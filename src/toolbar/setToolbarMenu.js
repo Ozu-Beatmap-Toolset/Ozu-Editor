@@ -1,6 +1,5 @@
-// Empty
-
-const {app, Menu} = require('electron')
+const {app, Menu} = require('electron');
+const open = require('open');
 
 const isOnMac = process.platform === 'darwin';
 
@@ -18,22 +17,19 @@ const menuTemplate = [
       },
       {
         label: 'Save',
-        accelerator: 'Ctrl+S'
+        accelerator: 'Ctrl+S',
       },
       { type: 'separator' },
       {
         label: 'Settings',
         accelerator: isOnMac?'Ctrl+Cmd+S':'Ctrl+Alt+S',
         click: () => {
-          
         }
       },
       { type: 'separator' },
       {
         label: 'Exit',
-        click: () => {
-          app.quit();
-        }
+        click: () => {app.quit();},
       },
     ]
   },
@@ -47,18 +43,19 @@ const menuTemplate = [
       },
     ]
   },
-  { 
+  {
     label: 'View',
     submenu: []
   },
-  { 
+  {
     label: 'Tools',
     submenu: []
   },
   { label: 'Help',
     submenu: [
       {
-        label: 'About'
+        label: 'About',
+        click: () => {open("https://github.com/Ozu-Beatmap-Toolset/ozu-gui");},
       },
     ]
   },
