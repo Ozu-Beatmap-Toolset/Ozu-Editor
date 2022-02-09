@@ -1,0 +1,18 @@
+{
+  "name": "practical-fight-compile-8osjw",
+  "productName": "practical-fight-compile-8osjw",
+  "description": "My Electron application description",
+  "keywords": [],
+  "main": "./src/app/main.js",
+  "version": "1.0.0",
+  "author": "John-William Lebel",
+  "scripts": {
+    "start": "electron ."
+  },
+  "dependencies": {
+    "open": "^8.4.0"
+  },
+  "devDependencies": {
+    "electron": "16.0.2"
+  }
+}
