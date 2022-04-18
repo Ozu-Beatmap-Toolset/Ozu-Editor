@@ -5,17 +5,11 @@
 // selectively enable features needed in the rendering
 // process.
 
-// mouse observer thigny
-var mouseObserver = require("./src/info/mouse/mouseEventObserver.js")
+//
+const { ipcRenderer } = require('electron');
+ipcRenderer.send('action-signal', ['testAction']);
+ipcRenderer.send('action-signal', ['testAction']);
 
-mouseFunction = mouseCoordinates => {
-  console.log(mouseCoordinates.x + " : " + mouseCoordinates.y);
-};
-
-mouseObserver.subscribe(mouseFunction);
-
-
-// buttons yeay!
 document.getElementById("hitobjectButton").onclick = () => {
   console.log('hitObject!');
 };

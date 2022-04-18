@@ -1,6 +1,9 @@
 const {app, Menu} = require('electron');
 const open = require('open');
 
+// actions with undo and redo support!
+const ActionHistory = require("../util/actions/actionHistory.js");
+
 const isOnMac = process.platform === 'darwin';
 
 const menuTemplate = [
@@ -36,10 +39,14 @@ const menuTemplate = [
   { label: 'Edit',
     submenu: [
       {
-        label: 'Undo'
+        label: 'Undo',
+        accelerator: 'Ctrl+z',
+        click: () => { ActionHistory.undo(); },
       },
       {
-        label: 'Redo'
+        label: 'Redo',
+        accelerator: 'Ctrl+y',
+        click: () => { ActionHistory.redo(); },
       },
     ]
   },

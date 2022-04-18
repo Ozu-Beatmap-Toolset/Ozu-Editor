@@ -8,6 +8,8 @@ function createWindow() {
   return new BrowserWindow({
     width: 800,
     height: 600,
+    minWidth: 1000,
+    minHeight: 600,
     title: appName.get() + " " + appVersion.get(),
     webPreferences: {
       nodeIntegration: true,

@@ -1,5 +1,7 @@
-const {app, BrowserWindow} = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const mainJsScript = require("./mainWindow.js");
+const actionDictionary = require("../util/actions/mainProcessActionDictionary.js");
+const Action = require('../util/actions/Action.js');
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -19,4 +21,9 @@ app.whenReady().then(() => {
 // explicitly with Cmd + Q.
 app.on('window-all-closed', function () {
   if (process.platform !== 'darwin') app.quit()
-})
+});
+
+ipcMain.on('action-signal', (event, args) => {
+  actionToDo = actionDictionary[args[0]];
+  actionToDo.do();
+});
