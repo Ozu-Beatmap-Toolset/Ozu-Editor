@@ -1,7 +1,7 @@
-const observer = new (require('../../util/patterns/observer.js'));
+const Observer = (require('../patterns/Observer.js'));
+const observer = new Observer();
 const MouseCoordinates = require('./MouseCoordinates.js');
 
-//const observer = new Observer();
 
 document.onmousemove = (event) => {
   const mouseCoordinates = new MouseCoordinates(event.pageX, event.pageY);

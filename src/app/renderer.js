@@ -10,18 +10,39 @@ const { ipcRenderer } = require('electron');
 ipcRenderer.send('action-signal', ['testAction']);
 ipcRenderer.send('action-signal', ['testAction']);
 
-document.getElementById("hitobjectButton").onclick = () => {
-  console.log('hitObject!');
-};
 
-document.getElementById("hitsoundButton").onclick = () => {
-  console.log('hitSound!');
-};
+window.addEventListener('mousemove', (event) => {
+    var x = event.clientX;
+    var y = event.clientY;
+    var ball = document.querySelector(".unplaced-circle");
+    var rect = document.querySelector('#play-field-area').getBoundingClientRect();
+    ball.style.position = "absolute";
+    if(x < rect.left) {
+        x = rect.left;
+    }
+    else if(x > rect.right) {
+        x = rect.right;
+    }
+    if(y < rect.top) {
+        y = rect.top;
+    }
+    else if(y > rect.bottom) {
+        y = rect.bottom;
+    }
+    ball.style.left = `${x}px`;
+    ball.style.top = `${y}px`;
+})
 
-document.getElementById("colorButton").onclick = () => {
-  console.log('color!');
-};
+var x = 1;
+window.addEventListener('click', (event) => {
+    hitCircle = document.querySelector(".unplaced-circle");
+    var dupNode = hitCircle.cloneNode(false);
+    dupNode.classList.remove("unplaced-circle");
+    dupNode.classList.add("placed-circle");
+    dupNode.id = (x++).toString();
+    document.getElementById("circle-layer").appendChild(dupNode);
+})
 
-document.getElementById("storyboardButton").onclick = () => {
-  console.log('storyBoard!');
-};
+window.addEventListener('resize', () => {
+    placedCircles = document.getElementsByClassName("placed-circle");
+})

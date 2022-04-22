@@ -1,5 +1,5 @@
 function get() {
-  return "Ozu Beatmap Editor";
+  return "Ozu Editor";
 }
 
 module.exports = {
