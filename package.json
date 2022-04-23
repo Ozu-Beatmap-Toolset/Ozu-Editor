@@ -1,9 +1,9 @@
 {
   "name": "practical-fight-compile-8osjw",
   "productName": "practical-fight-compile-8osjw",
-  "description": "My Electron application description",
+  "description": "A beatmap editor for the game Osu!",
   "keywords": [],
-  "main": "./src/app/main.js",
+  "main": "./src/window/main.js",
   "version": "1.0.0",
   "author": "John-William Lebel",
   "scripts": {

@@ -1,5 +1,5 @@
-const {BrowserWindow} = require('electron')
-const path = require('path')
+const { BrowserWindow } = require('electron');
+const path = require('path');
 const appVersion = require("../info/appVersion.js");
 const appName = require("../info/appName.js");
 
@@ -15,8 +15,8 @@ function createWindow() {
       nodeIntegration: true,
       contextIsolation: false,
       preload: path.join(__dirname, 'preload.js')
-    },
-  })
+    }
+  });
 }
 
 module.exports = {

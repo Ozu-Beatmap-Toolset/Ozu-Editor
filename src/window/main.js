@@ -1,7 +1,7 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const mainJsScript = require("./mainWindow.js");
 const actionDictionary = require("../util/actions/mainProcessActionDictionary.js");
-const Action = require('../util/actions/Action.js');
+const Action = require("../util/actions/Action.js");
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.

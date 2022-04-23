@@ -10,6 +10,15 @@ const { ipcRenderer } = require('electron');
 ipcRenderer.send('action-signal', ['testAction']);
 ipcRenderer.send('action-signal', ['testAction']);
 
+const RealtimeKB = require("../util/keyboard/RealtimeKB.js");
+var keyLogger = new RealtimeKB();
+
+const MeasureBar = require("../app/measure_bar/MeasureBar.js");
+var measureBar = new MeasureBar();
+
+const Playfield = require("../app/playfield/Playfield.js");
+var playfield = new Playfield();
+playfield.appendToDOM(document);
 
 window.addEventListener('mousemove', (event) => {
     var x = event.clientX;
@@ -31,18 +40,41 @@ window.addEventListener('mousemove', (event) => {
     }
     ball.style.left = `${x}px`;
     ball.style.top = `${y}px`;
-})
+});
 
 var x = 1;
 window.addEventListener('click', (event) => {
+    var x = event.clientX;
+    var y = event.clientY;
     hitCircle = document.querySelector(".unplaced-circle");
-    var dupNode = hitCircle.cloneNode(false);
-    dupNode.classList.remove("unplaced-circle");
-    dupNode.classList.add("placed-circle");
-    dupNode.id = (x++).toString();
-    document.getElementById("circle-layer").appendChild(dupNode);
-})
+    var hitCircleCopy = hitCircle.cloneNode(false);
+    hitCircleCopy.classList.remove("unplaced-circle");
+    hitCircleCopy.classList.add("placed-circle");
+    hitCircleCopy.id = (x++).toString();
+    document.getElementById("circle-layer").appendChild(hitCircleCopy);
+});
 
 window.addEventListener('resize', () => {
     placedCircles = document.getElementsByClassName("placed-circle");
-})
+});
+
+window.addEventListener('wheel', (event) => {
+    const scrollAmount = event.deltaY * -0.01;    // -100 increments, wtf
+    if(keyLogger.leftCtrlPressed()) {
+        measureBar.scrollTimeDivision(scrollAmount);
+    }
+    else {
+        measureBar.scrollPosition(scrollAmount);
+    }
+    console.log(measureBar.getCurrentPosition());
+});
+
+window.addEventListener('keydown', (event) => {
+    keyLogger.log(event);
+});
+window.addEventListener('keyup', (event) => {
+    keyLogger.delog(event);
+});
+window.addEventListener('blur', (event) => {
+    keyLogger.reset(event);
+});

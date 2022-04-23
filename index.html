@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <meta http-equiv="Content-Security-Policy" content="">
     <link href="./styles.css" type="text/css" rel="stylesheet">
   </head>
   <body>
@@ -10,6 +10,6 @@
   <div id="circle-layer"></div>
   <div class="unplaced-circle"></div>
 
-  <script src="./src/app/renderer.js"></script>
+  <script>require("./src/window/renderer.js")</script>
   </body>
 </html>
