@@ -1,10 +1,13 @@
 module.exports = class HitCircle {
-    constructor(posX, posY) {
-        this.posX = posX;
-        this.posY = posY;
-    }
+    static circleId = 1;
 
-    appendToDOM(document) {
-        //document.
+    static cloneAt(domCircle, positionOnMeasureBar) {
+      const copy = domCircle.cloneNode(false);
+      copy.classList.remove('unplaced-circle');
+      copy.classList.add('placed-circle');
+      copy.classList.add('hit-object');
+      copy.id = (HitCircle.circleId++).toString();
+      copy.style.setProperty('--measure-bar-position', positionOnMeasureBar);
+      return copy;
     }
 }

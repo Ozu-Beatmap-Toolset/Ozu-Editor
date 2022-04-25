@@ -5,9 +5,10 @@ module.exports = class MeasureBar {
     start = 0;
     increments = 1;
     relativePosition = 0;
+    bpm = 60;
 
     scrollTimeDivision(scrollAmount) {
-        var newTimeDivision = 1/this.increments + scrollAmount
+        var newTimeDivision = Math.round(1/this.increments) + scrollAmount;
         if(newTimeDivision < MIN_TIME_DIVISION) {
             newTimeDivision = MIN_TIME_DIVISION;
         }
@@ -16,15 +17,28 @@ module.exports = class MeasureBar {
         }
         this.increments = 1/newTimeDivision;
 
-        // snapping the position on a time division
-        this.relativePosition = parseInt(this.relativePosition/this.increments) * this.increments;
+        this.snapToClosestDivision();
     }
 
     scrollPosition(scrollAmount) {
-        this.relativePosition += scrollAmount * this.increments;
+        this.addToRelativePosition(scrollAmount*this.increments);
         if(this.relativePosition < this.start) {
             this.relativePosition = this.start;
         }
+    }
+
+    step(ms) {
+        const amountToMove = this.#msToAmountOfBeats(ms);
+        this.addToRelativePosition(amountToMove);
+    }
+
+    addToRelativePosition(amount) {
+        this.relativePosition += amount;
+
+    }
+
+    snapToClosestDivision() {
+        this.relativePosition = Math.round(this.relativePosition/this.increments) * this.increments;
     }
 
     getTimeDivision() {
@@ -33,5 +47,10 @@ module.exports = class MeasureBar {
 
     getCurrentPosition() {
         return this.relativePosition + this.start;
+    }
+
+    #msToAmountOfBeats(ms) {
+        const minutes = ms/60000;   // ms * (1sec/1000ms) * (1min/60sec) = min
+        return this.bpm * minutes;  // beats/min * min = beats
     }
 };

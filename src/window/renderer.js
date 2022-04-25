@@ -10,22 +10,26 @@ const { ipcRenderer } = require('electron');
 ipcRenderer.send('action-signal', ['testAction']);
 ipcRenderer.send('action-signal', ['testAction']);
 
-const RealtimeKB = require("../util/keyboard/RealtimeKB.js");
-var keyLogger = new RealtimeKB();
+const RealtimeKB = require('../util/keyboard/RealtimeKB.js');
+const keyLogger = new RealtimeKB();
 
-const MeasureBar = require("../app/measure_bar/MeasureBar.js");
-var measureBar = new MeasureBar();
+const MeasureBar = require('../app/measure_bar/MeasureBar.js');
+const measureBar = new MeasureBar();
+
+const BeatmapPlayer = require('../app/beatmap_player/BeatmapPlayer.js')
+const beatmapPlayer = new BeatmapPlayer(measureBar);
 
 const Playfield = require("../app/playfield/Playfield.js");
-var playfield = new Playfield();
-playfield.appendToDOM(document);
+const playfield = new Playfield();
+
+const HitCircle = require('../app/hit_objects/HitCircle.js');
 
 window.addEventListener('mousemove', (event) => {
     var x = event.clientX;
     var y = event.clientY;
     var ball = document.querySelector(".unplaced-circle");
     var rect = document.querySelector('#play-field-area').getBoundingClientRect();
-    ball.style.position = "absolute";
+    ball.style.position = 'absolute';
     if(x < rect.left) {
         x = rect.left;
     }
@@ -42,24 +46,18 @@ window.addEventListener('mousemove', (event) => {
     ball.style.top = `${y}px`;
 });
 
-var x = 1;
 window.addEventListener('click', (event) => {
-    var x = event.clientX;
-    var y = event.clientY;
-    hitCircle = document.querySelector(".unplaced-circle");
-    var hitCircleCopy = hitCircle.cloneNode(false);
-    hitCircleCopy.classList.remove("unplaced-circle");
-    hitCircleCopy.classList.add("placed-circle");
-    hitCircleCopy.id = (x++).toString();
-    document.getElementById("circle-layer").appendChild(hitCircleCopy);
+    unplacedCircle = document.querySelector('.unplaced-circle');
+    const hitCircleCopy = HitCircle.cloneAt(unplacedCircle, measureBar.getCurrentPosition());
+    playfield.insertHitObject(hitCircleCopy);
 });
 
 window.addEventListener('resize', () => {
-    placedCircles = document.getElementsByClassName("placed-circle");
+    placedCircles = document.getElementsByClassName('placed-circle');
 });
 
 window.addEventListener('wheel', (event) => {
-    const scrollAmount = event.deltaY * -0.01;    // -100 increments, wtf
+    const scrollAmount = Math.round(event.deltaY * -0.01);    // increments are scaled by -100
     if(keyLogger.leftCtrlPressed()) {
         measureBar.scrollTimeDivision(scrollAmount);
     }
@@ -67,14 +65,4 @@ window.addEventListener('wheel', (event) => {
         measureBar.scrollPosition(scrollAmount);
     }
     console.log(measureBar.getCurrentPosition());
-});
-
-window.addEventListener('keydown', (event) => {
-    keyLogger.log(event);
-});
-window.addEventListener('keyup', (event) => {
-    keyLogger.delog(event);
-});
-window.addEventListener('blur', (event) => {
-    keyLogger.reset(event);
 });
