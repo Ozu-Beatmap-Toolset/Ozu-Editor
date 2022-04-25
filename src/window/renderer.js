@@ -48,7 +48,7 @@ window.addEventListener('mousemove', (event) => {
 
 window.addEventListener('click', (event) => {
     unplacedCircle = document.querySelector('.unplaced-circle');
-    const hitCircleCopy = HitCircle.cloneAt(unplacedCircle, measureBar.getCurrentPosition());
+    const hitCircleCopy = HitCircle.cloneAt(unplacedCircle, measureBar.getCurrentPositionOnClosestDivision());
     playfield.insertHitObject(hitCircleCopy);
 });
 

@@ -3,12 +3,12 @@ module.exports = class Playfield {
 
     }
 
-    getHitObjectsParent() {
+    static getHitObjectsParent() {
         return document.getElementById('hit-objects-layer');
     }
 
     insertHitObject(hitObject) {
-        const parent = this.getHitObjectsParent();
+        const parent = Playfield.getHitObjectsParent();
         const children = parent.children;
         if(children.length == 0) {
             this.#insertSomewhere(parent, hitObject);
@@ -19,18 +19,18 @@ module.exports = class Playfield {
         }
     }
 
-    #getMeasureBarPositionOf(domElement) {
-        const valueStr = domElement.style.getPropertyValue('--measure-bar-position');
+    static getMeasureBarPositionOfHitObject(domHitObject) {
+        const valueStr = domHitObject.style.getPropertyValue('--measure-bar-position');
         return parseFloat(valueStr);
     }
 
     #shouldInsertLast(children, hitObject) {
-        return this.#getMeasureBarPositionOf(children[children.length-1]) <= this.#getMeasureBarPositionOf(hitObject);
+        return Playfield.getMeasureBarPositionOfHitObject(children[children.length-1]) <= Playfield.getMeasureBarPositionOfHitObject(hitObject);
     }
 
     #insertSorted(parent, children, hitObject) {
         for(var i = 0; i < children.length; i++) {
-            if(this.#getMeasureBarPositionOf(children[i]) >= this.#getMeasureBarPositionOf(hitObject)) {
+            if(Playfield.getMeasureBarPositionOfHitObject(children[i]) >= Playfield.getMeasureBarPositionOfHitObject(hitObject)) {
                 parent.insertBefore(hitObject, children[i]);
                 break;
             }

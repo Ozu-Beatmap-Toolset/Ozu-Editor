@@ -1,3 +1,5 @@
+const TransparencyHandler = require('../hit_objects/TransparencyHandler.js');
+
 const MIN_TIME_DIVISION = 1;
 const MAX_TIME_DIVISION = 16;
 
@@ -5,7 +7,7 @@ module.exports = class MeasureBar {
     start = 0;
     increments = 1;
     relativePosition = 0;
-    bpm = 60;
+    bpm = 120;
 
     scrollTimeDivision(scrollAmount) {
         var newTimeDivision = Math.round(1/this.increments) + scrollAmount;
@@ -34,11 +36,15 @@ module.exports = class MeasureBar {
 
     addToRelativePosition(amount) {
         this.relativePosition += amount;
-
+        TransparencyHandler.updateTransparency(this.getCurrentPosition());
     }
 
     snapToClosestDivision() {
-        this.relativePosition = Math.round(this.relativePosition/this.increments) * this.increments;
+        this.relativePosition = this.#snapToClosestDivision(this.relativePosition);
+    }
+
+    #snapToClosestDivision(value) {
+        return Math.round(value/this.increments) * this.increments;
     }
 
     getTimeDivision() {
@@ -47,6 +53,10 @@ module.exports = class MeasureBar {
 
     getCurrentPosition() {
         return this.relativePosition + this.start;
+    }
+
+    getCurrentPositionOnClosestDivision() {
+        return this.#snapToClosestDivision(this.relativePosition) + this.start;
     }
 
     #msToAmountOfBeats(ms) {
