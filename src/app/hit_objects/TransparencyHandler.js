@@ -1,18 +1,5 @@
 const Playfield = require('../playfield/Playfield.js');
 
-function updateVisibility(measureBarPosition, domHitObject) {
-    if(transparencyFunction(measureBarPosition, domHitObject) < 0.01) {
-        domHitObject.style.setProperty('visibility', 'hidden');
-    } else {
-        domHitObject.style.setProperty('visibility', 'visible');
-    }
-}
-
-function updateOpacity(measureBarPosition, domHitObject) {
-    var newOpacity = transparencyFunction(measureBarPosition, domHitObject);
-    domHitObject.style.setProperty('opacity', String(newOpacity));
-}
-
 function updateTransparency(measureBarPosition) {
     const parent = Playfield.getHitObjectsParent();
     for(const domHitObject of parent.children) {
@@ -21,15 +8,35 @@ function updateTransparency(measureBarPosition) {
     }
 }
 
+function updateVisibility(measureBarPosition, domHitObject) {
+    domHitObject.style.setProperty('visibility', visibilityFunction(measureBarPosition, domHitObject));
+}
+
+function updateOpacity(measureBarPosition, domHitObject) {
+    domHitObject.style.setProperty('opacity', opacityFunction(measureBarPosition, domHitObject));
+}
+
+function visibilityFunction(measureBarPosition, domHitObject) {
+    const transparency = transparencyFunction(measureBarPosition, domHitObject);
+    if(transparency < 0) {
+        return 'hidden';
+    }
+    return 'visible';
+}
+
+function opacityFunction(measureBarPosition, domHitObject) {
+    const transparency = transparencyFunction(measureBarPosition, domHitObject);
+    if(transparency > 1) {
+        return '1';
+    }
+    if(transparency < 0) {
+        return '0';
+    }
+    return String(transparency);
+}
+
 function transparencyFunction(measureBarPosition, domHitObject) {
-    const result = 2 - Math.abs(measureBarPosition - Playfield.getMeasureBarPositionOfHitObject(domHitObject));
-    if(result > 1) {
-        return 1;
-    }
-    if(result < 0) {
-        return 0;
-    }
-    return result;
+    return 1.5 - Math.abs(measureBarPosition - Playfield.getMeasureBarPositionOfHitObject(domHitObject));
 }
 
 module.exports = {

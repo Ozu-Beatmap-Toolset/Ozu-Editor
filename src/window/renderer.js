@@ -60,9 +60,9 @@ window.addEventListener('wheel', (event) => {
     const scrollAmount = Math.round(event.deltaY * -0.01);    // increments are scaled by -100
     if(keyLogger.leftCtrlPressed()) {
         measureBar.scrollTimeDivision(scrollAmount);
+        console.log(measureBar.getTimeDivision());
     }
     else {
         measureBar.scrollPosition(scrollAmount);
     }
-    console.log(measureBar.getCurrentPosition());
 });

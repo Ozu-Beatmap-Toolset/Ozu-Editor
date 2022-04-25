@@ -39,7 +39,6 @@ module.exports = class BeatmapPlayer {
         const currentTime = Date.now();
         measureBar.step(currentTime - this.lastExecutionTime);
         this.lastExecutionTime = Date.now();
-        console.log(measureBar.getCurrentPosition());
     }
 
     userToggledPlay(measureBar) {

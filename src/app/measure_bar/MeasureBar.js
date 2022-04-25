@@ -4,9 +4,9 @@ const MIN_TIME_DIVISION = 1;
 const MAX_TIME_DIVISION = 16;
 
 module.exports = class MeasureBar {
-    start = 0;
-    increments = 1;
-    relativePosition = 0;
+    start = 0;  // ms
+    increments = 1; // beats
+    relativePosition = 0; // beats
     bpm = 120;
 
     scrollTimeDivision(scrollAmount) {
@@ -24,9 +24,6 @@ module.exports = class MeasureBar {
 
     scrollPosition(scrollAmount) {
         this.addToRelativePosition(scrollAmount*this.increments);
-        if(this.relativePosition < this.start) {
-            this.relativePosition = this.start;
-        }
     }
 
     step(ms) {
@@ -36,11 +33,18 @@ module.exports = class MeasureBar {
 
     addToRelativePosition(amount) {
         this.relativePosition += amount;
+        const startInBeats = this.getOffsetInBeats();
+        if(this.relativePosition < startInBeats) {
+            this.relativePosition = startInBeats;
+        }
         TransparencyHandler.updateTransparency(this.getCurrentPosition());
+        console.log(this.getCurrentPosition());
     }
 
     snapToClosestDivision() {
         this.relativePosition = this.#snapToClosestDivision(this.relativePosition);
+        TransparencyHandler.updateTransparency(this.getCurrentPosition());
+        console.log(this.getCurrentPosition());
     }
 
     #snapToClosestDivision(value) {
@@ -52,11 +56,15 @@ module.exports = class MeasureBar {
     }
 
     getCurrentPosition() {
-        return this.relativePosition + this.start;
+        return this.relativePosition + this.getOffsetInBeats();
+    }
+
+    getOffsetInBeats() {
+        return this.#msToAmountOfBeats(this.start);
     }
 
     getCurrentPositionOnClosestDivision() {
-        return this.#snapToClosestDivision(this.relativePosition) + this.start;
+        return this.#snapToClosestDivision(this.relativePosition) + this.getOffsetInBeats();
     }
 
     #msToAmountOfBeats(ms) {
