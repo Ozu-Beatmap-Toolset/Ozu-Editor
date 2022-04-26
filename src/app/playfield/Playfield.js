@@ -1,47 +1,38 @@
+const PlayfieldConstants = require('./constants.js');
+const Vector2 = require('../../util/math/vector/Vector2.js');
+
 module.exports = class Playfield {
-    constructor() {
-
-    }
-
-    static getHitObjectsParent() {
+    static asDomElement() {
         return document.getElementById('hit-objects-layer');
     }
 
-    insertHitObject(hitObject) {
-        const parent = Playfield.getHitObjectsParent();
-        const children = parent.children;
-        if(children.length == 0) {
-            this.#insertSomewhere(parent, hitObject);
-        } else if(this.#shouldInsertLast(children, hitObject)) {
-            this.#insertLast(children, hitObject);
-        } else {
-            this.#insertSorted(parent, children, hitObject);
-        }
+    playfieldPositionToOsuPixel(pos) {
+        const rect = this.getPlayfieldRect();
+        const clientToOsu = new Vector2(
+            PlayfieldConstants.sizeX/rect.width,
+            PlayfieldConstants.sizeY/rect.height);
+        return pos.decoupledScaled(clientToOsu).discreteForm();
     }
 
-    static getMeasureBarPositionOfHitObject(domHitObject) {
-        const valueStr = domHitObject.style.getPropertyValue('--measure-bar-position');
-        return parseFloat(valueStr);
+    osuPixelToPlayfieldPosition(px) {
+        const rect = this.getPlayfieldRect();
+        const osuToClient = new Vector2(
+            rect.width/PlayfieldConstants.sizeX,
+            rect.height/PlayfieldConstants.sizeY);
+        return px.decoupledScaled(osuToClient);
     }
 
-    #shouldInsertLast(children, hitObject) {
-        return Playfield.getMeasureBarPositionOfHitObject(children[children.length-1]) <= Playfield.getMeasureBarPositionOfHitObject(hitObject);
+    snapOnOsuPixels(domElement) {
+        const playfieldPosX = parseFloat(domElement.style.getPropertyValue('left'));
+        const playfieldPosY = parseFloat(domElement.style.getPropertyValue('top'));
+        const playfieldPos = new Vector2(playfieldPosX, playfieldPosY);
+        const osuPixel = this.playfieldPositionToOsuPixel(playfieldPos);
+        const snappedPlayfieldPos = this.osuPixelToPlayfieldPosition(osuPixel);
+        domElement.style.setProperty('left', String(snappedPlayfieldPos.x) + 'px');
+        domElement.style.setProperty('top', String(snappedPlayfieldPos.y) + 'px');
     }
 
-    #insertSorted(parent, children, hitObject) {
-        for(var i = 0; i < children.length; i++) {
-            if(Playfield.getMeasureBarPositionOfHitObject(children[i]) >= Playfield.getMeasureBarPositionOfHitObject(hitObject)) {
-                parent.insertBefore(hitObject, children[i]);
-                break;
-            }
-        }
-    }
-
-    #insertLast(children, hitObject) {
-        children[children.length-1].after(hitObject);
-    }
-
-    #insertSomewhere(parent, hitObject) {
-        parent.appendChild(hitObject);
+    getPlayfieldRect() {
+        return document.querySelector('#play-field-area').getBoundingClientRect();
     }
 }

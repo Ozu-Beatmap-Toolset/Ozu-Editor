@@ -22,34 +22,39 @@ const beatmapPlayer = new BeatmapPlayer(measureBar);
 const Playfield = require("../app/playfield/Playfield.js");
 const playfield = new Playfield();
 
+const playfieldInserter = require("../app/playfield/playfieldInserter.js");
+
 const HitCircle = require('../app/hit_objects/HitCircle.js');
 
 window.addEventListener('mousemove', (event) => {
     var x = event.clientX;
     var y = event.clientY;
-    var ball = document.querySelector(".unplaced-circle");
-    var rect = document.querySelector('#play-field-area').getBoundingClientRect();
-    ball.style.position = 'absolute';
-    if(x < rect.left) {
-        x = rect.left;
+    var unplacedCircle = document.querySelector(".unplaced-circle");
+    var playfieldRectangle = playfield.getPlayfieldRect();
+    unplacedCircle.style.position = 'absolute';
+    if(x < playfieldRectangle.left) {
+        x = playfieldRectangle.left;
     }
-    else if(x > rect.right) {
-        x = rect.right;
+    else if(x > playfieldRectangle.right) {
+        x = playfieldRectangle.right;
     }
-    if(y < rect.top) {
-        y = rect.top;
+    if(y < playfieldRectangle.top) {
+        y = playfieldRectangle.top;
     }
-    else if(y > rect.bottom) {
-        y = rect.bottom;
+    else if(y > playfieldRectangle.bottom) {
+        y = playfieldRectangle.bottom;
     }
-    ball.style.left = `${x}px`;
-    ball.style.top = `${y}px`;
+    x -= playfieldRectangle.left;
+    y -= playfieldRectangle.top;
+    unplacedCircle.style.left = `${x}px`;
+    unplacedCircle.style.top = `${y}px`;
+    playfield.snapOnOsuPixels(unplacedCircle);
 });
 
 window.addEventListener('click', (event) => {
     unplacedCircle = document.querySelector('.unplaced-circle');
-    const hitCircleCopy = HitCircle.cloneAt(unplacedCircle, measureBar.getCurrentPositionOnClosestDivision());
-    playfield.insertHitObject(hitCircleCopy);
+    const hitCircleCopy = HitCircle.cloneAt(unplacedCircle, playfield, measureBar.getCurrentPositionOnClosestDivision());
+    playfieldInserter.insert(hitCircleCopy);
 });
 
 window.addEventListener('resize', () => {

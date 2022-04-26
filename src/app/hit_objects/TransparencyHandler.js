@@ -1,7 +1,8 @@
 const Playfield = require('../playfield/Playfield.js');
+const MeasureBarPosRet = require('../measure_bar/MeasureBarPositionRetriever.js');
 
 function updateTransparency(measureBarPosition) {
-    const parent = Playfield.getHitObjectsParent();
+    const parent = Playfield.asDomElement();
     for(const domHitObject of parent.children) {
         updateVisibility(measureBarPosition, domHitObject);
         updateOpacity(measureBarPosition, domHitObject);
@@ -36,7 +37,7 @@ function opacityFunction(measureBarPosition, domHitObject) {
 }
 
 function transparencyFunction(measureBarPosition, domHitObject) {
-    return 1.5 - Math.abs(measureBarPosition - Playfield.getMeasureBarPositionOfHitObject(domHitObject));
+    return 1.5 - Math.abs(measureBarPosition - MeasureBarPosRet.getPositionOfHitObject(domHitObject));
 }
 
 module.exports = {
