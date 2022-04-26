@@ -37,8 +37,20 @@ class RealtimeKB {
         this.#loggedKeys.length = 0;
     }
 
+    amountOfKeysPressed() {
+        return this.#loggedKeys.length;
+    }
+
     leftCtrlPressed() {
         return this.#loggedKeys.includes('ControlLeft');
+    }
+
+    key1Pressed() {
+        return this.#loggedKeys.includes('Digit1') || this.#loggedKeys.includes('Numpad1');
+    }
+
+    escPressed() {
+        return this.#loggedKeys.includes('Escape');
     }
 };
 

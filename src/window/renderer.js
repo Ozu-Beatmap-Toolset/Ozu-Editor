@@ -10,64 +10,27 @@ const { ipcRenderer } = require('electron');
 ipcRenderer.send('action-signal', ['testAction']);
 ipcRenderer.send('action-signal', ['testAction']);
 
-const RealtimeKB = require('../util/keyboard/RealtimeKB.js');
-const keyLogger = new RealtimeKB();
-
-const MeasureBar = require('../app/measure_bar/MeasureBar.js');
-const measureBar = new MeasureBar();
-
-const BeatmapPlayer = require('../app/beatmap_player/BeatmapPlayer.js')
-const beatmapPlayer = new BeatmapPlayer(measureBar);
+const RealtimeKB = require('../util/user_input/RealtimeKB.js');
+const CursorPosition = require('../util/user_input/CursorPosition.js');
 
 const Playfield = require("../app/playfield/Playfield.js");
+
+const MeasureBar = require('../app/measure_bar/MeasureBar.js');
+const MeasureBarScroller = require('../app/measure_bar/MeasureBarScroller.js');
+const BeatmapPlayer = require('../app/beatmap_player/BeatmapPlayer.js');
+
+const ToolSelector = require('../app/playfield/tools/ToolSelector.js');
+const PlayfieldIdleTool = require('../app/playfield/tools/IdleTool.js');
+const StateMachine = require('../util/patterns/state_machine/StateMachine.js');
+
+const keyLogger = new RealtimeKB();
+const cursorPosition = new CursorPosition();
 const playfield = new Playfield();
-
-const playfieldInserter = require("../app/playfield/playfieldInserter.js");
-
-const HitCircle = require('../app/hit_objects/HitCircle.js');
-
-window.addEventListener('mousemove', (event) => {
-    var x = event.clientX;
-    var y = event.clientY;
-    var unplacedCircle = document.querySelector(".unplaced-circle");
-    var playfieldRectangle = playfield.getPlayfieldRect();
-    unplacedCircle.style.position = 'absolute';
-    if(x < playfieldRectangle.left) {
-        x = playfieldRectangle.left;
-    }
-    else if(x > playfieldRectangle.right) {
-        x = playfieldRectangle.right;
-    }
-    if(y < playfieldRectangle.top) {
-        y = playfieldRectangle.top;
-    }
-    else if(y > playfieldRectangle.bottom) {
-        y = playfieldRectangle.bottom;
-    }
-    x -= playfieldRectangle.left;
-    y -= playfieldRectangle.top;
-    unplacedCircle.style.left = `${x}px`;
-    unplacedCircle.style.top = `${y}px`;
-    playfield.snapOnOsuPixels(unplacedCircle);
-});
-
-window.addEventListener('click', (event) => {
-    unplacedCircle = document.querySelector('.unplaced-circle');
-    const hitCircleCopy = HitCircle.cloneAt(unplacedCircle, playfield, measureBar.getCurrentPositionOnClosestDivision());
-    playfieldInserter.insert(hitCircleCopy);
-});
+const measureBar = new MeasureBar();
+const measureBarScroller = new MeasureBarScroller(measureBar, keyLogger);
+const beatmapPlayer = new BeatmapPlayer(measureBar);
+const toolSelector = new ToolSelector([keyLogger, cursorPosition], new StateMachine(new PlayfieldIdleTool([playfield, measureBar])));
 
 window.addEventListener('resize', () => {
-    placedCircles = document.getElementsByClassName('placed-circle');
-});
-
-window.addEventListener('wheel', (event) => {
-    const scrollAmount = Math.round(event.deltaY * -0.01);    // increments are scaled by -100
-    if(keyLogger.leftCtrlPressed()) {
-        measureBar.scrollTimeDivision(scrollAmount);
-        console.log(measureBar.getTimeDivision());
-    }
-    else {
-        measureBar.scrollPosition(scrollAmount);
-    }
+    placedHitObjects = document.getElementsByClassName('placed-circle');
 });
