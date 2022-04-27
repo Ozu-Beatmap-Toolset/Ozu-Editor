@@ -1,23 +1,20 @@
 const fs = require("fs");
 var skinLocation;
+var skinFileNameDict = require('./skinFileNames.json');
 var skinDict = {};
 
 reloadSkinFolder();
 
 function reloadSkinFolder() {
-    skinLocation = require('../../../userPrefs.json').skinLocation;
-    registerfileNamesFrom('./src/app/skin/skinInterfaceContent.html');
-    registerfileNamesFrom('./src/app/skin/skinOsuContent.html');
+    skinLocation = require('../../../userPrefs.json').gameData.skinLocation;
+    registerfileNames();
 }
 
-function registerfileNamesFrom(htmlDataFileName) {
-    const regexPng = new RegExp('<p class="osu-md__paragraph"><code>(.+\.png)</code></p>', 'g');
-    const fileContent = fs.readFileSync(htmlDataFileName, 'utf-8');
-    const fileNameMatches = fileContent.matchAll(regexPng);
-
-    for (const match of fileNameMatches) {
-        const fileName = match[1];
+function registerfileNames() {
+    for (const entries of Object.entries(skinFileNameDict)) {
+        const fileName = entries[1];
         skinDict[fileName.replace('.png', '')] = skinLocation + '/' + fileName;
+        console.log(fileName);
     }
 }
 

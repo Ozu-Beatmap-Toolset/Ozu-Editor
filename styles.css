@@ -3,6 +3,8 @@
 /* Add styles here to customize the appearance of your app */
 
 body {
+  height: 100%;
+  overflow: hidden;
   background-color: #333;
   user-select: none;
 }
@@ -10,12 +12,12 @@ body {
 #play-field-area {
     height: 80%;
     aspect-ratio: 4/3;
-    background: #444;
     position: absolute;
-    top:50%;
+    top:51.71%;
     left:50%;
     transform:translate(-50%,-50%);
     border-radius: 8px;
+    background-color: rgba(64, 64, 64, 0.2);
 }
 
 .unplaced-circle, .placed-circle {
