@@ -23,10 +23,15 @@ const ToolSelector = require('../app/playfield/tools/ToolSelector.js');
 const PlayfieldIdleTool = require('../app/playfield/tools/IdleTool.js');
 const StateMachine = require('../util/patterns/state_machine/StateMachine.js');
 
+const skinData = require('../app/skin/skinData.js');
+console.log(skinData.skinDict['section-pass']);
+
 const keyLogger = new RealtimeKB();
 const cursorPosition = new CursorPosition();
+
 const playfield = new Playfield();
 const measureBar = new MeasureBar();
+
 const measureBarScroller = new MeasureBarScroller(measureBar, keyLogger);
 const beatmapPlayer = new BeatmapPlayer(measureBar);
 const toolSelector = new ToolSelector([keyLogger, cursorPosition], new StateMachine(new PlayfieldIdleTool([playfield, measureBar])));
