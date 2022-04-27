@@ -1,4 +1,4 @@
-# Ozu Editor
+# Ozu Editor™
 
 Ozu Editor is a desktop app which aims to improve the experience of creating beatmaps in osu! 
 It's planned to have many advantages over the default editor, such as:
