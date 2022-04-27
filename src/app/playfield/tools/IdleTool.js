@@ -3,7 +3,7 @@ const RealtimeKB = require('../../../util/user_input/RealtimeKB.js');
 const unplacedCircle = require('../../hit_objects/unplacedCircle.js');
 
 module.exports = class IdleTool extends State {
-    #uiData;
+    #uiData
 
     constructor(uiData) {
         super();
@@ -11,7 +11,7 @@ module.exports = class IdleTool extends State {
     }
 
     next(input) {
-        if(input[0][0].amountOfKeysPressed() == 1 && input[0][0].key1Pressed()) {
+        if (input[0][0].amountOfKeysPressed() == 1 && input[0][0].key1Pressed()) {
             const HitCirclePlacement = require('./playfield_placement/HitCirclePlacement.js');
             return new HitCirclePlacement(this.#uiData);
         }

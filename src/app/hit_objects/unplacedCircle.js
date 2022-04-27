@@ -1,7 +1,7 @@
 function moveTo(pos, playfield) {
     var x = pos.x;
     var y = pos.y;
-    const unplacedCircle = document.querySelector(".unplaced-circle");
+    const unplacedCircle = getDomObject();
     const playfieldRectangle = playfield.getPlayfieldRect();
     unplacedCircle.style.position = 'absolute';
     x = clamp(x, playfieldRectangle.left, playfieldRectangle.right);
@@ -11,6 +11,10 @@ function moveTo(pos, playfield) {
     unplacedCircle.style.left = `${x}px`;
     unplacedCircle.style.top = `${y}px`;
     playfield.snapOnOsuPixels(unplacedCircle);
+}
+
+function getDomObject() {
+    return document.querySelector(".unplaced-circle");
 }
 
 function clamp(x, min, max) {
@@ -24,5 +28,6 @@ function clamp(x, min, max) {
 }
 
 module.exports = {
-    moveTo
+    moveTo,
+    getDomObject
 }

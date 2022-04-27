@@ -19,12 +19,14 @@ const MeasureBar = require('../app/measure_bar/MeasureBar.js');
 const MeasureBarScroller = require('../app/measure_bar/MeasureBarScroller.js');
 const BeatmapPlayer = require('../app/beatmap_player/BeatmapPlayer.js');
 
+const unplacedCircle = require('../app/hit_objects/unplacedCircle');
+
 const ToolSelector = require('../app/playfield/tools/ToolSelector.js');
 const PlayfieldIdleTool = require('../app/playfield/tools/IdleTool.js');
 const StateMachine = require('../util/patterns/state_machine/StateMachine.js');
 
-const skinData = require('../app/skin/skinData.js');
-console.log(skinData.skinDict['section-pass']);
+const skinSetter = require('../app/skin/skinSetter.js');
+skinSetter.updateSkinOf(unplacedCircle.getDomObject());
 
 const keyLogger = new RealtimeKB();
 const cursorPosition = new CursorPosition();

@@ -5,6 +5,7 @@ const playfieldInserter = require('../../playfieldInserter.js');
 const HitCircle = require('../../../hit_objects/HitCircle.js');
 const unplacedCircle = require('../../../hit_objects/unplacedCircle.js');
 const Vector2 = require('../../../../util/math/vector/Vector2.js');
+const skinSetter = require('../../../skin/skinSetter.js');
 
 module.exports = class HitCirclePlacement extends State {
     #mouseMoveListenerMethod = (event) => { this.mouseMoved(event); };
@@ -30,8 +31,8 @@ module.exports = class HitCirclePlacement extends State {
     }
 
     exec(input) {
-        if(input[1].type == 'mousedown') {
-            if(input[1].buttons == 1) {
+        if (input[1].type == 'mousedown') {
+            if (input[1].buttons == 1) {
                 const unplacedCircle = document.querySelector('.unplaced-circle');
                 const hitCircleCopy = HitCircle.cloneAt(unplacedCircle, this.#uiData[0], this.#uiData[1].getCurrentPositionOnClosestDivision());
                 playfieldInserter.insert(hitCircleCopy);
@@ -40,13 +41,13 @@ module.exports = class HitCirclePlacement extends State {
     }
 
     next(input) {
-        if(input[0][0].escPressed()) {
+        if (input[0][0].escPressed()) {
             this.unregister();
             const IdleTool = require('../IdleTool.js');
             return new IdleTool(this.#uiData);
         }
-        if(input[1].type == 'mousedown') {
-            if(input[1].buttons == 2) {
+        if (input[1].type == 'mousedown') {
+            if (input[1].buttons == 2) {
                 this.unregister();
                 const IdleTool = require('../IdleTool.js');
                 return new IdleTool(this.#uiData);

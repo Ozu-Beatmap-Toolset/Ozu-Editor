@@ -37,7 +37,7 @@ function opacityFunction(measureBarPosition, domHitObject) {
 }
 
 function transparencyFunction(measureBarPosition, domHitObject) {
-    return 1.5 - Math.abs(measureBarPosition - MeasureBarPosRet.getPositionOfHitObject(domHitObject));
+    return 1 - Math.abs(measureBarPosition - MeasureBarPosRet.getPositionOfHitObject(domHitObject));
 }
 
 module.exports = {
