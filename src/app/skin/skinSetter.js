@@ -3,11 +3,11 @@ const skinData = require('../skin/skinData.js');
 function updateSkinForAllHitCircles() {
     const hitCircles = document.getElementsByClassName('placed-circle');
     for (const hitCircle of hitCircles) {
-        updateSkinOf(hitCircle);
+        updateSkinOfHitCircle(hitCircle);
     }
 }
 
-function updateSkinOf(hitCircle) {
+function updateSkinOfHitCircle(hitCircle) {
     hitCircle.style.setProperty('height', '0px');
     hitCircle.style.setProperty('width', '0px');
     hitCircle.style.setProperty('background', 'none');
@@ -34,5 +34,5 @@ function updateSkinOf(hitCircle) {
 
 module.exports = {
     updateSkinForAllHitCircles,
-    updateSkinOf
+    updateSkinOfHitCircle
 }

@@ -19,7 +19,6 @@ module.exports = class HitCircle {
         const osuPixel = playfield.playfieldPositionToOsuPixel(playfieldPos);
         copy.style.setProperty('--osu-pixels-x', String(osuPixel.x));
         copy.style.setProperty('--osu-pixels-y', String(osuPixel.y));
-        skinSetter.updateSkinOf(copy);
         return copy;
     }
 }

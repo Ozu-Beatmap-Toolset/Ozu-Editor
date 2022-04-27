@@ -26,7 +26,7 @@ const PlayfieldIdleTool = require('../app/playfield/tools/IdleTool.js');
 const StateMachine = require('../util/patterns/state_machine/StateMachine.js');
 
 const skinSetter = require('../app/skin/skinSetter.js');
-skinSetter.updateSkinOf(unplacedCircle.getDomObject());
+skinSetter.updateSkinOfHitCircle(unplacedCircle.getDomObject());
 
 const keyLogger = new RealtimeKB();
 const cursorPosition = new CursorPosition();
