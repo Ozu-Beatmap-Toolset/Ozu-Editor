@@ -10,7 +10,7 @@ module.exports = class StateMachine extends State {
     }
 
     // Modified to make it compatible with events.
-    // The start() method is now called as fast as possible. 
+    // The start() method is now called as soon as possible. 
     exec(input) {
         if(this.#initialStartNotExecuted && this.#nextState != this.#state) {
             this.#nextState.start(input);

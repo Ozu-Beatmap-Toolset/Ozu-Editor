@@ -1,5 +1,5 @@
 // Modules to control application life and create native browser window
-const toolbarUtils = require("../toolbar/setToolbarMenu.js");
+const toolbarUtils = require("./toolbar/setToolbarMenu.js");
 const windowCreator = require("./createWindow.js");
 
 function main() {

@@ -6,6 +6,8 @@ const HitCircle = require('../../../hit_objects/HitCircle.js');
 const unplacedCircle = require('../../../hit_objects/unplacedCircle.js');
 const Vector2 = require('../../../../util/math/vector/Vector2.js');
 const skinSetter = require('../../../skin/skinSetter.js');
+const AddCircleToPlayfield = require('../../../../util/actions/actions/AddCircleToPlayfield.js');
+require('../../../../util/actions/Action.js');
 
 module.exports = class HitCirclePlacement extends State {
     #mouseMoveListenerMethod = (event) => { this.mouseMoved(event); };
@@ -35,7 +37,7 @@ module.exports = class HitCirclePlacement extends State {
             if (input[1].buttons == 1) {
                 const unplacedCircle = document.querySelector('.unplaced-circle');
                 const hitCircleCopy = HitCircle.cloneAt(unplacedCircle, this.#uiData[0], this.#uiData[1].getCurrentPositionOnClosestDivision());
-                playfieldInserter.insert(hitCircleCopy);
+                new AddCircleToPlayfield(this.#uiData[2], hitCircleCopy, this.#uiData[1]).do();
             }
         }
     }

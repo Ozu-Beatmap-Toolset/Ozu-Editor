@@ -45,8 +45,20 @@ class RealtimeKB {
         return this.#loggedKeys.includes('ControlLeft');
     }
 
+    rightCtrlPressed() {
+        return this.#loggedKeys.includes('ControlRight');
+    }
+
     key1Pressed() {
         return this.#loggedKeys.includes('Digit1') || this.#loggedKeys.includes('Numpad1');
+    }
+
+    zPressed() {
+        return this.#loggedKeys.includes('KeyZ');
+    }
+
+    yPressed() {
+        return this.#loggedKeys.includes('KeyY');
     }
 
     escPressed() {

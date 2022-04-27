@@ -7,7 +7,7 @@ module.exports = class ToolSelector {
     #mouseDownListenerMethod = (event) => { this.mousePressed(event); };
 
     constructor(userInput, stateMachine) {
-        // uiData is [playfield, measureBar]
+        // uiData is [playfield, measureBar, actionHistory]
         // new StateMachine(new IdleTool(uiData));
         this.#selectorMachine = stateMachine;
         this.#userInput = userInput;

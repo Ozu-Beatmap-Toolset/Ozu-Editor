@@ -1,13 +1,14 @@
-const actionHistory = require('./actionHistory.js');
+require('./ActionHistory.js');
 
 module.exports = class Action {
-    constructor(forward, inverse) {
-      this.forward = forward;
-      this.inverse = inverse;
+    constructor(actionHistory, forward, inverse) {
+        this.actionHistory = actionHistory;
+        this.forward = forward;
+        this.inverse = inverse;
     }
 
     do() {
-      this.forward();
-      actionHistory.addAction(this);
+        this.forward();
+        this.actionHistory.addAction(this);
     }
 }

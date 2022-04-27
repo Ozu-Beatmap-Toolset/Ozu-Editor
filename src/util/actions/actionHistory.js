@@ -1,39 +1,35 @@
-var actionList = [];
-var currentActionIndex = -1;
 const MAX_ACTION_HISTORY_SIZE = 200;
 
-function addAction(action) {
-    if(actionList.length - currentActionIndex > 1) {
-        actionList.length = currentActionIndex + 1;
-    }
-    actionList.push(action);
-    if(actionList.length > MAX_ACTION_HISTORY_SIZE) {
-        actionList.splice(0, 1);
-    }
-    currentActionIndex = actionList.length-1;
-}
+module.exports = class ActionHistory {
+    #actionList = [];
+    #currentActionIndex = -1;
 
-function undo() {
-    if(currentActionIndex >= 0) {
-        actionList[currentActionIndex].inverse();
-        currentActionIndex--;
+    addAction(action) {
+        if(this.#actionList.length - this.#currentActionIndex > 1) {
+            this.#actionList.length = this.#currentActionIndex + 1;
+        }
+        this.#actionList.push(action);
+        if(this.#actionList.length > MAX_ACTION_HISTORY_SIZE) {
+            this.#actionList.splice(0, 1);
+        }
+        this.#currentActionIndex = this.#actionList.length-1;
     }
-}
 
-function redo() {
-    if(currentActionIndex < actionList.length-1) {
-        currentActionIndex++;
-        actionList[currentActionIndex].forward();
+    undo() {
+        if(this.#currentActionIndex >= 0) {
+            this.#actionList[this.#currentActionIndex].inverse();
+            this.#currentActionIndex--;
+        }
     }
-}
 
-function size() {
-    return actionList.length;
-}
+    redo() {
+        if(this.#currentActionIndex < this.#actionList.length-1) {
+            this.#currentActionIndex++;
+            this.#actionList[this.#currentActionIndex].forward();
+        }
+    }
 
-module.exports = {
-    addAction,
-    undo,
-    redo,
-    size
+    size() {
+        return this.#actionList.length;
+    }
 }
