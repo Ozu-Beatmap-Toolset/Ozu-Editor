@@ -1,6 +1,5 @@
 require('../playfield/Playfield.js');
 const Vector2 = require('../../util/math/vector/Vector2.js');
-const skinSetter = require('../skin/skinSetter.js');
 
 module.exports = class HitCircle {
     static circleId = 1;
