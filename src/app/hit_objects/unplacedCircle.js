@@ -1,3 +1,5 @@
+require('../playfield/Playfield.js');
+
 function moveTo(pos, playfield) {
     var x = pos.x;
     var y = pos.y;
@@ -14,7 +16,7 @@ function moveTo(pos, playfield) {
 }
 
 function getDomObject() {
-    return document.querySelector(".unplaced-circle");
+    return document.querySelector('.unplaced-circle');
 }
 
 function clamp(x, min, max) {

@@ -14,7 +14,6 @@ function registerfileNames() {
     for (const entries of Object.entries(skinFileNameDict)) {
         const fileName = entries[1];
         skinDict[fileName.replace('.png', '')] = skinLocation + '/' + fileName;
-        console.log(fileName);
     }
 }
 

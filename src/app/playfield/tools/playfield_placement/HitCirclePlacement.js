@@ -2,10 +2,10 @@ const State = require('../../../../util/patterns/state_machine/State.js');
 const RealtimeKB = require('../../../../util/user_input/RealtimeKB.js');
 const Playfield = require('../../Playfield.js');
 const playfieldInserter = require('../../playfieldInserter.js');
-const HitCircle = require('../../../hit_objects/HitCircle.js');
+const HitCircle = require('../../../hit_objects/HitCircleCloner.js');
 const unplacedCircle = require('../../../hit_objects/unplacedCircle.js');
 const Vector2 = require('../../../../util/math/vector/Vector2.js');
-const skinSetter = require('../../../skin/skinSetter.js');
+const skinSetter = require('../../../ui/hitObjectdrawer.js');
 const AddCircleToPlayfield = require('../../../../util/actions/actions/AddCircleToPlayfield.js');
 require('../../../../util/actions/Action.js');
 

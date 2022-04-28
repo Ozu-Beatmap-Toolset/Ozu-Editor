@@ -18,12 +18,12 @@ module.exports = class IdleTool extends State {
         return this;
         /*
         if(input[0].amountOfKeysPressed() == 1 && input[0].key2Pressed()) {
-            const HitSlizerPlacement = require('./playfield_placement/HitSlizerPlacement.js');
-            return new HitSlizerPlacement(this.#uiData);
+            const HitSliderPlacement = require('./playfield_placement/HitSliderPlacement.js');
+            return new HitSliderPlacement(this.#uiData);
         }
         if(input[0].amountOfKeysPressed() == 1 && input[0].key3Pressed()) {
-            const HitSliclePlacement = require('./playfield_placement/HitSliclePlacement.js');
-            return new HitSliclePlacement(this.#uiData);
+            const HitSpinnerPlacement = require('./playfield_placement/HitSpinnerPlacement.js');
+            return new HitSpinnerPlacement(this.#uiData);
         }
         return this;*/
     }

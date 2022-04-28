@@ -29,4 +29,16 @@ module.exports = class Vector2 {
     discreteForm() {
         return new Vector2(Math.round(this.x), Math.round(this.y));
     }
+
+    distanceSquared(that) {
+        return this.x*this.x + this.y*this.y;
+    }
+
+    distance(that) {
+        Math.sqrt(distanceSquared(that));
+    }
+
+    static constructFromJson(json) {
+        return new Vector2(parseFloat(json.x), parseFloat(json.y));
+    }
 }

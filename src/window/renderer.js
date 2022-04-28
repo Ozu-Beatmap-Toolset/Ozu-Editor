@@ -20,16 +20,16 @@ const ToolSelector = require('../app/playfield/tools/ToolSelector.js');
 const PlayfieldIdleTool = require('../app/playfield/tools/IdleTool.js');
 const StateMachine = require('../util/patterns/state_machine/StateMachine.js');
 
-const hitCircleSkinSetter = require('../app/skin/hitCircleSkinSetter');
+const hitCircleSkinSetter = require('../app/ui/hitCircleDrawer.js');
+const hitSliderSkinSetter = require('../app/ui/hitSliderDrawer.js');
 
 const ActionHistory = require('../util/actions/ActionHistory.js');
 
 
 const UndoRedoHandler = require('../util/actions/UndoRedoHandler.js');
 
-
-hitCircleSkinSetter.updateSkin(unplacedCircle.getDomObject());
-
+hitCircleSkinSetter.draw(unplacedCircle.getDomObject());
+hitSliderSkinSetter.draw(document.querySelector('.test-slider'));
 
 const keyLogger = new RealtimeKB();
 const cursorPosition = new CursorPosition();
@@ -45,4 +45,20 @@ const toolSelector = new ToolSelector([keyLogger, cursorPosition], new StateMach
 
 window.addEventListener('resize', () => {
     placedHitObjects = document.getElementsByClassName('placed-circle');
+    hitSliderSkinSetter.draw(document.querySelector('.test-slider'), playfield);
 });
+
+
+function updateSlider() {
+    //var x1 = Date.now();
+    const hitSlider = document.querySelector('.test-slider');
+    controlPoints = JSON.parse(getComputedStyle(hitSlider).getPropertyValue('--control-points'));
+    controlPoints[0].x = cursorPosition.get().x - parseInt(playfield.getPlayfieldRect().left);
+    controlPoints[0].y = cursorPosition.get().y - parseInt(playfield.getPlayfieldRect().top);
+    hitSlider.style.setProperty('--control-points', JSON.stringify(controlPoints));
+    hitSliderSkinSetter.draw(document.querySelector('.test-slider'), playfield);
+    //var x2 = Date.now();
+    //console.log(x1 - x2);
+}
+
+window.setInterval(updateSlider, 16);
