@@ -33,7 +33,8 @@ body {
     justify-content: start;
     align-items: start;
     position: absolute;
-    --control-points: [{"x":-50, "y":0}, {"x":1000, "y":200}, {"x":-20, "y":300}, {"x":20, "y":350}];
+    --bezier-length: 1;
+    --control-points: [{"x":-50, "y":0}, {"x":700, "y":800}, {"x":200, "y":400}, {"x":100, "y":200}];
 }
 
 .hit-object-img-layer {

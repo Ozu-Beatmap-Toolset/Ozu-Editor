@@ -22,7 +22,7 @@ module.exports = class Playfield {
         return px.decoupledScaled(osuToClient);
     }
 
-    snapOnOsuPixels(domElement) {
+    snapOnOsuGrid(domElement) {
         const playfieldPosX = parseFloat(domElement.style.getPropertyValue('left'));
         const playfieldPosY = parseFloat(domElement.style.getPropertyValue('top'));
         const playfieldPos = new Vector2(playfieldPosX, playfieldPosY);

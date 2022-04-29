@@ -5,6 +5,7 @@ const arcLengthApproximation = require('../arc_length/arcLengthApproximation.js'
 
 module.exports = class BezierCurve extends ParametricCurve {
     #controlPoints;
+    length = 1;
 
     constructor(controlPoints) {
         super();
@@ -16,6 +17,7 @@ module.exports = class BezierCurve extends ParametricCurve {
 
     // https://en.wikipedia.org/wiki/B%C3%A9zier_curve#:~:text=the%20animations%20below.-,Explicit%20definition,-%5Bedit%5D
     compute(t) {
+        // handling discontinuities
         if(this.#controlPoints.length == 1) {
             return this.#controlPoints[0];
         }
@@ -31,6 +33,9 @@ module.exports = class BezierCurve extends ParametricCurve {
     }
 
     derivative(t) {
+        if(this.#controlPoints.length == 1) {
+            return 0;
+        }
         const P = this.#controlPoints;
         const n = P.length-1;
         var result = new Vector2(0, 0);
@@ -53,10 +58,6 @@ module.exports = class BezierCurve extends ParametricCurve {
 
     order() {
         return this.#controlPoints.length-1;
-    }
-
-    length() {
-        return 1;
     }
 
     fastUpperBoundArcLength() {

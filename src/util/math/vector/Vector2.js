@@ -18,6 +18,11 @@ module.exports = class Vector2 {
         return new Vector2(this.x * factor, this.y * factor);
     }
 
+    scaledToMagnitude(magnitude) {
+        const currentMagnitude = this.magnitude();
+        return this.scaled(magnitude/currentMagnitude);
+    }
+
     decoupledScaled(that) {
         return new Vector2(this.x * that.x, this.y * that.y);
     }
@@ -62,5 +67,9 @@ module.exports = class Vector2 {
 
     static constructFromJson(json) {
         return new Vector2(parseFloat(json.x), parseFloat(json.y));
+    }
+
+    isFinite() {
+        return isFinite(this.x) && isFinite(this.y);
     }
 }

@@ -1,6 +1,6 @@
-const hitCircleSkinSetter = require('./hitCircleDrawer.js');
-const hitSliderSkinSetter = require('./hitSliderDrawer.js');
-const hitSpinnerSkinSetter = require('./hitSpinnerDrawer.js');
+const hitCircleSkinSetter = require('./hitCircleUiUpdater.js');
+const hitSliderSkinSetter = require('./hitSliderUiUpdater.js');
+const hitSpinnerSkinSetter = require('./hitSpinnerUiUpdater.js');
 
 function redrawAll() {
     const hitCircles = document.getElementsByClassName('placed-circle');

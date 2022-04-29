@@ -6,7 +6,7 @@ const parametricSolver = require('../arc_length/parametricSolver.js');
 
 module.exports = class OsuBezier extends ParametricCurve {
     #bezierCurve;
-    #length = 0;
+    length = 0;
 
     constructor(bezierCurve) {
         super();
@@ -18,20 +18,7 @@ module.exports = class OsuBezier extends ParametricCurve {
         return this.#bezierCurve.compute(t);
     }
 
-    curvature(distance, h) {
-        const t = parametricSolver.findT(distance, (p) => { return this.#bezierCurve.arcLength(p); }, 5, 10);
-        return this.#bezierCurve.curvature(t, h);
-    }
-
     order() {
         return this.#bezierCurve.order();
-    }
-
-    length() {
-        return this.#length;
-    }
-
-    setLength(length) {
-        this.#length = length;
     }
 }
