@@ -34,7 +34,7 @@ body {
     align-items: start;
     position: absolute;
     --bezier-length: 1;
-    --control-points: [{"x":-50, "y":0}, {"x":700, "y":800}, {"x":200, "y":400}, {"x":100, "y":200}];
+    --control-points: [{"x":500, "y":500}, {"x":500, "y":500}, {"x":200, "y":300}];
 }
 
 .hit-object-img-layer {

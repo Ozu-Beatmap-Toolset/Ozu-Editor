@@ -10,7 +10,7 @@ const parametricSolver = require('../../util/math/curve/arc_length/parametricSol
 const MAX_ALLOWED_STEP_ANGLE = 0.7;
 const BORDER_COLOR = '#e6e6e6';
 const UNUSED = '#000000';
-const SLIDER_BODY_MAIN_GRADIENT_COLOR = 'rgba(230, 230, 230)';
+const SLIDER_BODY_MAIN_GRADIENT_COLOR = 'rgba(128, 128, 128)';
 const SLIDER_BODY_SECONDARY_GRADIENT_COLOR = 'rgba(0, 0, 0)'
 
 function draw(hitSlider) {
@@ -32,10 +32,10 @@ function draw(hitSlider) {
     drawBezierComponent(bezierCurve, borderContextBundle[0], borderContextBundle[1], BORDER_COLOR, 'destination-out', 105, drawBodySegment, drawCircle);
     // draw the gradient behind the border
     drawBezierComponent(bezierCurve, bodyContextBundle[0], bodyContextBundle[1], UNUSED, 'lighten', 105, drawBodySegmentGradient, drawCircleGradient);
-    bodyContextBundle[2].style.opacity = 0.5;
+    bodyContextBundle[2].style.opacity = 0.2;
 
-    addImageToUiLayer(skinData.skinDict['hitcircle'], bezierCurve.compute(0), imgLayer);
-    addImageToUiLayer(skinData.skinDict['hitcircleoverlay'], bezierCurve.compute(0), imgLayer);
+    //addImageToUiLayer(skinData.skinDict['hitcircle'], bezierCurve.compute(0), imgLayer);
+    //addImageToUiLayer(skinData.skinDict['hitcircleoverlay'], bezierCurve.compute(0), imgLayer);
 }
 
 function drawBezierComponent(bezierCurve, context, canvasRect, color, compositeOperation, width, segmentDrawingFunction, circleDrawingFunction) {
@@ -59,7 +59,7 @@ function drawBezierComponent(bezierCurve, context, canvasRect, color, compositeO
     var currentTengent = bezierCurve.derivative(-stepSize);
     var nextTengent = bezierCurve.derivative(0);
     const x1 = Date.now();
-    for(var i = 0; i+1 < numIterations * bezierCurve.length; i++) {
+    for(var i = 0; i < numIterations * bezierCurve.length; i++) {
         const t = i/numIterations;
         const previousPointOnCurve = currentPointOnCurve;
         currentPointOnCurve = nextPointOnCurve;
@@ -82,8 +82,12 @@ function drawBezierComponent(bezierCurve, context, canvasRect, color, compositeO
     }
 
     // complete the path
-    segmentDrawingFunction(context, bezierCurve.compute(bezierCurve.length-stepSize).plus(offset), bezierCurve.compute(bezierCurve.length).plus(offset), bezierCurve.compute(bezierCurve.length).plus(offset), nextTengent, width);
-
+    if(bezierCurve.length < stepSize*2) {
+        segmentDrawingFunction(context, start, stop, stop, nextTengent, width);
+    }
+    else {
+        segmentDrawingFunction(context, bezierCurve.compute(bezierCurve.length-stepSize).plus(offset), bezierCurve.compute(bezierCurve.length).plus(offset), bezierCurve.compute(bezierCurve.length).plus(offset), nextTengent, width);
+    }
     const x2 = Date.now();
     //console.log(x2-x1);
     context.stroke();
@@ -103,17 +107,19 @@ function drawBodySegmentGradient(context, previousPosition, position, nextPositi
     const gradPoint1 = position.plus(perp);
     const gradPoint2 = position.minus(perp);
 
-    const gradient = context.createLinearGradient(gradPoint1.x, gradPoint1.y, gradPoint2.x, gradPoint2.y);
-    gradient.addColorStop(0, SLIDER_BODY_SECONDARY_GRADIENT_COLOR);
-    gradient.addColorStop(0.5, SLIDER_BODY_MAIN_GRADIENT_COLOR);
-    gradient.addColorStop(1, SLIDER_BODY_SECONDARY_GRADIENT_COLOR);
-    context.beginPath();
-    context.moveTo(previousPosition.x, previousPosition.y);
-    context.lineTo(position.x, position.y);
-    context.lineTo(nextPosition.x, nextPosition.y);
-    context.strokeStyle = gradient;
-    context.lineJoin = 'round';
-    context.stroke();
+    if(gradPoint1.isFinite() && gradPoint2.isFinite()) {
+        const gradient = context.createLinearGradient(gradPoint1.x, gradPoint1.y, gradPoint2.x, gradPoint2.y);
+        gradient.addColorStop(0, SLIDER_BODY_SECONDARY_GRADIENT_COLOR);
+        gradient.addColorStop(0.5, SLIDER_BODY_MAIN_GRADIENT_COLOR);
+        gradient.addColorStop(1, SLIDER_BODY_SECONDARY_GRADIENT_COLOR);
+        context.beginPath();
+        context.moveTo(previousPosition.x, previousPosition.y);
+        context.lineTo(position.x, position.y);
+        context.lineTo(nextPosition.x, nextPosition.y);
+        context.strokeStyle = gradient;
+        context.lineJoin = 'round';
+        context.stroke();
+    }
 }
 
 function drawCircle(context, center, radii) {
