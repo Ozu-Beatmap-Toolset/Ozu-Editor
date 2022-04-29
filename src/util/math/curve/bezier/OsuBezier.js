@@ -1,6 +1,8 @@
 const ParametricCurve = require('../ParametricCurve.js');
 const binomial = require('../../common_function/binomial.js');
 const Vector2 = require('../../vector/Vector2.js');
+const BezierCurve = require('./BezierCurve.js')
+const parametricSolver = require('../arc_length/parametricSolver.js');
 
 module.exports = class OsuBezier extends ParametricCurve {
     #bezierCurve;
@@ -12,10 +14,13 @@ module.exports = class OsuBezier extends ParametricCurve {
     }
 
     compute(distance) {
-        var points = [];
-        const controlPointsDistance = this.#bezierCurve.controlPointsDistance();
-        const resolution = parseInt(controlPointsDistance/50) + 2;
+        const t = parametricSolver.findT(distance, (p) => { return this.#bezierCurve.arcLength(p); }, 5, 10);
+        return this.#bezierCurve.compute(t);
+    }
 
+    curvature(distance, h) {
+        const t = parametricSolver.findT(distance, (p) => { return this.#bezierCurve.arcLength(p); }, 5, 10);
+        return this.#bezierCurve.curvature(t, h);
     }
 
     order() {

@@ -30,12 +30,34 @@ module.exports = class Vector2 {
         return new Vector2(Math.round(this.x), Math.round(this.y));
     }
 
-    distanceSquared(that) {
+    magnitudeSquared() {
         return this.x*this.x + this.y*this.y;
     }
 
+    magnitude() {
+        return Math.sqrt(this.magnitudeSquared());
+    }
+
+    dotProduct(that) {
+        return this.x*that.x + this.y*that.y;
+    }
+
     distance(that) {
-        Math.sqrt(distanceSquared(that));
+        const x = this.x-that.x;
+        const y = this.y-that.y;
+        return Math.sqrt(x*x + y*y);
+    }
+
+    complexMultiply(that) {
+        return new Vector2(this.x*that.x - this.y*that.y, this.x*that.y + this.y*that.x);
+    }
+
+    rotate(angle) {
+        return this.complexMultiply(new Vector2(Math.cos(angle), Math.sin(angle)));
+    }
+
+    angleFrom(that) {
+        return Math.acos(this.dotProduct(that)/(this.magnitude() * that.magnitude()));
     }
 
     static constructFromJson(json) {
