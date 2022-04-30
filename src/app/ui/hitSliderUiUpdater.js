@@ -14,9 +14,8 @@ const SLIDER_BODY_MAIN_GRADIENT_COLOR = 'rgba(128, 128, 128)';
 const SLIDER_BODY_SECONDARY_GRADIENT_COLOR = 'rgba(0, 0, 0)'
 
 function draw(hitSlider, playfield) {
-    imgLayer = uiLayerGetter.getCleanUiLayer(hitSlider);
-    canvasLayer = uiLayerGetter.getCleanCanvasLayer(hitSlider);
-    
+    var x1 = Date.now();
+
     // Bézier curve
     const controlPointsJson = JSON.parse(getComputedStyle(hitSlider).getPropertyValue('--control-points'));
     const controlPoints = [];
@@ -26,35 +25,50 @@ function draw(hitSlider, playfield) {
     }
     const bezierCurve = new BezierCurve(controlPoints);
     bezierCurve.length = parseFloat(getComputedStyle(hitSlider).getPropertyValue('--bezier-length'));
-
-    const borderContextBundle = canvasContextBundleCreator.createContextBundleOn(canvasLayer);
-    const bodyContextBundle = canvasContextBundleCreator.createContextBundleOn(canvasLayer);
-
+        
+    // compute curve length
     const stepSize = 10/bezierCurve.arcLength(bezierCurve.length);
-    var x1 = Date.now();
+    //console.log(1/stepSize);
+
     var samples = [new Vector2(0, 0)];
-    const sampler = new BezierSamplerClient(bezierCurve, 1/stepSize);
+    const sampler = new BezierSamplerClient();
+    sampler.send(bezierCurve, 1/stepSize);
     sampler.onReceive((data) => {
-        console.log(data);
-        samples = JSON.parse(data);
+        // receive data
+        console.log(data.toString());
+        console.log(data.toString());
+        console.log("hi ;-;");
+
+        // previous computation of curve samples
+        //const samples = bezierCurve.sample(stepSize);
+
+        // now we're trying to get them from a java server
+        samples = JSON.parse(data.toString());
+        //sampler.close();
+
+
+
+        // get ui layers from the dom
+        imgLayer = uiLayerGetter.getCleanUiLayer(hitSlider);
+        canvasLayer = uiLayerGetter.getCleanCanvasLayer(hitSlider);
+
+        // get context stuff from the canvas
+        const borderContextBundle = canvasContextBundleCreator.createContextBundleOn(canvasLayer);
+        const bodyContextBundle = canvasContextBundleCreator.createContextBundleOn(canvasLayer);
+
+        // draw the border
+        drawBezierComponent(samples, stepSize, borderContextBundle[0], borderContextBundle[1], BORDER_COLOR, 'source-over', 120, drawBodySegment, drawCircle);
+        // erase the center of the border
+        drawBezierComponent(samples, stepSize, borderContextBundle[0], borderContextBundle[1], BORDER_COLOR, 'destination-out', 105, drawBodySegment, drawCircle);
+        // draw the gradient on the body
+        drawBezierComponent(samples, stepSize, bodyContextBundle[0], bodyContextBundle[1], UNUSED, 'lighten', 105, drawBodySegmentGradient, drawCircleGradient);
+        bodyContextBundle[2].style.opacity = 0.2;
+        
+        // head circle
+        addImageToUiLayer(skinData.skinDict['hitcircle'], bezierCurve.compute(0), imgLayer);
+        addImageToUiLayer(skinData.skinDict['hitcircleoverlay'], bezierCurve.compute(0), imgLayer);
     });
-    //const samples = bezierCurve.sample(stepSize);
     var x2 = Date.now();
-    console.log(1/stepSize);
-
-
-    // draw the border
-    drawBezierComponent(samples, stepSize, borderContextBundle[0], borderContextBundle[1], BORDER_COLOR, 'source-over', 120, drawBodySegment, drawCircle);
-    // erase the center of the border
-    drawBezierComponent(samples, stepSize, borderContextBundle[0], borderContextBundle[1], BORDER_COLOR, 'destination-out', 105, drawBodySegment, drawCircle);
-    // draw the gradient behind the border
-    drawBezierComponent(samples, stepSize, bodyContextBundle[0], bodyContextBundle[1], UNUSED, 'lighten', 105, drawBodySegmentGradient, drawCircleGradient);
-    bodyContextBundle[2].style.opacity = 0.2;
-
-
-
-    addImageToUiLayer(skinData.skinDict['hitcircle'], bezierCurve.compute(0), imgLayer);
-    addImageToUiLayer(skinData.skinDict['hitcircleoverlay'], bezierCurve.compute(0), imgLayer);
 }
 
 function drawBezierComponent(bezierCurve, stepSize, context, canvasRect, color, compositeOperation, width, segmentDrawingFunction, circleDrawingFunction) {

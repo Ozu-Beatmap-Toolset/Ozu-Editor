@@ -14,14 +14,9 @@ const MeasureBar = require('../app/measure_bar/MeasureBar.js');
 const MeasureBarScroller = require('../app/measure_bar/MeasureBarScroller.js');
 const BeatmapPlayer = require('../app/beatmap_player/BeatmapPlayer.js');
 
-const unplacedCircle = require('../app/hit_objects/unplacedCircle');
-
 const ToolSelector = require('../app/playfield/tools/ToolSelector.js');
 const PlayfieldIdleTool = require('../app/playfield/tools/IdleTool.js');
 const StateMachine = require('../util/patterns/state_machine/StateMachine.js');
-
-const hitCircleUiUpdater = require('../app/ui/hitCircleUiUpdater.js');
-const hitSliderSkinSetter = require('../app/ui/hitSliderUiUpdater.js');
 
 const ActionHistory = require('../util/actions/ActionHistory.js');
 
@@ -38,9 +33,6 @@ const undoRedoHandler = new UndoRedoHandler(actionHistory, keyLogger);
 const playfield = new Playfield();
 const measureBar = new MeasureBar();
 
-hitCircleUiUpdater.draw(unplacedCircle.getDomObject());
-hitSliderSkinSetter.draw(document.querySelector('.unplaced-slider'), playfield);
-
 const measureBarScroller = new MeasureBarScroller(measureBar, keyLogger);
 const beatmapPlayer = new BeatmapPlayer(measureBar);
 const toolSelector = new ToolSelector([keyLogger, cursorPosition], new StateMachine(new PlayfieldIdleTool([playfield, measureBar, actionHistory])));
@@ -48,17 +40,3 @@ const toolSelector = new ToolSelector([keyLogger, cursorPosition], new StateMach
 window.addEventListener('resize', () => {
     placedHitObjects = document.getElementsByClassName('placed-circle');
 });
-
-function updateSlider() {
-    const hitSlider = document.querySelector('.unplaced-slider');
-    controlPoints = JSON.parse(getComputedStyle(hitSlider).getPropertyValue('--control-points'));
-    const topLeftPlayfield = new Vector2(playfield.getPlayfieldRect().left, playfield.getPlayfieldRect().top);
-    const cursorOnOsuGrid = playfield.playfieldPositionToOsuPixel(cursorPosition.get().minus(topLeftPlayfield));
-    controlPoints[controlPoints.length-1].x = cursorOnOsuGrid.x;
-    controlPoints[controlPoints.length-1].y = cursorOnOsuGrid.y;
-    hitSlider.style.setProperty('--control-points', JSON.stringify(controlPoints));
-
-    hitSliderSkinSetter.draw(document.querySelector('.unplaced-slider'), playfield);
-}
-
-//window.setInterval(updateSlider, 16);

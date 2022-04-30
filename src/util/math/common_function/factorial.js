@@ -13,7 +13,6 @@ function compute(num)
         }
         lut[num] = rval;
     }
-    console.log(lut[num]);
     return lut[num];
 }
 
