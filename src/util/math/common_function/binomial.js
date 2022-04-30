@@ -1,9 +1,17 @@
 const factorial = require('./factorial.js');
 
-function compute(n, k) {
-    return factorial.compute(n) / (factorial.compute(k) * factorial.compute(n-k));
+const lut = [[]];
+
+function getOrCompute(n, k) {
+    if(typeof lut[n] === 'undefined') {
+        lut[n] = [];
+    }
+    if(typeof lut[n][k] === 'undefined') {
+        lut[n][k] = factorial.compute(n) / (factorial.compute(k) * factorial.compute(n-k));
+    }
+    return lut[n][k];
 }
 
 module.exports = {
-    compute
+    getOrCompute
 }

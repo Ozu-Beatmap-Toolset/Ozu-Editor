@@ -24,17 +24,14 @@ body {
     visibility: hidden;
 }
 
-.test-slider {
-    top: 0px;
-    left: 0px;
-    width: 100%;
-    height: 100%;
+.unplaced-slider {
     display: flex;
     justify-content: start;
     align-items: start;
     position: absolute;
+    visibility: hidden;
     --bezier-length: 1;
-    --control-points: [{"x":500, "y":500}, {"x":500, "y":500}, {"x":200, "y":300}];
+    --control-points: [];
 }
 
 .hit-object-img-layer {

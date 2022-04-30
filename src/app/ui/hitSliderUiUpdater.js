@@ -2,10 +2,10 @@ const skinData = require('./skinData.js');
 const uiLayerGetter = require('./uiLayerGetter.js');
 const Vector2 = require('../../util/math/vector/Vector2.js');
 const BezierCurve = require('../../util/math/curve/bezier/BezierCurve.js');
-const OsuBezier = require('../../util/math/curve/bezier/OsuBezier.js');
 const Playfield = require('../playfield/Playfield.js');
 const canvasContextBundleCreator = require('./canvasContextBundleCreator.js');
 const parametricSolver = require('../../util/math/curve/arc_length/parametricSolver.js');
+const BezierSamplerClient = require('../../util/math/curve/bezier/BezierSamplerClient.js');
 
 const MAX_ALLOWED_STEP_ANGLE = 0.7;
 const BORDER_COLOR = '#e6e6e6';
@@ -13,83 +13,82 @@ const UNUSED = '#000000';
 const SLIDER_BODY_MAIN_GRADIENT_COLOR = 'rgba(128, 128, 128)';
 const SLIDER_BODY_SECONDARY_GRADIENT_COLOR = 'rgba(0, 0, 0)'
 
-function draw(hitSlider) {
+function draw(hitSlider, playfield) {
     imgLayer = uiLayerGetter.getCleanUiLayer(hitSlider);
     canvasLayer = uiLayerGetter.getCleanCanvasLayer(hitSlider);
     
     // Bézier curve
     const controlPointsJson = JSON.parse(getComputedStyle(hitSlider).getPropertyValue('--control-points'));
     const controlPoints = [];
-    for(const jsonObj of controlPointsJson) { controlPoints.push(Vector2.constructFromJson(jsonObj)); }
+    for(const jsonObj of controlPointsJson) {
+        const pos = playfield.osuPixelToPlayfieldPosition(Vector2.constructFromJson(jsonObj));
+        controlPoints.push(pos); 
+    }
     const bezierCurve = new BezierCurve(controlPoints);
     bezierCurve.length = parseFloat(getComputedStyle(hitSlider).getPropertyValue('--bezier-length'));
 
     const borderContextBundle = canvasContextBundleCreator.createContextBundleOn(canvasLayer);
     const bodyContextBundle = canvasContextBundleCreator.createContextBundleOn(canvasLayer);
+
+    const stepSize = 10/bezierCurve.arcLength(bezierCurve.length);
+    var x1 = Date.now();
+    var samples = [new Vector2(0, 0)];
+    const sampler = new BezierSamplerClient(bezierCurve, 1/stepSize);
+    sampler.onReceive((data) => {
+        console.log(data);
+        samples = JSON.parse(data);
+    });
+    //const samples = bezierCurve.sample(stepSize);
+    var x2 = Date.now();
+    console.log(1/stepSize);
+
+
     // draw the border
-    drawBezierComponent(bezierCurve, borderContextBundle[0], borderContextBundle[1], BORDER_COLOR, 'source-over', 120, drawBodySegment, drawCircle);
+    drawBezierComponent(samples, stepSize, borderContextBundle[0], borderContextBundle[1], BORDER_COLOR, 'source-over', 120, drawBodySegment, drawCircle);
     // erase the center of the border
-    drawBezierComponent(bezierCurve, borderContextBundle[0], borderContextBundle[1], BORDER_COLOR, 'destination-out', 105, drawBodySegment, drawCircle);
+    drawBezierComponent(samples, stepSize, borderContextBundle[0], borderContextBundle[1], BORDER_COLOR, 'destination-out', 105, drawBodySegment, drawCircle);
     // draw the gradient behind the border
-    drawBezierComponent(bezierCurve, bodyContextBundle[0], bodyContextBundle[1], UNUSED, 'lighten', 105, drawBodySegmentGradient, drawCircleGradient);
+    drawBezierComponent(samples, stepSize, bodyContextBundle[0], bodyContextBundle[1], UNUSED, 'lighten', 105, drawBodySegmentGradient, drawCircleGradient);
     bodyContextBundle[2].style.opacity = 0.2;
 
-    //addImageToUiLayer(skinData.skinDict['hitcircle'], bezierCurve.compute(0), imgLayer);
-    //addImageToUiLayer(skinData.skinDict['hitcircleoverlay'], bezierCurve.compute(0), imgLayer);
+
+
+    addImageToUiLayer(skinData.skinDict['hitcircle'], bezierCurve.compute(0), imgLayer);
+    addImageToUiLayer(skinData.skinDict['hitcircleoverlay'], bezierCurve.compute(0), imgLayer);
 }
 
-function drawBezierComponent(bezierCurve, context, canvasRect, color, compositeOperation, width, segmentDrawingFunction, circleDrawingFunction) {
+function drawBezierComponent(bezierCurve, stepSize, context, canvasRect, color, compositeOperation, width, segmentDrawingFunction, circleDrawingFunction) {
     context.globalCompositeOperation = compositeOperation;
     context.fillStyle = color;
     context.strokeStyle = color;
     context.lineWidth = width;
 
     const offset = new Vector2(canvasRect.left, canvasRect.top);
-    const start = bezierCurve.compute(0).plus(offset);
-    const stop = bezierCurve.compute(bezierCurve.length).plus(offset);
+    const start = bezierCurve[0].plus(offset);
+    const stop = bezierCurve[bezierCurve.length-1].plus(offset);
+
+    var currentTangent = stop.minus(start);
 
     const centerOfCirclesToDraw = [start, stop];
 
     context.beginPath();
     context.moveTo(start.x, start.y);
-    const stepSize = 20/bezierCurve.fastUpperBoundArcLength();
-    const numIterations = parseInt(1/stepSize);
-    var currentPointOnCurve = bezierCurve.compute(-stepSize).plus(offset);
-    var nextPointOnCurve = bezierCurve.compute(0).plus(offset);
-    var currentTengent = bezierCurve.derivative(-stepSize);
-    var nextTengent = bezierCurve.derivative(0);
-    const x1 = Date.now();
-    for(var i = 0; i < numIterations * bezierCurve.length; i++) {
-        const t = i/numIterations;
-        const previousPointOnCurve = currentPointOnCurve;
-        currentPointOnCurve = nextPointOnCurve;
-        nextPointOnCurve = bezierCurve.compute(t+stepSize).plus(offset);
-        const previousTengent = currentTengent;
-        currentTengent = nextTengent;
-        nextTengent = bezierCurve.derivative(t+stepSize);
-        const currentStepAngle = currentTengent.angleFrom(nextTengent);
-        const previousStepAngle = previousTengent.angleFrom(currentTengent);
-        if(!currentPointOnCurve.isFinite() || !currentTengent.isFinite()) {
-            continue;
-        }
-        if(Math.abs(currentStepAngle) > MAX_ALLOWED_STEP_ANGLE || Math.abs(previousStepAngle) > MAX_ALLOWED_STEP_ANGLE) {
-            centerOfCirclesToDraw.push(currentPointOnCurve);
-            context.moveTo(currentPointOnCurve.x, currentPointOnCurve.y);
-        }
-        else {
-            segmentDrawingFunction(context, previousPointOnCurve, currentPointOnCurve, nextPointOnCurve, currentTengent, width);
+    for(var i = 1; i < bezierCurve.length-1; i++) {
+        const previousDerivative = bezierCurve[i].minus(bezierCurve[i-1]);
+        const currentDerivative = bezierCurve[i+1].minus(bezierCurve[i]);
+        currentTangent = currentDerivative;
+        segmentDrawingFunction(context, bezierCurve[i-1].plus(offset), bezierCurve[i].plus(offset), bezierCurve[i+1].plus(offset), currentDerivative, width);
+        const stepAngle = currentDerivative.angleFrom(previousDerivative);
+        if(Math.abs(stepAngle) > MAX_ALLOWED_STEP_ANGLE) {
+            centerOfCirclesToDraw.push(bezierCurve[i].plus(offset));
+            context.moveTo(bezierCurve[i].plus(offset).x, bezierCurve[i].plus(offset).y);
         }
     }
 
     // complete the path
-    if(bezierCurve.length < stepSize*2) {
-        segmentDrawingFunction(context, start, stop, stop, nextTengent, width);
+    if(bezierCurve.length < 2) {
+        segmentDrawingFunction(context, start, stop, stop, currentTangent, width);
     }
-    else {
-        segmentDrawingFunction(context, bezierCurve.compute(bezierCurve.length-stepSize).plus(offset), bezierCurve.compute(bezierCurve.length).plus(offset), bezierCurve.compute(bezierCurve.length).plus(offset), nextTengent, width);
-    }
-    const x2 = Date.now();
-    //console.log(x2-x1);
     context.stroke();
 
     for(const center of centerOfCirclesToDraw) {
@@ -98,8 +97,15 @@ function drawBezierComponent(bezierCurve, context, canvasRect, color, compositeO
 }
 
 function drawBodySegment(context, previousPosition, position, nextPosition, velocity, width) {
-    context.lineJoin = 'round';
+    /*context.lineJoin = 'round';
+    context.lineTo(position.x, position.y);*/
+    
+    context.beginPath();
+    context.moveTo(previousPosition.x, previousPosition.y);
     context.lineTo(position.x, position.y);
+    context.lineTo(nextPosition.x, nextPosition.y);
+    context.lineJoin = 'round';
+    context.stroke();
 }
 
 function drawBodySegmentGradient(context, previousPosition, position, nextPosition, velocity, width) {
@@ -129,13 +135,15 @@ function drawCircle(context, center, radii) {
 }
 
 function drawCircleGradient(context, center, radii) {
-    const gradient = context.createRadialGradient(center.x, center.y, 0, center.x, center.y, radii);
-    gradient.addColorStop(0, SLIDER_BODY_MAIN_GRADIENT_COLOR);
-    gradient.addColorStop(1, SLIDER_BODY_SECONDARY_GRADIENT_COLOR);
-    context.fillStyle = gradient;
-    context.beginPath();
-    context.arc(center.x, center.y, radii, 0, 2*Math.PI);
-    context.fill();
+    if(center.isFinite()) {
+        const gradient = context.createRadialGradient(center.x, center.y, 0, center.x, center.y, radii);
+        gradient.addColorStop(0, SLIDER_BODY_MAIN_GRADIENT_COLOR);
+        gradient.addColorStop(1, SLIDER_BODY_SECONDARY_GRADIENT_COLOR);
+        context.fillStyle = gradient;
+        context.beginPath();
+        context.arc(center.x, center.y, radii, 0, 2*Math.PI);
+        context.fill();
+    }
 }
 
 function addImageToUiLayer(src, position, uiLayer) {

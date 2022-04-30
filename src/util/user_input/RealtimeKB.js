@@ -53,6 +53,10 @@ class RealtimeKB {
         return this.#loggedKeys.includes('Digit1') || this.#loggedKeys.includes('Numpad1');
     }
 
+    key2Pressed() {
+        return this.#loggedKeys.includes('Digit2') || this.#loggedKeys.includes('Numpad2');
+    }
+
     zPressed() {
         return this.#loggedKeys.includes('KeyZ');
     }

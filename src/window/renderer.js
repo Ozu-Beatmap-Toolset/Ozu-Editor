@@ -20,16 +20,15 @@ const ToolSelector = require('../app/playfield/tools/ToolSelector.js');
 const PlayfieldIdleTool = require('../app/playfield/tools/IdleTool.js');
 const StateMachine = require('../util/patterns/state_machine/StateMachine.js');
 
-const hitCircleSkinSetter = require('../app/ui/hitCircleUiUpdater.js');
+const hitCircleUiUpdater = require('../app/ui/hitCircleUiUpdater.js');
 const hitSliderSkinSetter = require('../app/ui/hitSliderUiUpdater.js');
 
 const ActionHistory = require('../util/actions/ActionHistory.js');
 
 
 const UndoRedoHandler = require('../util/actions/UndoRedoHandler.js');
+const Vector2 = require('../util/math/vector/Vector2.js');
 
-hitCircleSkinSetter.draw(unplacedCircle.getDomObject());
-hitSliderSkinSetter.draw(document.querySelector('.test-slider'));
 
 const keyLogger = new RealtimeKB();
 const cursorPosition = new CursorPosition();
@@ -39,26 +38,27 @@ const undoRedoHandler = new UndoRedoHandler(actionHistory, keyLogger);
 const playfield = new Playfield();
 const measureBar = new MeasureBar();
 
+hitCircleUiUpdater.draw(unplacedCircle.getDomObject());
+hitSliderSkinSetter.draw(document.querySelector('.unplaced-slider'), playfield);
+
 const measureBarScroller = new MeasureBarScroller(measureBar, keyLogger);
 const beatmapPlayer = new BeatmapPlayer(measureBar);
 const toolSelector = new ToolSelector([keyLogger, cursorPosition], new StateMachine(new PlayfieldIdleTool([playfield, measureBar, actionHistory])));
 
 window.addEventListener('resize', () => {
     placedHitObjects = document.getElementsByClassName('placed-circle');
-    hitSliderSkinSetter.draw(document.querySelector('.test-slider'), playfield);
 });
 
-
 function updateSlider() {
-    var x1 = Date.now();
-    const hitSlider = document.querySelector('.test-slider');
+    const hitSlider = document.querySelector('.unplaced-slider');
     controlPoints = JSON.parse(getComputedStyle(hitSlider).getPropertyValue('--control-points'));
-    controlPoints[0].x = cursorPosition.get().x - parseInt(playfield.getPlayfieldRect().left);
-    controlPoints[0].y = cursorPosition.get().y - parseInt(playfield.getPlayfieldRect().top);
+    const topLeftPlayfield = new Vector2(playfield.getPlayfieldRect().left, playfield.getPlayfieldRect().top);
+    const cursorOnOsuGrid = playfield.playfieldPositionToOsuPixel(cursorPosition.get().minus(topLeftPlayfield));
+    controlPoints[controlPoints.length-1].x = cursorOnOsuGrid.x;
+    controlPoints[controlPoints.length-1].y = cursorOnOsuGrid.y;
     hitSlider.style.setProperty('--control-points', JSON.stringify(controlPoints));
-    hitSliderSkinSetter.draw(document.querySelector('.test-slider'), playfield);
-    var x2 = Date.now();
-    //console.log(x2-x1);
+
+    hitSliderSkinSetter.draw(document.querySelector('.unplaced-slider'), playfield);
 }
 
-window.setInterval(updateSlider, 16);
+//window.setInterval(updateSlider, 16);

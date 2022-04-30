@@ -15,32 +15,63 @@ module.exports = class BezierCurve extends ParametricCurve {
         }
     }
 
+    sample(stepSize) {
+        const samples = [this.#controlPoints[0]];
+        for(var t = stepSize; t < this.length; t+= stepSize) {
+            samples.push(this.compute(t));
+        }
+        samples.push(this.compute(this.length));
+        return samples;
+    }
+
+    // like sample(stepSize), but tries to distribute the points more evenly on the curve
+    roughDistributedSample(N) {
+        const samples = [this.#controlPoints[0]];
+        const A = this.fastUpperBoundArcLength();
+        var pSum = 0;
+
+        for(var k = 1; k < this.#controlPoints.length; k++) {
+            const Ik = this.#controlPoints[k].distance(this.#controlPoints[k-1]);
+            const P = Ik/A;
+            const amountOfPoints = P*N;
+            for(var i = 0; i < amountOfPoints; i++) {
+                const pos = i/amountOfPoints;
+                samples.push(this.compute(pSum + pos*P));
+            }
+            pSum += P;
+        }
+        samples.push(this.compute(this.length));
+        return samples;
+    }
+
+    toJsonString() {
+        return JSON.stringify(this.#controlPoints);
+    }
+
     // https://en.wikipedia.org/wiki/B%C3%A9zier_curve#:~:text=the%20animations%20below.-,Explicit%20definition,-%5Bedit%5D
     compute(t) {
-        // handling discontinuities
         if(this.#controlPoints.length == 1) {
             return this.#controlPoints[0];
         }
-        const P = this.#controlPoints;
-        const n = P.length-1;
+        var n = this.#controlPoints.length-1;
         var result = new Vector2(0, 0);
-        for(var i = 0; i < P.length; i++) {
-            const bin = binomial.compute(n, i);
+        for(var i = 0; i < n+1; i++) {
+            const bin = binomial.getOrCompute(n, i);
             const scalar = Math.pow(1-t, n-i) * Math.pow(t, i);
-            result = result.plus(P[i].scaled(bin * scalar));
+            result = result.plus(this.#controlPoints[i].scaled(bin * scalar));
         }
         return result;
     }
 
     derivative(t) {
         if(this.#controlPoints.length == 1) {
-            return 0;
+            return new Vector2(0, 0);
         }
         const P = this.#controlPoints;
         const n = P.length-1;
         var result = new Vector2(0, 0);
         for(var i = 0; i < P.length; i++) {
-            const bin = binomial.compute(n, i);
+            const bin = binomial.getOrCompute(n, i);
             // derivation with respect to t, only the factors containing t are affected
             const scalar = (i-n)*Math.pow(1-t, n-i-1) * Math.pow(t, i)
                                + Math.pow(1-t, n-i) * i*Math.pow(t, i-1);

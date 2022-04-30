@@ -10,9 +10,10 @@
     "start": "electron ."
   },
   "dependencies": {
+    "net": "^1.0.2",
     "open": "^8.4.0"
   },
   "devDependencies": {
-    "electron": "16.0.2"
+    "electron": "^16.2.4"
   }
 }

@@ -1,4 +1,4 @@
-const StateMachine = require('../../../util/patterns/state_machine/StateMachine.js');
+require('../../../util/patterns/state_machine/StateMachine.js');
 
 module.exports = class ToolSelector {
     #selectorMachine;
