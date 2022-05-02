@@ -5,22 +5,23 @@ const unplacedSlider = require('../../../hit_objects/unplacedSlider.js');
 const Vector2 = require('../../../../util/math/vector/Vector2.js');
 const HitSliderCloner = require('../../../hit_objects/HitSliderCloner.js');
 const AddSliderToPlayfield = require('../../../../util/actions/actions/AddSliderToPlayfield.js');
+const BezierSamplerClient = require('../../../../util/math/curve/bezier/BezierSamplerClient.js');
+const BezierCurve = require('../../../../util/math/curve/bezier/BezierCurve.js');
 
 const REFRESH_RATE = 16; // ms
 
 module.exports = class HitSliderPlacement extends State {
-    #mouseMoveListenerMethod = (event) => { this.mouseMoved(event); };
     #uiData;
     #interval;
-    constructor(uiData) {
+    #bezierCurve;
+    constructor(uiData, bezierCurve) {
         super();
         this.#uiData = uiData;
-        window.addEventListener('mousemove', this.#mouseMoveListenerMethod);
         unplacedSlider.getDomObject().style.setProperty('visibility', 'visible');
+        this.#bezierCurve = bezierCurve;
     }
 
     unregister() {
-        window.removeEventListener('mousemove', this.#mouseMoveListenerMethod);
         window.clearInterval(this.#interval);
         unplacedSlider.getDomObject().style.setProperty('visibility', 'hidden');
     }
@@ -29,9 +30,9 @@ module.exports = class HitSliderPlacement extends State {
         // start to display the slider
         this.#interval = window.setInterval(() => this.repositionSliderControlPoint(input[0][1].get()), REFRESH_RATE);
         // add a control point to the curve
-        unplacedSlider.addControlPoint(this.#uiData[0].playfieldPositionToOsuPixel(input[0][1].get()));
+        unplacedSlider.addControlPoint(this.#uiData[0].playfieldPositionToOsuPixel(input[0][1].get()), this.#bezierCurve, this.#uiData[0]);
         // move the circle to the cursor for the first frame
-        unplacedSlider.moveLastControlPointTo(input[0][1].get(), this.#uiData[0]);
+        unplacedSlider.moveLastControlPointTo(input[0][1].get(), this.#bezierCurve, this.#uiData[0]);
     }
 
     exec(input) {
@@ -62,17 +63,13 @@ module.exports = class HitSliderPlacement extends State {
             // left click = add a new control-point
             if (input[1].buttons == 1) {
                 this.unregister();
-                return new HitSliderPlacement(this.#uiData);
+                return new HitSliderPlacement(this.#uiData, this.#bezierCurve);
             }
         }
         return this;
     }
 
-    mouseMoved(event) {
-
-    }
-
     repositionSliderControlPoint(cursorPosition) {
-        unplacedSlider.moveLastControlPointTo(cursorPosition, this.#uiData[0]);
+        unplacedSlider.moveLastControlPointTo(cursorPosition, this.#bezierCurve, this.#uiData[0]);
     }
 }

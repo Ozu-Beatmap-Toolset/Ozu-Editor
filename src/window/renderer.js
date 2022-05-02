@@ -22,7 +22,6 @@ const ActionHistory = require('../util/actions/ActionHistory.js');
 
 
 const UndoRedoHandler = require('../util/actions/UndoRedoHandler.js');
-const Vector2 = require('../util/math/vector/Vector2.js');
 
 
 const keyLogger = new RealtimeKB();

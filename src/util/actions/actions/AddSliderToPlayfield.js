@@ -10,16 +10,18 @@ module.exports = class AddCircleToPlayfield extends Action {
     #sliderToAdd;
     #measureBar;
     #playfield;
-    constructor(actionHistory, sliderToAdd, measureBar, playfield) {
+    #bezierCurve;
+    constructor(actionHistory, sliderToAdd, measureBar, playfield, bezierCurve) {
         super(actionHistory, () => {this.forwardAction() }, () => { this.inverseAction() });
         this.#sliderToAdd = sliderToAdd;
         this.#measureBar = measureBar;
         this.#playfield = playfield;
+        this.#bezierCurve = bezierCurve;
     }
 
     forwardAction() {
         playfieldInserter.insert(this.#sliderToAdd);
-        hitSliderUiUpdater.draw(this.#sliderToAdd, this.#playfield);
+        hitSliderUiUpdater.draw(this.#sliderToAdd, this.bezierCurve, this.#playfield);
         //transparencyHandler.updateTransparency(this.#measureBar.getCurrentPosition());
     }
 

@@ -2,72 +2,84 @@ const ParametricCurve = require('../ParametricCurve.js');
 const binomial = require('../../common_function/binomial.js');
 const Vector2 = require('../../vector/Vector2.js');
 const arcLengthApproximation = require('../arc_length/arcLengthApproximation.js');
+const BezierCurveSampler = require("./BezierSampler.js");
 
 module.exports = class BezierCurve extends ParametricCurve {
-    #controlPoints;
+    controlPoints;
+    samples = [];
     length = 1;
+    bezierSampler;
 
     constructor(controlPoints) {
         super();
-        this.#controlPoints = controlPoints;
-        if(controlPoints.length == 0) {
-            this.#controlPoints = [new Vector2(0, 0)];
-        }
+        this.controlPoints = controlPoints;
+        this.bezierSampler = new BezierCurveSampler(this);
     }
 
-    sample(stepSize) {
-        const samples = [this.#controlPoints[0]];
-        for(var t = stepSize; t < this.length; t+= stepSize) {
+    addControlPoint(index, controlPoint) {
+        this.controlPoints.splice(index, 0, controlPoint);
+        this.samples.splice(index, 0, []);
+        this.moveControlPoint(index, controlPoint);
+    }
+
+    moveControlPoint(index, destination) {
+        this.bezierSampler.invalidateSegmentsAround(index);
+        this.controlPoints[index] = destination;
+    }
+
+    sample(N) {
+        this.bezierSampler.sampleMissingSegments(N);
+
+        const packedSamples = [];
+        for(const segment of this.samples) {
+            if(typeof segment !== 'undefined') {
+                for(const e of segment) {
+                    packedSamples.push(e);
+                }
+            }
+        }
+
+        if(packedSamples.length == 0) {
+            packedSamples.push(this.controlPoints[0])
+        }
+
+        return packedSamples;
+    }
+
+    sample2(N) {
+        const samples = [];
+
+        for(var i = 0; i < N; i++) {
+            const t = i/N;
             samples.push(this.compute(t));
         }
-        samples.push(this.compute(this.length));
+
         return samples;
-    }
-
-    // like sample(stepSize), but tries to distribute the points more evenly on the curve
-    roughDistributedSample(N) {
-        const samples = [this.#controlPoints[0]];
-        const A = this.fastUpperBoundArcLength();
-        var pSum = 0;
-
-        for(var k = 1; k < this.#controlPoints.length; k++) {
-            const Ik = this.#controlPoints[k].distance(this.#controlPoints[k-1]);
-            const P = Ik/A;
-            const amountOfPoints = P*N;
-            for(var i = 0; i < amountOfPoints; i++) {
-                const pos = i/amountOfPoints;
-                samples.push(this.compute(pSum + pos*P));
-            }
-            pSum += P;
-        }
-        samples.push(this.compute(this.length));
-        return samples;
-    }
-
-    toJsonString() {
-        return JSON.stringify(this.#controlPoints);
     }
 
     // https://en.wikipedia.org/wiki/B%C3%A9zier_curve#:~:text=the%20animations%20below.-,Explicit%20definition,-%5Bedit%5D
     compute(t) {
-        if(this.#controlPoints.length == 1) {
-            return this.#controlPoints[0];
+        if(this.controlPoints.length == 0) {
+            return new Vector2(NaN, NaN);
         }
-        var n = this.#controlPoints.length-1;
+        if(this.controlPoints.length == 1) {
+            return this.controlPoints[0];
+        }
+        var n = this.controlPoints.length-1;
         var result = new Vector2(0, 0);
         for(var i = 0; i < n+1; i++) {
             const bin = binomial.getOrCompute(n, i);
             const scalar = Math.pow(1-t, n-i) * Math.pow(t, i);
-            result = result.plus(this.#controlPoints[i].scaled(bin * scalar));
+            result = result.plus(this.controlPoints[i].scaled(bin * scalar));
         }
         return result;
     }
 
     derivative(t) {
-        if(this.#controlPoints.length == 1) {
+        if(this.controlPoints.length == 1) {
             return new Vector2(0, 0);
         }
-        const P = this.#controlPoints;
+        const P = this.controlPoints;
         const n = P.length-1;
         var result = new Vector2(0, 0);
         for(var i = 0; i < P.length; i++) {
@@ -88,13 +100,13 @@ module.exports = class BezierCurve extends ParametricCurve {
     }
 
     order() {
-        return this.#controlPoints.length-1;
+        return this.controlPoints.length-1;
     }
 
     fastUpperBoundArcLength() {
         var distance = 0;
-        for(var i = 1; i < this.#controlPoints.length; i++) {
-            distance += this.#controlPoints[i-1].distance(this.#controlPoints[i]);
+        for(var i = 1; i < this.controlPoints.length; i++) {
+            distance += this.controlPoints[i-1].distance(this.controlPoints[i]);
         }
         return distance;
     }

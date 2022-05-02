@@ -3,10 +3,10 @@ const clamp = require('../../util/math/common_function/clamp.js');
 require('../playfield/Playfield.js');
 const playfieldConstants = require('../playfield/constants.js');
 const hitSliderUiUpdater = require('../ui/hitSliderUiUpdater.js');
+const BezierCurve = require('../../util/math/curve/bezier/BezierCurve.js');
 
-function moveLastControlPointTo(pos, playfield) {
-    const hitSlider = getDomObject();
-    controlPoints = JSON.parse(getComputedStyle(getDomObject()).getPropertyValue('--control-points'));
+function moveLastControlPointTo(pos, bezierCurve, playfield) {
+    const controlPoints = JSON.parse(getComputedStyle(getDomObject()).getPropertyValue('--control-points'));
     const topLeftPlayfield = new Vector2(playfield.getPlayfieldRect().left, playfield.getPlayfieldRect().top);
     const cursorOnOsuGrid = playfield.playfieldPositionToOsuPixel(pos.minus(topLeftPlayfield));
     var x = cursorOnOsuGrid.x;
@@ -19,11 +19,13 @@ function moveLastControlPointTo(pos, playfield) {
     controlPoints[controlPoints.length-1].y = y;
     getDomObject().style.setProperty('--control-points', JSON.stringify(controlPoints));
 
-    hitSliderUiUpdater.draw(getDomObject(), playfield);
+    hitSliderUiUpdater.draw(getDomObject(), bezierCurve, playfield);
 }
 
-function addControlPoint(pos) {
-    controlPoints = JSON.parse(getComputedStyle(getDomObject()).getPropertyValue('--control-points'));
+function addControlPoint(pos, bezierCurve, playfield) {
+    const controlPoints = JSON.parse(getComputedStyle(getDomObject()).getPropertyValue('--control-points'));
+    const topLeftPlayfield = new Vector2(playfield.getPlayfieldRect().left, playfield.getPlayfieldRect().top);
+    bezierCurve.addControlPoint(controlPoints.length, playfield.osuPixelToPlayfieldPosition(pos).minus(topLeftPlayfield));
     controlPoints.push({"x":pos.x, "y":pos.y});
     getDomObject().style.setProperty('--control-points', JSON.stringify(controlPoints));
 }

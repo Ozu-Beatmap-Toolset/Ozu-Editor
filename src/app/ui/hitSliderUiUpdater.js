@@ -5,7 +5,6 @@ const BezierCurve = require('../../util/math/curve/bezier/BezierCurve.js');
 const Playfield = require('../playfield/Playfield.js');
 const canvasContextBundleCreator = require('./canvasContextBundleCreator.js');
 const parametricSolver = require('../../util/math/curve/arc_length/parametricSolver.js');
-const BezierSamplerClient = require('../../util/math/curve/bezier/BezierSamplerClient.js');
 
 const MAX_ALLOWED_STEP_ANGLE = 0.7;
 const BORDER_COLOR = '#e6e6e6';
@@ -13,10 +12,17 @@ const UNUSED = '#000000';
 const SLIDER_BODY_MAIN_GRADIENT_COLOR = 'rgba(128, 128, 128)';
 const SLIDER_BODY_SECONDARY_GRADIENT_COLOR = 'rgba(0, 0, 0)'
 
-function draw(hitSlider, playfield) {
-    var x1 = Date.now();
+function draw(hitSlider, bezierCurve, playfield) {
+    // get ui layers from the dom
+    imgLayer = uiLayerGetter.getCleanUiLayer(hitSlider);
+    canvasLayer = uiLayerGetter.getCleanCanvasLayer(hitSlider);
 
+    // get context stuff from the canvas
+    const borderContextBundle = canvasContextBundleCreator.createContextBundleOn(canvasLayer);
+    const bodyContextBundle = canvasContextBundleCreator.createContextBundleOn(canvasLayer);
+    
     // Bézier curve
+    /*
     const controlPointsJson = JSON.parse(getComputedStyle(hitSlider).getPropertyValue('--control-points'));
     const controlPoints = [];
     for(const jsonObj of controlPointsJson) {
@@ -24,51 +30,28 @@ function draw(hitSlider, playfield) {
         controlPoints.push(pos); 
     }
     const bezierCurve = new BezierCurve(controlPoints);
-    bezierCurve.length = parseFloat(getComputedStyle(hitSlider).getPropertyValue('--bezier-length'));
-        
+    bezierCurve.length = parseFloat(getComputedStyle(hitSlider).getPropertyValue('--bezier-length'));*/
+    
     // compute curve length
-    const stepSize = 10/bezierCurve.arcLength(bezierCurve.length);
-    //console.log(1/stepSize);
+    const stepSize = 2/bezierCurve.arcLength(bezierCurve.length);
 
-    var samples = [new Vector2(0, 0)];
-    const sampler = new BezierSamplerClient();
-    sampler.send(bezierCurve, 1/stepSize);
-    sampler.onReceive((data) => {
-        // receive data
-        console.log(data.toString());
-        console.log(data.toString());
-        console.log("hi ;-;");
+    // computation of curve samples
+    const samples = bezierCurve.sample(1/stepSize);
 
-        // previous computation of curve samples
-        //const samples = bezierCurve.sample(stepSize);
+    const start = bezierCurve.compute(0);
 
-        // now we're trying to get them from a java server
-        samples = JSON.parse(data.toString());
-        //sampler.close();
+    // head circle
+    addImageToUiLayer(skinData.skinDict['hitcircle'], start, imgLayer);
+    addImageToUiLayer(skinData.skinDict['hitcircleoverlay'], start, imgLayer);
 
-
-
-        // get ui layers from the dom
-        imgLayer = uiLayerGetter.getCleanUiLayer(hitSlider);
-        canvasLayer = uiLayerGetter.getCleanCanvasLayer(hitSlider);
-
-        // get context stuff from the canvas
-        const borderContextBundle = canvasContextBundleCreator.createContextBundleOn(canvasLayer);
-        const bodyContextBundle = canvasContextBundleCreator.createContextBundleOn(canvasLayer);
-
-        // draw the border
-        drawBezierComponent(samples, stepSize, borderContextBundle[0], borderContextBundle[1], BORDER_COLOR, 'source-over', 120, drawBodySegment, drawCircle);
-        // erase the center of the border
-        drawBezierComponent(samples, stepSize, borderContextBundle[0], borderContextBundle[1], BORDER_COLOR, 'destination-out', 105, drawBodySegment, drawCircle);
-        // draw the gradient on the body
-        drawBezierComponent(samples, stepSize, bodyContextBundle[0], bodyContextBundle[1], UNUSED, 'lighten', 105, drawBodySegmentGradient, drawCircleGradient);
-        bodyContextBundle[2].style.opacity = 0.2;
-        
-        // head circle
-        addImageToUiLayer(skinData.skinDict['hitcircle'], bezierCurve.compute(0), imgLayer);
-        addImageToUiLayer(skinData.skinDict['hitcircleoverlay'], bezierCurve.compute(0), imgLayer);
-    });
-    var x2 = Date.now();
+    bodyContextBundle[2].style.opacity = 0.2;
+    // draw the border
+    drawBezierComponent(samples, stepSize, borderContextBundle[0], borderContextBundle[1], BORDER_COLOR, 'source-over', 120, drawBodySegment, drawCircle);
+    // erase the center of the border
+    drawBezierComponent(samples, stepSize, borderContextBundle[0], borderContextBundle[1], BORDER_COLOR, 'destination-out', 105, drawBodySegment, drawCircle);
+    // draw the gradient on the body
+    drawBezierComponent(samples, stepSize, bodyContextBundle[0], bodyContextBundle[1], UNUSED, 'lighten', 105, drawBodySegmentGradient, drawCircleGradient);
+    
 }
 
 function drawBezierComponent(bezierCurve, stepSize, context, canvasRect, color, compositeOperation, width, segmentDrawingFunction, circleDrawingFunction) {
