@@ -21,7 +21,7 @@ module.exports = class AddCircleToPlayfield extends Action {
 
     forwardAction() {
         playfieldInserter.insert(this.#sliderToAdd);
-        hitSliderUiUpdater.draw(this.#sliderToAdd, this.bezierCurve, this.#playfield);
+        hitSliderUiUpdater.draw(this.#sliderToAdd, this.#bezierCurve, this.#playfield);
         //transparencyHandler.updateTransparency(this.#measureBar.getCurrentPosition());
     }
 

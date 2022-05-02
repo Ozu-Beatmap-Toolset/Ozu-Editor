@@ -18,6 +18,7 @@ function moveLastControlPointTo(pos, bezierCurve, playfield) {
     controlPoints[controlPoints.length-1].x = x;
     controlPoints[controlPoints.length-1].y = y;
     getDomObject().style.setProperty('--control-points', JSON.stringify(controlPoints));
+    bezierCurve.moveControlPoint(controlPoints.length-1, pos.minus(topLeftPlayfield))
 
     hitSliderUiUpdater.draw(getDomObject(), bezierCurve, playfield);
 }

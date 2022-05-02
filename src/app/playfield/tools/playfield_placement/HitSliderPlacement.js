@@ -39,7 +39,7 @@ module.exports = class HitSliderPlacement extends State {
         if (input[1].type == 'mousedown') {
             if (input[1].buttons == 2) { // right click
                 const hitSliderCopy = HitSliderCloner.cloneAt(unplacedSlider.getDomObject(), this.#uiData[0], this.#uiData[1].getCurrentPositionOnClosestDivision());
-                new AddSliderToPlayfield(this.#uiData[2], hitSliderCopy, this.#uiData[1], this.#uiData[0]).do();
+                new AddSliderToPlayfield(this.#uiData[2], hitSliderCopy, this.#uiData[1], this.#uiData[0], this.#bezierCurve).do();
             }
         }
     }

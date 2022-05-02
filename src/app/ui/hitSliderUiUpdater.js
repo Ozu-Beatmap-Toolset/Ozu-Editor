@@ -37,7 +37,7 @@ function draw(hitSlider, bezierCurve, playfield) {
 
     // computation of curve samples
     const samples = bezierCurve.sample(1/stepSize);
-
+    
     const start = bezierCurve.compute(0);
 
     // head circle
