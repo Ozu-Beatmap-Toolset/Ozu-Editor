@@ -2,59 +2,15 @@ const ParametricCurve = require('../ParametricCurve.js');
 const binomial = require('../../common_function/binomial.js');
 const Vector2 = require('../../vector/Vector2.js');
 const arcLengthApproximation = require('../arc_length/arcLengthApproximation.js');
-const BezierCurveSampler = require("./BezierSampler.js");
 
 module.exports = class BezierCurve extends ParametricCurve {
     controlPoints;
     samples = [];
     length = 1;
-    bezierSampler;
 
     constructor(controlPoints) {
         super();
         this.controlPoints = controlPoints;
-        this.bezierSampler = new BezierCurveSampler(this);
-    }
-
-    addControlPoint(index, controlPoint) {
-        this.controlPoints.splice(index, 0, controlPoint);
-        this.samples.splice(index, 0, []);
-        this.moveControlPoint(index, controlPoint);
-    }
-
-    moveControlPoint(index, destination) {
-        this.bezierSampler.invalidateSegmentsAround(index);
-        this.controlPoints[index] = destination;
-    }
-
-    sample(N) {
-        this.bezierSampler.sampleMissingSegments(N);
-
-        const packedSamples = [];
-        for(const segment of this.samples) {
-            if(typeof segment !== 'undefined') {
-                for(const e of segment) {
-                    packedSamples.push(e);
-                }
-            }
-        }
-
-        if(packedSamples.length == 0) {
-            packedSamples.push(this.controlPoints[0])
-        }
-
-        return packedSamples;
-    }
-
-    sample2(N) {
-        const samples = [];
-
-        for(var i = 0; i < N; i++) {
-            const t = i/N;
-            samples.push(this.compute(t));
-        }
-
-        return samples;
     }
 
     // https://en.wikipedia.org/wiki/B%C3%A9zier_curve#:~:text=the%20animations%20below.-,Explicit%20definition,-%5Bedit%5D
@@ -108,6 +64,6 @@ module.exports = class BezierCurve extends ParametricCurve {
         for(var i = 1; i < this.controlPoints.length; i++) {
             distance += this.controlPoints[i-1].distance(this.controlPoints[i]);
         }
-        return distance;
+        return distance * this.length;
     }
 }

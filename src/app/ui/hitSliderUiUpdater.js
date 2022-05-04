@@ -36,21 +36,25 @@ function draw(hitSlider, bezierCurve, playfield) {
     const stepSize = 2/bezierCurve.arcLength(bezierCurve.length);
 
     // computation of curve samples
-    const samples = bezierCurve.sample(1/stepSize);
-    
-    const start = bezierCurve.compute(0);
+    const samples = bezierCurve.samples;
 
+    //console.log(samples);
+
+    const start = bezierCurve.compute(0);
+    
     // head circle
     addImageToUiLayer(skinData.skinDict['hitcircle'], start, imgLayer);
     addImageToUiLayer(skinData.skinDict['hitcircleoverlay'], start, imgLayer);
 
-    bodyContextBundle[2].style.opacity = 0.2;
-    // draw the border
-    drawBezierComponent(samples, stepSize, borderContextBundle[0], borderContextBundle[1], BORDER_COLOR, 'source-over', 120, drawBodySegment, drawCircle);
-    // erase the center of the border
-    drawBezierComponent(samples, stepSize, borderContextBundle[0], borderContextBundle[1], BORDER_COLOR, 'destination-out', 105, drawBodySegment, drawCircle);
-    // draw the gradient on the body
-    drawBezierComponent(samples, stepSize, bodyContextBundle[0], bodyContextBundle[1], UNUSED, 'lighten', 105, drawBodySegmentGradient, drawCircleGradient);
+    if(bezierCurve.samples.length > 1) {
+        bodyContextBundle[2].style.opacity = 0.1;
+        // draw the border
+        drawBezierComponent(samples, stepSize, borderContextBundle[0], borderContextBundle[1], BORDER_COLOR, 'source-over', 120, drawBodySegment, drawCircle);
+        // erase the center of the border
+        drawBezierComponent(samples, stepSize, borderContextBundle[0], borderContextBundle[1], BORDER_COLOR, 'destination-out', 105, drawBodySegment, drawCircle);
+        // draw the gradient on the body
+        drawBezierComponent(samples, stepSize, bodyContextBundle[0], bodyContextBundle[1], UNUSED, 'lighten', 105, drawBodySegmentGradient, drawCircleGradient);
+    }
     
 }
 

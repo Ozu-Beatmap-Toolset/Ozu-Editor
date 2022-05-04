@@ -1,4 +1,5 @@
 const BezierCurve = require('../../../util/math/curve/bezier/BezierCurve.js');
+const BezierSamplerClient = require('../../../util/math/curve/bezier/BezierSamplerClient.js');
 const State = require('../../../util/patterns/state_machine/State.js');
 const RealtimeKB = require('../../../util/user_input/RealtimeKB.js');
 const unplacedCircle = require('../../hit_objects/unplacedCircle.js');
@@ -18,7 +19,7 @@ module.exports = class IdleTool extends State {
         }
         if(input[0][0].amountOfKeysPressed() == 1 && input[0][0].key2Pressed()) {
             const HitSliderPlacement = require('./playfield_placement/HitSliderPlacement.js');
-            return new HitSliderPlacement(this.#uiData, new BezierCurve([]));
+            return new HitSliderPlacement(this.#uiData, new BezierCurve([]), new BezierSamplerClient());
         }
         /*
         return this;

@@ -23,7 +23,6 @@ const ActionHistory = require('../util/actions/ActionHistory.js');
 
 const UndoRedoHandler = require('../util/actions/UndoRedoHandler.js');
 
-
 const keyLogger = new RealtimeKB();
 const cursorPosition = new CursorPosition();
 const actionHistory = new ActionHistory();

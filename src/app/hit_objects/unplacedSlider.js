@@ -6,7 +6,7 @@ const hitSliderUiUpdater = require('../ui/hitSliderUiUpdater.js');
 const BezierCurve = require('../../util/math/curve/bezier/BezierCurve.js');
 
 function moveLastControlPointTo(pos, bezierCurve, playfield) {
-    const controlPoints = JSON.parse(getComputedStyle(getDomObject()).getPropertyValue('--control-points'));
+    const controlPoints = bezierCurve.controlPoints;
     const topLeftPlayfield = new Vector2(playfield.getPlayfieldRect().left, playfield.getPlayfieldRect().top);
     const cursorOnOsuGrid = playfield.playfieldPositionToOsuPixel(pos.minus(topLeftPlayfield));
     var x = cursorOnOsuGrid.x;
@@ -18,7 +18,7 @@ function moveLastControlPointTo(pos, bezierCurve, playfield) {
     controlPoints[controlPoints.length-1].x = x;
     controlPoints[controlPoints.length-1].y = y;
     getDomObject().style.setProperty('--control-points', JSON.stringify(controlPoints));
-    bezierCurve.moveControlPoint(controlPoints.length-1, pos.minus(topLeftPlayfield))
+    bezierCurve.controlPoints[controlPoints.length-1] = pos.minus(topLeftPlayfield);
 
     hitSliderUiUpdater.draw(getDomObject(), bezierCurve, playfield);
 }
@@ -26,7 +26,7 @@ function moveLastControlPointTo(pos, bezierCurve, playfield) {
 function addControlPoint(pos, bezierCurve, playfield) {
     const controlPoints = JSON.parse(getComputedStyle(getDomObject()).getPropertyValue('--control-points'));
     const topLeftPlayfield = new Vector2(playfield.getPlayfieldRect().left, playfield.getPlayfieldRect().top);
-    bezierCurve.addControlPoint(controlPoints.length, playfield.osuPixelToPlayfieldPosition(pos).minus(topLeftPlayfield));
+    bezierCurve.controlPoints.push(playfield.osuPixelToPlayfieldPosition(pos).minus(topLeftPlayfield));
     controlPoints.push({"x":pos.x, "y":pos.y});
     getDomObject().style.setProperty('--control-points', JSON.stringify(controlPoints));
 }
