@@ -1,18 +1,18 @@
 <template>
-  <div id="play-field-area">
-  </div>
+    <div id="playfield-area"/>
 </template>
 
 <script>
 export default {
     name: "PlayfieldArea",
     components: {
+        
     }
 }
 </script>
 
 <style>
-#play-field-area {
+#playfield-area {
     height: 80%;
     aspect-ratio: 4/3;
     position: absolute;
