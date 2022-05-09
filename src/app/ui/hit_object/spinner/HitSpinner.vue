@@ -1,5 +1,5 @@
 <template>
-  
+    <div class="spinner-image-layer"/>
 </template>
 
 <script>
