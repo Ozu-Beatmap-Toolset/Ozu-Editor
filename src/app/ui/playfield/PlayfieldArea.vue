@@ -1,9 +1,11 @@
 <template>
     <div class="playfield-area"/>
-    <div class="full-playfield-area" @click="playfieldClicked()"/>
+    <div class="full-playfield-area" @mousedown="playfieldClicked" @mouseenter="mouseEntered" @mouseleave="mouseExit"/>
 </template>
 
 <script>
+import { appData } from '../../../util/globals/GlobalData.js';
+import { changePlayfieldTool, toolSelectorKeyPressed } from './playfieldToolSelector.js';
 
 export default {
     name: "PlayfieldArea",
@@ -11,9 +13,32 @@ export default {
 
     },
     methods: {
-        playfieldClicked() {
-            console.log('playfield clicked');
-        }
+        mouseEntered: () => {
+            appData.playfield.isMouseHovering = true;
+        },
+        mouseExit: () => {
+            appData.playfield.isMouseHovering = false;
+        },
+        quickAccessToolChanged(toolType) {
+            changePlayfieldTool(toolType);
+            
+        },
+        playfieldClicked: (event) => {
+            appData.playfield.currentUserTool.mouseDown(event);
+        },
+        keyPressed(event) {
+            if(appData.playfield.isMouseHovering) {
+                toolSelectorKeyPressed(event, this.events);
+            }
+        },
+    },
+    created() {
+        this.events.on('set-active-tool', this.quickAccessToolChanged);
+        window.addEventListener('keydown', this.keyPressed);
+    },
+    beforeUnmount() {
+        this.events.off('set-active-tool', this.quickAccessToolChanged);
+        window.removeEventListener('keydown', this.keyPressed);
     }
 }
 </script>

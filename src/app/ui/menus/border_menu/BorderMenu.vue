@@ -1,5 +1,5 @@
 <template>
-    <LeftBM class="border-menu" @onSelectionToolClicked="$emit('onSelectionToolClicked')"/>
+    <LeftBM class="border-menu"/>
     <RightBM class="border-menu"/>
 </template>
 
@@ -17,7 +17,7 @@ export default {
 
 <style>
 .border-menu {
-    background-color: rgba(75, 75, 75, 0.95);
+    background-color: rgba(75, 75, 75);
     
     border-style: solid;
     border-width: 1px;

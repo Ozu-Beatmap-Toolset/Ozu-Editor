@@ -17,7 +17,7 @@ export default {
 
 <style>
 .measure-bar {
-    background-color: rgba(75, 75, 75, 0.95);
+    background-color: rgba(75, 75, 75);
 
     border-style: solid;
     border-width: 1px;

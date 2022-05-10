@@ -1,6 +1,6 @@
 <template>
     <div class="left-border-menu">
-        <QuickAccessButton @onSelectionToolClicked="$emit('onSelectionToolClicked')"/>
+        <QuickAccessButton/>
     </div>
 </template>
 

@@ -8,9 +8,10 @@
 </template>
 
 <script>
-import PlayfieldArea from './app/ui/playfield/PlayfieldArea.vue'
-import BorderMenus from './app/ui/menus/border_menu/BorderMenu.vue'
-import MeasureBars from './app/ui/menus/measure_bar/MeasureBar.vue'
+import PlayfieldArea from './app/ui/playfield/PlayfieldArea.vue';
+import BorderMenus from './app/ui/menus/border_menu/BorderMenu.vue';
+import MeasureBars from './app/ui/menus/measure_bar/MeasureBar.vue';
+
 
 export default {
     name: 'App',
