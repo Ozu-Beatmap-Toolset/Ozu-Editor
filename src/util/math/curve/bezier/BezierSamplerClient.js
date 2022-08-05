@@ -1,37 +1,11 @@
-import net from 'net';
 import Vector2 from '../../vector/Vector2.js';
 import './BezierCurve.js';
 
 const host = '127.0.0.1';
-const port = 62765;
+const port = '62765';
 
 export default class BezierSamplerClient {
-    socket;
-    buf = [];
-    isDisconnected = true;
     onReceiveFunction = () => {};
-
-    constructor() {
-        this.createSocketConnection();
-    }
-
-    createSocketConnection() {
-        this.socket = net.createConnection({
-            port: port, 
-            host: host,
-        }, () => {
-            console.log('connected to server');
-            this.isDisconnected = false;
-        });
-        this.socket.on('close', () => {
-            console.log('disconnected from server');
-            this.isDisconnected = true;
-        });
-
-        this.socket.on('data', (data) => {
-            this.reveive(data);
-        });
-    }
 
     send(unparsedControlPoints, length, amount) {
         var controlPoints = '';
@@ -39,8 +13,18 @@ export default class BezierSamplerClient {
             controlPoints += String(point.x) + ':' + String(point.y) + '|';
         }
         controlPoints = controlPoints.substring(0, controlPoints.length-1);
-
-        this.socket.write(JSON.stringify({controlPoints, length, amount}) + '\n');
+        
+        fetch(`http://${host}:${port}/bezier_sampler`, {
+            method: 'POST',
+            headers: {
+                'Accept': '*/*',
+                'Content-Type': 'application/json',
+                'Connection': 'keep-alive',
+                'Accept-Encoding': 'gzip, deflate, br'
+            },
+            body: JSON.stringify({controlPoints, length, amount}),
+        }).then(data => data.text())
+        .then(data => this.reveive(data));
     }
 
     reveive(data) {
@@ -72,14 +56,5 @@ export default class BezierSamplerClient {
 
     onReceive(userFunction) {
         this.onReceiveFunction = userFunction;
-    }
-
-    isDisconnected() {
-        return this.isDisconnected;
-    }
-
-    close() {
-        this.socket.write.call(this.socket, 'end-connection' + '\n');
-        //this.socket.destroy();
     }
 }
