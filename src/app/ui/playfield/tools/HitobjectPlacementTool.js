@@ -1,21 +1,35 @@
+//import BezierSamplerClient from "../../../../util/math/curve/bezier/BezierSamplerClient.js";
+import CursorPosition from "../../../../util/user_input/CursorPosition.js";
 import IPlayfieldTool from "./IPlayfieldTool";
 
 export default class HitobjectPlacementTool extends IPlayfieldTool {
+    mouseCursor;
+    bezierSamplerClient;
     constructor() {
         super();
-        const unused = '';
-        unused.length;
+        this.mouseCursor = new CursorPosition();
+        //this.bezierSamplerClient = new BezierSamplerClient();
     }
 
     unregister() {
-        console.log(this.name());
+        this.mouseCursor.unregister();
+        //this.bezierSamplerClient.close();
     }
 
     name() {
         return 'hitobject';
     }
 
-    mouseDown() {
-        console.log(this.name());
+    mouseDown(event) {
+        if(event.button == 0) {
+            console.log(this.name());
+        }
+        else if(event.button == 2) {
+            console.log(this.name());
+        }
+    }
+
+    mouseMove() {
+        //console.log(this.mouseCursor.get());
     }
 }

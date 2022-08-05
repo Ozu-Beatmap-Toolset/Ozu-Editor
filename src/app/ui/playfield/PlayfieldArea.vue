@@ -1,6 +1,6 @@
 <template>
     <div class="playfield-area"/>
-    <div class="full-playfield-area" @mousedown="playfieldClicked" @mouseenter="mouseEntered" @mouseleave="mouseExit"/>
+    <div class="full-playfield-area" @mousedown="playfieldClicked" @mousemove="playfieldMouseMoved" @mouseenter="mouseEntered" @mouseleave="mouseExit"/>
 </template>
 
 <script>
@@ -23,8 +23,11 @@ export default {
             changePlayfieldTool(toolType);
             
         },
-        playfieldClicked: (event) => {
+        playfieldClicked(event) {
             appData.playfield.currentUserTool.mouseDown(event);
+        },
+        playfieldMouseMoved(event) {
+            appData.playfield.currentUserTool.mouseMove(event);
         },
         keyPressed(event) {
             if(appData.playfield.isMouseHovering) {

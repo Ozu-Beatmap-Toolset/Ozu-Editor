@@ -1,0 +1,16 @@
+{
+    "playfield": {
+        "tools": {
+            "select": ["Escape"],
+            "origin": ["LeftShift", "MouseButton2"],
+            "move": ["keyG"],
+            "rotate": ["KeyR"],
+            "scale": ["keyS"],
+            "hitobject": ["Digit1"],
+            "hitslicle": ["Digit2"],
+            "hitstream": ["Digit3"],
+            "hitspinner": ["Digit4"],
+            "measure": ["KeyM"]
+        }
+    }
+}

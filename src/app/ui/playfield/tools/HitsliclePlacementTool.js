@@ -18,4 +18,8 @@ export default class HitsliclePlacementTool extends IPlayfieldTool {
     mouseDown() {
         console.log(this.name());
     }
+
+    mouseMove() {
+        
+    }
 }

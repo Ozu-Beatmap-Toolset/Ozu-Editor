@@ -18,4 +18,8 @@ export default class HitstreamPlacementTool extends IPlayfieldTool {
     mouseDown() {
         console.log(this.name());
     }
+
+    mouseMove() {
+        
+    }
 }

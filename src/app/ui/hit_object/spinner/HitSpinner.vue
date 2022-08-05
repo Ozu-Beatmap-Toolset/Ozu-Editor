@@ -4,7 +4,12 @@
 
 <script>
 export default {
-    name: "hitSpinner"
+    name: "hitSpinner",
+    data() {
+        return {
+            duration: 1,   // the duration of the spinner, in beats
+        };
+    }
 }
 </script>
 

@@ -18,4 +18,8 @@ export default class HitspinnerPlacementTool extends IPlayfieldTool {
     mouseDown() {
         console.log(this.name());
     }
+
+    mouseMove() {
+        
+    }
 }

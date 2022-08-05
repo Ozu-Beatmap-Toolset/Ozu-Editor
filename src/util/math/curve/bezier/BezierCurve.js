@@ -1,9 +1,9 @@
-import ParametricCurve from '../ParametricCurve.js';
 import binomial from '../../common_function/binomial.js';
 import Vector2 from '../../vector/Vector2.js';
 import arcLengthApproximation from'../arc_length/arcLengthApproximation.js';
+import ParametricCurve from '../ParametricCurve.js';
 
-class BezierCurve extends ParametricCurve {
+export default class BezierCurve extends ParametricCurve {
     controlPoints;
     samples = [];
     length = 1;
@@ -66,8 +66,4 @@ class BezierCurve extends ParametricCurve {
         }
         return distance * this.length;
     }
-}
-
-export default {
-    BezierCurve
 }

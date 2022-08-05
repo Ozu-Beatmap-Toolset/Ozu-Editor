@@ -5,5 +5,6 @@ export const appData = reactive({
     playfield: {
         isMouseHovering: false,
         currentUserTool: new SelectTool(),
+        hitobjects: []
     }
 })

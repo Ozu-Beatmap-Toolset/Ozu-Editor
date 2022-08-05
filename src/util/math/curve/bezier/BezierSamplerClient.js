@@ -1,35 +1,35 @@
 import net from 'net';
 import Vector2 from '../../vector/Vector2.js';
-import '../bezier/BezierCurve.js';
+import './BezierCurve.js';
 
 const host = '127.0.0.1';
 const port = 62765;
 
-class BezierSamplerClient {
+export default class BezierSamplerClient {
     socket;
-    #buf = [];
-    #isDisconnected = false;
-    #onReceiveFunction = (data) => {};
+    buf = [];
+    isDisconnected = true;
+    onReceiveFunction = () => {};
 
     constructor() {
-        this.#createSocketConnection();
+        this.createSocketConnection();
     }
 
-    #createSocketConnection() {
+    createSocketConnection() {
         this.socket = net.createConnection({
             port: port, 
             host: host,
         }, () => {
             console.log('connected to server');
-            this.#isDisconnected = false;
+            this.isDisconnected = false;
         });
         this.socket.on('close', () => {
             console.log('disconnected from server');
-            this.#isDisconnected = true;
+            this.isDisconnected = true;
         });
 
         this.socket.on('data', (data) => {
-            this.#reveive(data);
+            this.reveive(data);
         });
     }
 
@@ -43,20 +43,20 @@ class BezierSamplerClient {
         this.socket.write(JSON.stringify({controlPoints, length, amount}) + '\n');
     }
 
-    #reveive(data) {
-        this.#buf += data;
+    reveive(data) {
+        this.buf += data;
         const delimiterIndex = data.indexOf(';');
         if(delimiterIndex !== -1) {
-            const msg = this.#buf.substr(0, delimiterIndex);
-            this.#buf = this.#buf.substr(delimiterIndex+1, this.#buf.length);
+            const msg = this.buf.substr(0, delimiterIndex);
+            this.buf = this.buf.substr(delimiterIndex+1, this.buf.length);
 
-            const points = this.#parsePoints(msg);
+            const points = this.parsePoints(msg);
 
-            this.#onReceiveFunction(points);
+            this.onReceiveFunction(points);
         }
     }
 
-    #parsePoints(pointsStr) {
+    parsePoints(pointsStr) {
         const midParsedPoints = pointsStr.split('|');
         const parsedPoints = [];
 
@@ -71,18 +71,15 @@ class BezierSamplerClient {
     }
 
     onReceive(userFunction) {
-        this.#onReceiveFunction = userFunction;
+        this.onReceiveFunction = userFunction;
     }
 
     isDisconnected() {
-        return this.#isDisconnected;
+        return this.isDisconnected;
     }
 
     close() {
-        this.socket.destroy();
+        this.socket.write.call(this.socket, 'end-connection' + '\n');
+        //this.socket.destroy();
     }
-}
-
-export default {
-    BezierSamplerClient
 }

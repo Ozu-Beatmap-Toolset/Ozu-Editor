@@ -1,4 +1,4 @@
-class Vector2 {
+export default class Vector2 {
     x = 0;
     y = 0;
     constructor(x, y) {
@@ -72,8 +72,4 @@ class Vector2 {
     isFinite() {
         return isFinite(this.x) && isFinite(this.y);
     }
-}
-
-export default {
-    Vector2
 }
