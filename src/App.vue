@@ -35,8 +35,8 @@ body {
 }
 
 #sakura-test {
-    width:100%;
-    height: auto;
+    height: 100%;
+    width:auto;
     display: block;
     margin-left: auto;
     margin-right: auto;

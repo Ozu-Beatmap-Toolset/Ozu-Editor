@@ -1,3 +1,4 @@
+import JavaRequestHandler from '../../../client/JavaRequestHandler.js';
 import Vector2 from '../../vector/Vector2.js';
 import './BezierCurve.js';
 
@@ -5,7 +6,7 @@ const host = '127.0.0.1';
 const port = '62765';
 
 export default class BezierSamplerClient {
-    onReceiveFunction = () => {};
+    userFunction = () => {};
 
     send(unparsedControlPoints, length, amount) {
         var controlPoints = '';
@@ -13,31 +14,16 @@ export default class BezierSamplerClient {
             controlPoints += String(point.x) + ':' + String(point.y) + '|';
         }
         controlPoints = controlPoints.substring(0, controlPoints.length-1);
-        
-        fetch(`http://${host}:${port}/bezier_sampler`, {
-            method: 'POST',
-            headers: {
-                'Accept': '*/*',
-                'Content-Type': 'application/json',
-                'Connection': 'keep-alive',
-                'Accept-Encoding': 'gzip, deflate, br'
-            },
-            body: JSON.stringify({controlPoints, length, amount}),
-        }).then(data => data.text())
-        .then(data => this.reveive(data));
-    }
 
-    reveive(data) {
-        this.buf += data;
-        const delimiterIndex = data.indexOf(';');
-        if(delimiterIndex !== -1) {
-            const msg = this.buf.substr(0, delimiterIndex);
-            this.buf = this.buf.substr(delimiterIndex+1, this.buf.length);
-
-            const points = this.parsePoints(msg);
-
-            this.onReceiveFunction(points);
-        }
+        let jrh = new JavaRequestHandler();
+        jrh.onReceive((data) => {
+            const points = this.parsePoints(data);
+            this.userFunction(points);
+        });
+        jrh.send(
+            `http://${host}:${port}/bezier_sampler`, 
+            JSON.stringify({controlPoints, length, amount})
+        );
     }
 
     parsePoints(pointsStr) {
@@ -54,7 +40,7 @@ export default class BezierSamplerClient {
         return parsedPoints;
     }
 
-    onReceive(userFunction) {
-        this.onReceiveFunction = userFunction;
+    onReceive(someFunction) {
+        this.userFunction = someFunction;
     }
 }

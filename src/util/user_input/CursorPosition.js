@@ -6,6 +6,7 @@ export default class CursorPosition {
 
     constructor() {
         window.addEventListener('mousemove', this.mouseMoveListenerMethod);
+        this.mousePosition = new Vector2(0, 0);
     }
 
     unregister() {
