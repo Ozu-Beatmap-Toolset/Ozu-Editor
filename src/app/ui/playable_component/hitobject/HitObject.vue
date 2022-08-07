@@ -1,7 +1,7 @@
 <template>
-    <!--draw the canvas layer only if this is a slider-->
     <div class="hitobject-canvas-layer" >
-        <canvas :id="this.getCanvasId()" :width="this.window.innerWidth" :height="this.window.innerHeight" />
+        <canvas :id="this.getCanvasId()" :width="this.window.innerWidth" :height="this.window.innerHeight" style="position:absolute"/>
+        <canvas :id="this.getOpacityCanvasId()" :width="this.window.innerWidth" :height="this.window.innerHeight" style="position:absolute; opacity: 0.8" />
     </div>
     <div class="hitobject-image-layer" :style="this.getComputedHeadPositionStyle()">
         <img class="hitobject-head" :src="getHitcircle()" />
@@ -23,7 +23,8 @@ export default {
             canvasId: appData.uuid(),
             window: window,
             canvas: null,
-            canvasContext: null,
+            opacityCanvas: null,
+            headPosition: this.dataObject.bezierCurves[0].controlPoints[0],
         };
     },
     methods: {
@@ -34,24 +35,27 @@ export default {
             return appData.skin.dict['hitcircleoverlay'];
         },
         getComputedHeadPositionStyle() {
-            var headPosition = this.getHeadPosition();
             return { 
-                left: `${headPosition.x}px`, 
-                top: `${headPosition.y}px`,
+                left: `${this.headPosition.x}px`, 
+                top: `${this.headPosition.y}px`,
             }
         },
-        getHeadPosition() {
+        computeHeadPosition() {
             if(this.dataObject.bezierCurves.length === 1 && this.dataObject.bezierCurves[0].controlPoints.length === 1) {
-                return this.dataObject.bezierCurves[0].controlPoints[0];
+                this.headPosition = this.dataObject.bezierCurves[0].controlPoints[0];
+                return;
             }
             //return findPositionOnSlider(this.dataObject.bezierCurves, this.dataObject.distance);
             //return this.dataObject.bezierCurves[0].controlPoints[0];
-            return findPositionOnSlider(this.dataObject.bezierCurves, 0);
+            this.headPosition = findPositionOnSlider(this.dataObject.bezierCurves, 0);
         },
         getCanvasId() {
             return this.canvasId;
         },
-        drawSliderBody(canvas, context, bCurves) {
+        getOpacityCanvasId() {
+            return this.canvasId + '-opacity-layer';
+        },
+        drawSliderBody(canvas, context, opacityCanvas, opacityContext, bCurves) {
             const samples = [];
             for(const bCurve of bCurves) {
                 for(const sample of bCurve.samples) {
@@ -60,16 +64,19 @@ export default {
             }
 
             if(samples.length > 1) {
-                const sliderBodyDrawer = new SliderBodyDrawer(canvas, context);
+                const sliderBodyDrawer = new SliderBodyDrawer(canvas, context, opacityCanvas, opacityContext);
                 //sliderBodyDrawer.draw(samples, appData.playfield.difficulty.circleSize);
                 sliderBodyDrawer.draw(samples, 120);
             }
         }
     },
     mounted() {
+        this.computeHeadPosition();
         this.canvas = document.getElementById(this.canvasId);
-        this.canvasContext = this.canvas.getContext('2d');
-        this.drawSliderBody(this.canvas, this.canvasContext, this.dataObject.bezierCurves);
+        const canvasContext = this.canvas.getContext('2d');
+        this.opacityCanvas = document.getElementById(this.getOpacityCanvasId());
+        const opacityCanvasContext = this.opacityCanvas.getContext('2d');
+        this.drawSliderBody(this.canvas, canvasContext, this.opacityCanvas, opacityCanvasContext, this.dataObject.bezierCurves);
     }
 }
 </script>

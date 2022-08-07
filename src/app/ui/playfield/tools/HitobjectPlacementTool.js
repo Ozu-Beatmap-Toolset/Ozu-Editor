@@ -97,6 +97,12 @@ export default class HitobjectPlacementTool extends IPlayfieldTool {
                     this.isWorking = true;
                 }
             }
+            else {
+                const lastHitObjectId = appData.playfield.hitobjects.length-1;
+                appData.playfield
+                    .hitobjects[lastHitObjectId]
+                    .id = appData.uuid();
+            }
         }
     }
 
@@ -106,7 +112,7 @@ export default class HitobjectPlacementTool extends IPlayfieldTool {
         }
         else {
             const upperBoundArcLength = this.bezierCurve.fastUpperBoundArcLength();
-            var amountOfPoints = Math.max(Math.round(upperBoundArcLength/50), 1);
+            var amountOfPoints = Math.max(Math.round(upperBoundArcLength/30), 1);
             if(amountOfPoints > 400) {
                 amountOfPoints = 400;
             }
