@@ -14,7 +14,7 @@ export const findPositionOnSlider = (bCurves, distance) => {
 
     var totalDistance = 0;
     var lastSeparation = 0;
-    var bestI = 1;
+    var bestI;
     for(var i = 1; i < samples.length; i++) {
         lastSeparation = samples[i-1].distance(samples[i]);
         totalDistance += lastSeparation;
@@ -23,5 +23,5 @@ export const findPositionOnSlider = (bCurves, distance) => {
     }
 
     const ratio = (distance-(totalDistance-lastSeparation))/lastSeparation;
-    return samples[bestI-1]*(1-ratio) + samples[bestI]*ratio;
+    return samples[bestI-1].scaled(1-ratio).plus(samples[bestI].scaled(ratio));
 }

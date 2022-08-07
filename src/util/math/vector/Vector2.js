@@ -86,4 +86,8 @@ export default class Vector2 {
     isFinite() {
         return isFinite(this.x) && isFinite(this.y);
     }
+
+    projectOnto(that) {
+        return that.scaled(this.dotProduct(that)/that.magnitudeSquared());
+    }
 }

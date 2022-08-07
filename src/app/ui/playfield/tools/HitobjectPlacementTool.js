@@ -2,6 +2,7 @@ import BezierSamplerClient from "../../../../util/math/curve/bezier/BezierSample
 import IPlayfieldTool from "./IPlayfieldTool";
 import { appData } from '../../../../util/globals/GlobalData.js';
 import BezierCurve from "../../../../util/math/curve/bezier/BezierCurve.js";
+import Vector2 from "../../../../util/math/vector/Vector2.js"
 
 
 const MAX_REFRESH_RATE = 16;
@@ -36,6 +37,13 @@ export default class HitobjectPlacementTool extends IPlayfieldTool {
         appData.playfield.hitobjects.push({
             bezierCurves: [this.bezierCurve],
             id: this.key,
+            opacity: 1,
+            playfieldScale: 1,
+            playfieldOffset: new Vector2(0, 0),
+            difficulty: {
+                circleSize: 1,
+            },
+            headDistance: 0,
         });
     }
 

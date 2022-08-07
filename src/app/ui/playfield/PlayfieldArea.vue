@@ -2,7 +2,7 @@
     <div class="playfield-area"/>
     <div class="full-playfield-area" @mousedown="playfieldClicked" @mousemove="playfieldMouseMoved" @mouseenter="mouseEntered" @mouseleave="mouseExit">
         <div v-for="hitobject in hitobjects" :key="hitobject.id">
-            <HitObject :dataObject="hitobject" />
+            <HitObject :dataObject="hitobject" v-if="hitobject.opacity > 0.01" />
         </div>
     </div>
 </template>
@@ -17,6 +17,19 @@ export default {
     components: {
     HitObject,
 },
+    data() {
+        return {
+            hitobjects: appData.playfield.hitobjects,
+        };
+    },
+    created() {
+        this.events.on('set-active-tool', this.quickAccessToolChanged);
+        window.addEventListener('keydown', this.keyPressed);
+    },
+    beforeUnmount() {
+        this.events.off('set-active-tool', this.quickAccessToolChanged);
+        window.removeEventListener('keydown', this.keyPressed);
+    },
     methods: {
         mouseEntered: () => {
             appData.playfield.isMouseHovering = true;
@@ -40,19 +53,6 @@ export default {
             }
         }
     },
-    created() {
-        this.events.on('set-active-tool', this.quickAccessToolChanged);
-        window.addEventListener('keydown', this.keyPressed);
-    },
-    beforeUnmount() {
-        this.events.off('set-active-tool', this.quickAccessToolChanged);
-        window.removeEventListener('keydown', this.keyPressed);
-    },
-    data() {
-        return {
-            hitobjects: appData.playfield.hitobjects,
-        };
-    }
 }
 </script>
 
