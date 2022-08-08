@@ -4,15 +4,13 @@
         <div v-for="hitobject in hitobjects" :key="hitobject.id">
             <div v-if="hitobject.opacity > 0.01">
                 <HitObject 
-                    :playfieldOffset="hitobject.playfieldOffset" 
-                    :playfieldScale="hitobject.playfieldScale" 
+                    :samples="this.getSamples(hitobject.bezierCurves)" 
+                    :headDiameter="hitobject.headDiameter" 
+                    :headDistance="hitobject.headDistance" 
+                    :hitcircle="this.skin.dict['hitcircle']" 
+                    :hitcircleoverlay="this.skin.dict['hitcircleoverlay']" 
+                    :sliderBorderColour="this.getSliderBorderColour()" 
                     :opacity="hitobject.opacity" 
-                    :circleSize="hitobject.difficulty.circleSize"
-                    :samples="this.getSamples(hitobject.bezierCurves)"
-                    :headDistance="0"
-                    :hitcircle="this.skin.dict['hitcircle']"
-                    :hitcircleoverlay="this.skin.dict['hitcircleoverlay']"
-                    :sliderBorderColour="this.getSliderBorderColour()"
                 />
             </div>
         </div>

@@ -1,7 +1,7 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import mittBuilder from 'mitt';
-const events = mittBuilder();
+import mitt from 'mitt';
+const events = mitt();
 
 const app = createApp(App);
 app.config.globalProperties.events = events;
