@@ -2,7 +2,19 @@
     <div class="playfield-area"/>
     <div class="full-playfield-area" @mousedown="playfieldClicked" @mousemove="playfieldMouseMoved" @mouseenter="mouseEntered" @mouseleave="mouseExit">
         <div v-for="hitobject in hitobjects" :key="hitobject.id">
-            <HitObject :dataObject="hitobject" v-if="hitobject.opacity > 0.01" />
+            <div v-if="hitobject.opacity > 0.01">
+                <HitObject 
+                    :playfieldOffset="hitobject.playfieldOffset" 
+                    :playfieldScale="hitobject.playfieldScale" 
+                    :opacity="hitobject.opacity" 
+                    :circleSize="hitobject.difficulty.circleSize"
+                    :samples="this.getSamples(hitobject.bezierCurves)"
+                    :headDistance="0"
+                    :hitcircle="this.skin.dict['hitcircle']"
+                    :hitcircleoverlay="this.skin.dict['hitcircleoverlay']"
+                    :sliderBorderColour="this.getSliderBorderColour()"
+                />
+            </div>
         </div>
     </div>
 </template>
@@ -11,6 +23,7 @@
 import { appData } from '../../../util/globals/GlobalData.js';
 import { changePlayfieldTool, toolSelectorKeyPressed } from './playfieldToolSelector.js';
 import HitObject from '../playable_component/hitobject/HitObject.vue';
+import { getSliderBorderColour } from '../../game_data/skin/sliderBorderColour.js';
 
 export default {
     name: "PlayfieldArea",
@@ -20,6 +33,7 @@ export default {
     data() {
         return {
             hitobjects: appData.playfield.hitobjects,
+            skin: appData.skin,
         };
     },
     created() {
@@ -31,6 +45,18 @@ export default {
         window.removeEventListener('keydown', this.keyPressed);
     },
     methods: {
+        getSamples(bezierCurves) {
+            const samples = [];
+            for(const bezierCurve of bezierCurves) {
+                for(const sample of bezierCurve.samples) {
+                    samples.push(sample);
+                }
+            }
+            return samples;
+        },
+        getSliderBorderColour() {
+            return getSliderBorderColour()
+        },
         mouseEntered: () => {
             appData.playfield.isMouseHovering = true;
         },
@@ -39,7 +65,6 @@ export default {
         },
         quickAccessToolChanged(toolType) {
             changePlayfieldTool(toolType);
-            
         },
         playfieldClicked(event) {
             appData.playfield.currentUserTool.mouseDown(event);

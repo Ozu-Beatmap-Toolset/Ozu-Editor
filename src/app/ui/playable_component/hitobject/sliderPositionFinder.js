@@ -1,13 +1,6 @@
 //import Vector2 from '../../../../util/math/vector/Vector2.js';
 
-export const findPositionOnSlider = (bCurves, distance) => {
-    const samples = [];
-    for(const bCurve of bCurves) {
-        for(const sample of bCurve.samples) {
-            samples.push(sample);
-        }
-    }
-
+export const findPositionOnSlider = (samples, distance) => {
     if(samples.length === 1) {
         return samples[0];
     }

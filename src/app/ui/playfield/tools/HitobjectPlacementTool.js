@@ -3,6 +3,7 @@ import IPlayfieldTool from "./IPlayfieldTool";
 import { appData } from '../../../../util/globals/GlobalData.js';
 import BezierCurve from "../../../../util/math/curve/bezier/BezierCurve.js";
 import Vector2 from "../../../../util/math/vector/Vector2.js"
+import { uuid } from "../../../../util/uuid/uuid.js"
 
 
 const MAX_REFRESH_RATE = 16;
@@ -20,6 +21,7 @@ export default class HitobjectPlacementTool extends IPlayfieldTool {
         this.now = Date.now();
 
         this.bezierCurve = new BezierCurve([appData.userInput.mouseCursor.get()]);
+        this.bezierCurve.samples = [this.bezierCurve.controlPoints[0]];
         
         this.isWorking = false;
 
@@ -31,7 +33,7 @@ export default class HitobjectPlacementTool extends IPlayfieldTool {
             const lastHitObjectId = appData.playfield.hitobjects.length-1;
             appData.playfield
                 .hitobjects[lastHitObjectId]
-                .id = appData.uuid();
+                .id = uuid();
         });
 
         appData.playfield.hitobjects.push({
@@ -106,10 +108,13 @@ export default class HitobjectPlacementTool extends IPlayfieldTool {
                 }
             }
             else {
-                const lastHitObjectId = appData.playfield.hitobjects.length-1;
                 appData.playfield
                     .hitobjects[lastHitObjectId]
-                    .id = appData.uuid();
+                    .bezierCurves[lastBezierId]
+                    .samples[0] = appData.userInput.mouseCursor.get();
+                appData.playfield
+                    .hitobjects[lastHitObjectId]
+                    .id = uuid();
             }
         }
     }

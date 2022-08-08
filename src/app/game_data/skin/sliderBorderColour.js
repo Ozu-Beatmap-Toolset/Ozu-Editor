@@ -1,6 +1,6 @@
 import { skin } from './skinData.js'
 
-export const getSliderBorderColor = () => {
+export const getSliderBorderColour = () => {
     const strArr = skin.ini['Colours']['SliderBorder'].split(',');
     return '#' + 
         parseInt(strArr[0]).toString('16') + 
