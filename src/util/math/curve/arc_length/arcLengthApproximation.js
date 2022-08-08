@@ -1,5 +1,5 @@
-import Vector2 from '../../vector/Vector2.js';
-import gaussianQuadrature from '../../integration/gaussianQuadrature.js';
+import Vector2 from '@/../src/util/math/vector/Vector2.js';
+import gaussianQuadrature from '@/../src/util/math/integration/gaussianQuadrature.js';
 
 function arcLength(derivative, t) {
     return arcLengthInterval(derivative, 0, t);

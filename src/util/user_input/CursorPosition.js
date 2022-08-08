@@ -1,4 +1,4 @@
-import Vector2 from '../math/vector/Vector2.js';
+import Vector2 from '@/../src/util/math/vector/Vector2.js';
 
 export default class CursorPosition {
     mouseMoveListenerMethod = (event) => { this.mouseMove(event); };

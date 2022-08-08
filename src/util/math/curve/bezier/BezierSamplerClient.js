@@ -1,5 +1,5 @@
-import JavaRequestHandler from '../../../client/JavaRequestHandler.js';
-import Vector2 from '../../vector/Vector2.js';
+import JavaRequestHandler from '@/../src/util/client/JavaRequestHandler.js';
+import Vector2 from '@/../src/util/math/vector/Vector2.js';
 import './BezierCurve.js';
 
 const host = '127.0.0.1';

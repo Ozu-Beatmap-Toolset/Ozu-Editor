@@ -1,5 +1,3 @@
-//import Vector2 from '../../../../util/math/vector/Vector2.js';
-
 export const findPositionOnSlider = (samples, distance) => {
     if(samples.length === 1) {
         return samples[0];

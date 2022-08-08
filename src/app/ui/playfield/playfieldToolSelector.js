@@ -1,4 +1,4 @@
-import { appData } from "../../../util/globals/GlobalData.js";
+import { appData } from "@/../src/util/globals/GlobalData.js";
 import SelectTool from "./tools/SelectTool.js";
 import HitobjectPlacementTool from "./tools/HitobjectPlacementTool.js";
 import HitsliclePlacementTool from "./tools/HitsliclePlacementTool.js";

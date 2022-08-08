@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { uuid } from '../../../../util/uuid/uuid.js'
+import { uuid } from '@/../src/util/uuid/uuid.js'
 import { drawCanvasSliderBody } from './sliderBodyDrawer.js'
 import { findPositionOnSlider } from './sliderPositionFinder.js';
 import { circleSizeToRadiusInOsuPixels } from './circleSizeConverter';

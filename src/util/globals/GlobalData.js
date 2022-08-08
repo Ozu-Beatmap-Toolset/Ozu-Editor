@@ -1,9 +1,9 @@
 import { reactive } from 'vue';
-import SelectTool from '../../app/ui/playfield/tools/SelectTool.js';
-import Vector2 from '../math/vector/Vector2.js';
-import CursorPosition from "../user_input/CursorPosition.js";
-import { skin } from '../../app/game_data/skin/skinData.js';
-import { uuid } from '../uuid/uuid.js';
+import SelectTool from '@/../src/app/ui/playfield/tools/SelectTool.js';
+import Vector2 from '@/../src/util/math/vector/Vector2.js';
+import CursorPosition from "@/../src/util/user_input/CursorPosition.js";
+import { skin } from '@/../src/app/game_data/skin/skinData.js';
+import { uuid } from '@/../src/util/uuid/uuid.js';
 
 export const appData = reactive({
     userInput: {

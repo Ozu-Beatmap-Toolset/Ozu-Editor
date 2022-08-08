@@ -2,12 +2,12 @@
     <table>
         <tr>
             <button id='quickAccessSelectButton' class="quick-access-tool-button" @click="selectToolClicked()" ref="select-tool-button" style="background-color:rgb(0, 162, 255); pointer-events: none;">
-                <img src="../../../../../../assets/buttons/ic_edit_24px.svg"/>
+                <img src="@/../assets/buttons/ic_edit_24px.svg"/>
             </button>
         </tr>
         <tr>
             <button id='quickAccessOriginButton' class="quick-access-tool-button" @click="onOriginToolClicked()" ref="origin-tool-button">
-                <img src="../../../../../../assets/buttons/ic_gps_fixed_24px.svg" draggable="false"/>
+                <img src="@/../assets/buttons/ic_gps_fixed_24px.svg" draggable="false"/>
                 
             </button>
         </tr>
@@ -27,17 +27,17 @@
         </tr>
         <tr>
             <button id='quickAccessMoveButton' class="quick-access-tool-button" @click="onMoveToolClicked()" ref="move-tool-button">
-                <img src="../../../../../../assets/buttons/ic_open_with_24px.svg" draggable="false"/>
+                <img src="@/../assets/buttons/ic_open_with_24px.svg" draggable="false"/>
             </button>
         </tr>
         <tr>
             <button id='quickAccessRotateButton' class="quick-access-tool-button" @click="onRotateToolClicked()" ref="rotate-tool-button">
-                <img src="../../../../../../assets/buttons/ic_loop_24px.svg" draggable="false"/>
+                <img src="@/../assets/buttons/ic_loop_24px.svg" draggable="false"/>
             </button>
         </tr>
         <tr>
             <button id='quickAccessScaleButton' class="quick-access-tool-button" @click="onScaleToolClicked()" ref="scale-tool-button">
-                <img src="../../../../../../assets/buttons/ic_tab_unselected_24px.svg" draggable="false"/>
+                <img src="@/../assets/buttons/ic_tab_unselected_24px.svg" draggable="false"/>
             </button>
         </tr>
         <tr>
@@ -56,22 +56,22 @@
         </tr>
         <tr>
             <button id='quickAccessHitobjectButton' class="quick-access-tool-button" @click="onHitobjectToolClicked()" ref="hitobject-tool-button">
-                <img src="../../../../../../assets/buttons/ic_add_circle_outline_24px.svg" draggable="false"/>
+                <img src="@/../assets/buttons/ic_add_circle_outline_24px.svg" draggable="false"/>
             </button>
         </tr>
         <tr>
             <button id='quickAccessHitslicleButton' class="quick-access-tool-button" @click="onHitslicleToolClicked()" ref="hitslicle-tool-button">
-                <img src="../../../../../../assets/buttons/ic_rotate_left_24px.svg" draggable="false"/>
+                <img src="@/../assets/buttons/ic_rotate_left_24px.svg" draggable="false"/>
             </button>
         </tr>
         <tr>
             <button id='quickAccessHitstreamButton' class="quick-access-tool-button" @click="onHitstreamToolClicked()" ref="hitstream-tool-button">
-                <img src="../../../../../../assets/buttons/ic_control_point_duplicate_24px.svg" draggable="false"/>
+                <img src="@/../assets/buttons/ic_control_point_duplicate_24px.svg" draggable="false"/>
             </button>
         </tr>
         <tr>
             <button id='quickAccessHitspinnerButton' class="quick-access-tool-button" @click="onHitspinnerToolClicked()" ref="hitspinner-tool-button">
-                <img src="../../../../../../assets/buttons/ic_settings_backup_restore_24px.svg" draggable="false"/>
+                <img src="@/../assets/buttons/ic_settings_backup_restore_24px.svg" draggable="false"/>
             </button>
         </tr>
         <tr>
@@ -90,7 +90,7 @@
         </tr>
         <tr>
             <button id='quickAccessMeasureButton' class="quick-access-tool-button" @click="onMeasureToolClicked()" ref="measure-tool-button">
-                <img src="../../../../../../assets/buttons/ic_settings_ethernet_24px.svg"/>
+                <img src="@/../assets/buttons/ic_settings_ethernet_24px.svg"/>
             </button>
         </tr>
     </table>

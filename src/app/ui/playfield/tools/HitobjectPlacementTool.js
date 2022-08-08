@@ -1,9 +1,9 @@
-import BezierSamplerClient from "../../../../util/math/curve/bezier/BezierSamplerClient.js";
+import BezierSamplerClient from "@/../src/util/math/curve/bezier/BezierSamplerClient.js";
 import IPlayfieldTool from "./IPlayfieldTool";
-import { appData } from '../../../../util/globals/GlobalData.js';
-import BezierCurve from "../../../../util/math/curve/bezier/BezierCurve.js";
-import Vector2 from "../../../../util/math/vector/Vector2.js"
-import { uuid } from "../../../../util/uuid/uuid.js"
+import { appData } from '@/../src/util/globals/GlobalData.js';
+import BezierCurve from "@/../src/util/math/curve/bezier/BezierCurve.js";
+import Vector2 from "@/../src/util/math/vector/Vector2.js"
+import { uuid } from "@/../src/util/uuid/uuid.js"
 
 
 const MAX_REFRESH_RATE = 16;

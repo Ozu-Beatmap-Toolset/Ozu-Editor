@@ -20,10 +20,10 @@
 </template>
 
 <script>
-import { appData } from '../../../util/globals/GlobalData.js';
+import { appData } from '@/../src/util/globals/GlobalData.js';
 import { changePlayfieldTool, toolSelectorKeyPressed } from './playfieldToolSelector.js';
-import HitObject from '../playable_component/hitobject/HitObject.vue';
-import { getSliderBorderColour } from '../../game_data/skin/sliderBorderColour.js';
+import HitObject from '@/../src/app/ui/playable_component/hitobject/HitObject.vue';
+import { getSliderBorderColour } from '@/../src/app/game_data/skin/sliderBorderColour.js';
 
 export default {
     name: "PlayfieldArea",
