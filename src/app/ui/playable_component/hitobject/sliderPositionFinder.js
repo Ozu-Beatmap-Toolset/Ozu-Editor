@@ -14,5 +14,7 @@ export const findPositionOnSlider = (samples, distance) => {
     }
 
     const ratio = (distance-(totalDistance-lastSeparation))/lastSeparation;
+    // cap the head at the end of the slider
+    if(ratio > 1) return samples[bestI];
     return samples[bestI-1].scaled(1-ratio).plus(samples[bestI].scaled(ratio));
 }

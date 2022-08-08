@@ -76,7 +76,10 @@ export default class HitobjectPlacementTool extends IPlayfieldTool {
     mouseDown(event) {
         if(event.button == 0) {
             this.bezierCurve.controlPoints.push(appData.userInput.mouseCursor.get());
-            this.sendSampleRequest();
+            if(!this.isWorking) {
+                this.sendSampleRequest();
+                this.isWorking = true;
+            }
         }
         else if(event.button == 2) {
             // stuff

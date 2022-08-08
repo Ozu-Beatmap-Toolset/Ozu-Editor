@@ -7,8 +7,8 @@
                     :samples="this.getSamples(hitobject.bezierCurves)" 
                     :headDiameter="hitobject.headDiameter" 
                     :headDistance="hitobject.headDistance" 
-                    :hitcircle="this.skin.dict['hitcircle']" 
-                    :hitcircleoverlay="this.skin.dict['hitcircleoverlay']" 
+                    :hitCircleSrc="this.skin.dict['hitcircle']" 
+                    :hitCircleOverlaySrc="this.skin.dict['hitcircleoverlay']" 
                     :sliderBorderColour="this.getSliderBorderColour()" 
                     :opacity="hitobject.opacity" 
                 />
@@ -37,6 +37,24 @@ export default {
     created() {
         this.events.on('set-active-tool', this.quickAccessToolChanged);
         window.addEventListener('keydown', this.keyPressed);
+        window.setInterval(() => {
+            for(const hitObject of appData.playfield.hitobjects) {
+                hitObject.headDistance += 10;
+                var totalLength = 0;
+                const samples = this.getSamples(hitObject.bezierCurves);
+                for(var i = 1; i < samples.length; i++) {
+                    totalLength += samples[i-1].distance(samples[i]);
+                }
+                if(hitObject.headDistance > totalLength) {
+                    if(totalLength > 0) {
+                        hitObject.headDistance %= totalLength;
+                    }
+                    else {
+                        hitObject.headDistance = 0;
+                    }
+                }
+            }
+        }, 16);
     },
     beforeUnmount() {
         this.events.off('set-active-tool', this.quickAccessToolChanged);
