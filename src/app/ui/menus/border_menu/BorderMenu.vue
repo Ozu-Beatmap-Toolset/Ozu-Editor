@@ -4,8 +4,8 @@
 </template>
 
 <script>
-import LeftBM from './LeftBorderMenu.vue'
-import RightBM from './RightBorderMenu.vue'
+import LeftBM from '@/../src/app/ui/menus/border_menu/LeftBorderMenu.vue'
+import RightBM from '@/../src/app/ui/menus/border_menu/RightBorderMenu.vue'
 export default {
     name: 'BorderMenus',
     components: {

@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import QuickAccessButton from './tool_button/QuickAccessToolButton.vue'
+import QuickAccessButton from '@/../src/app/ui/menus/border_menu/tool_button/QuickAccessToolButton.vue'
 
 export default {
     name: "LeftBorderMenu",

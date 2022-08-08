@@ -1,5 +1,5 @@
 import BezierSamplerClient from "@/../src/util/math/curve/bezier/BezierSamplerClient.js";
-import IPlayfieldTool from "./IPlayfieldTool";
+import IPlayfieldTool from "@/../src/app/ui/playfield/tools/IPlayfieldTool.js";
 import { appData } from '@/../src/util/globals/GlobalData.js';
 import BezierCurve from "@/../src/util/math/curve/bezier/BezierCurve.js";
 import Vector2 from "@/../src/util/math/vector/Vector2.js"

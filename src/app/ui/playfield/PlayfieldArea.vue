@@ -21,7 +21,7 @@
 
 <script>
 import { appData } from '@/../src/util/globals/GlobalData.js';
-import { changePlayfieldTool, toolSelectorKeyPressed } from './playfieldToolSelector.js';
+import { changePlayfieldTool, toolSelectorKeyPressed } from '@/../src/app/ui/playfield/playfieldToolSelector.js';
 import HitObject from '@/../src/app/ui/playable_component/hitobject/HitObject.vue';
 import { getSliderBorderColour } from '@/../src/app/game_data/skin/sliderBorderColour.js';
 

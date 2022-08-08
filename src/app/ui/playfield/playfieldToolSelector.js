@@ -1,9 +1,9 @@
 import { appData } from "@/../src/util/globals/GlobalData.js";
-import SelectTool from "./tools/SelectTool.js";
-import HitobjectPlacementTool from "./tools/HitobjectPlacementTool.js";
-import HitsliclePlacementTool from "./tools/HitsliclePlacementTool.js";
-import HitstreamPlacementTool from "./tools/HitstreamPlacementTool.js";
-import HitspinnerPlacementTool from "./tools/HitspinnerPlacementTool.js";
+import SelectTool from "@/../src/app/ui/playfield/tools/SelectTool.js";
+import HitobjectPlacementTool from "@/../src/app/ui/playfield/tools/HitobjectPlacementTool.js";
+import HitsliclePlacementTool from "@/../src/app/ui/playfield/tools/HitsliclePlacementTool.js";
+import HitstreamPlacementTool from "@/../src/app/ui/playfield/tools/HitstreamPlacementTool.js";
+import HitspinnerPlacementTool from "@/../src/app/ui/playfield/tools/HitspinnerPlacementTool.js";
 
 
 function changePlayfieldTool(type) {

@@ -1,4 +1,4 @@
-import IPlayfieldTool from "./IPlayfieldTool";
+import IPlayfieldTool from "@/../src/app/ui/playfield/tools/IPlayfieldTool.js";
 
 export default class HitspinnerPlacementTool extends IPlayfieldTool {
     constructor() {

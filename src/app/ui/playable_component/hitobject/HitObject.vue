@@ -11,9 +11,9 @@
 
 <script>
 import { uuid } from '@/../src/util/uuid/uuid.js'
-import { drawCanvasSliderBody } from './sliderBodyDrawer.js'
-import { findPositionOnSlider } from './sliderPositionFinder.js';
-import { circleSizeToRadiusInOsuPixels } from './circleSizeConverter';
+import { drawCanvasSliderBody } from '@/../src/app/ui/playable_component/hitobject/sliderBodyDrawer.js'
+import { findPositionOnSlider } from '@/../src/app/ui/playable_component/hitobject/sliderPositionFinder.js';
+import { circleSizeToRadiusInOsuPixels } from '@/../src/app/ui/playable_component/hitobject/circleSizeConverter.js';
 
 export default {
     name: "HitObject",

@@ -4,8 +4,8 @@
 </template>
 
 <script>
-import TopMB from './TopMeasureBar.vue';
-import BottomMB from './BottomMeasureBar.vue';
+import TopMB from '@/../src/app/ui/menus/measure_bar/TopMeasureBar.vue';
+import BottomMB from '@/../src/app/ui/menus/measure_bar/BottomMeasureBar.vue';
 export default {
     name: 'MeasureBars',
     components: {
