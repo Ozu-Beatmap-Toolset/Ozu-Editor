@@ -35,6 +35,7 @@
             ButtonList,
         },
         props: ['userTool'],
+        emits: ['zoom-changed', 'offset-changed', 'set-active-tool'],
         data() {
             return {
                 isMouseHovering: false,
@@ -54,19 +55,19 @@
                 if(this.isMouseHovering) return;
                 this.isMouseHovering = true;
                 this.keyListener.addKeybinding(['Escape'], () => {
-                    this.events.emit('set-active-tool', ToolType.Select);
+                    this.$emit('set-active-tool', ToolType.Select);
                 });
                 this.keyListener.addKeybinding(['Digit1'], () => {
-                    this.events.emit('set-active-tool', ToolType.HitObjectPlacement);
+                    this.$emit('set-active-tool', ToolType.HitObjectPlacement);
                 });
                 this.keyListener.addKeybinding(['Digit2'], () => {
-                    this.events.emit('set-active-tool', ToolType.HitSliclePlacement);
+                    this.$emit('set-active-tool', ToolType.HitSliclePlacement);
                 });
                 this.keyListener.addKeybinding(['Digit3'], () => {
-                    this.events.emit('set-active-tool', ToolType.HitStreamPlacement);
+                    this.$emit('set-active-tool', ToolType.HitStreamPlacement);
                 });
                 this.keyListener.addKeybinding(['Digit4'], () => {
-                    this.events.emit('set-active-tool', ToolType.HitSpinnerPlacement);
+                    this.$emit('set-active-tool', ToolType.HitSpinnerPlacement);
                 });
                 window.addEventListener('wheel', this.mouseScroll)
             },
@@ -88,6 +89,7 @@
                 if(this.zoom < 0.5) {
                     this.zoom = 0.5;
                 }
+                this.$emit('zoom-changed', this.zoom);
             },
         },
         beforeUnmount() {

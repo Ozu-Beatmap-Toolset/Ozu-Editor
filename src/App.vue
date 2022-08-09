@@ -3,7 +3,7 @@
     <div class="widget-playfield-test">
         <PlayfieldArea 
             :hitObjects="this.hitObjects" 
-            :backgroundImageSrc="'@/../assets/bg_test/sakura.jpeg'" 
+            backgroundImageSrc="C:/Users/Plads/Documents/GitHub/Ozu-Beatmap-Toolset/editor/ozu-editor/assets/bg_test/sakura.jpeg" 
         />
     </div>
 </template>
@@ -42,5 +42,7 @@
         left: 10%;
         height: 90%;
         width: 80%;
+        border-radius: 6px;
+        background-color: #222;
     }
 </style>
