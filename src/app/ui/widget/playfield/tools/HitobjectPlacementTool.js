@@ -1,8 +1,9 @@
 import BezierSamplerClient from "@/../src/util/math/curve/bezier/BezierSamplerClient.js";
-import IPlayfieldTool from "@/../src/app/ui/playfield/tools/IPlayfieldTool.js";
-import { appData } from '@/../src/util/globals/GlobalData.js';
+import IPlayfieldTool from "@/../src/app/ui/widget/playfield/tools/IPlayfieldTool.js";
 import BezierCurve from "@/../src/util/math/curve/bezier/BezierCurve.js";
 import { uuid } from "@/../src/util/uuid/uuid.js"
+import CursorPosition from "@/../src/util/user_input/CursorPosition.js"
+import { ToolType } from "@/../src/app/ui/widget/playfield/tools/ToolTypeEnum.js";
 
 
 const MAX_REFRESH_RATE = 16;
@@ -15,11 +16,16 @@ export default class HitobjectPlacementTool extends IPlayfieldTool {
     isWorking;
     lastTime;
     now;
-    constructor() {
+    hitObjects;
+    constructor(hitObjects) {
         super();
         this.now = Date.now();
+        this.key = uuid();
+        
+        this.mouseCursor = new CursorPosition();
+        this.hitObjects = hitObjects;
 
-        this.bezierCurve = new BezierCurve([appData.userInput.mouseCursor.get()]);
+        this.bezierCurve = new BezierCurve([this.mouseCursor.get()]);
         this.bezierCurve.samples = [this.bezierCurve.controlPoints[0]];
         
         this.isWorking = false;
@@ -29,13 +35,11 @@ export default class HitobjectPlacementTool extends IPlayfieldTool {
             this.bezierCurve.samples = data;
             this.isWorking = false;
             
-            const lastHitObjectId = appData.playfield.hitobjects.length-1;
-            appData.playfield
-                .hitobjects[lastHitObjectId]
-                .id = uuid();
+            const lastHitObjectId = this.hitObjects.length-1;
+            this.hitObjects[lastHitObjectId].id = uuid();
         });
 
-        appData.playfield.hitobjects.push({
+        this.hitObjects.push({
             bezierCurves: [this.bezierCurve],
             id: this.key,
             headDiameter: 100,
@@ -45,37 +49,29 @@ export default class HitobjectPlacementTool extends IPlayfieldTool {
     }
 
     unregister() {
-        const lastHitObjectId = appData.playfield.hitobjects.length-1;
-        const lastBezierId = appData.playfield.hitobjects[lastHitObjectId].bezierCurves.length-1
-        appData.playfield
-            .hitobjects[lastHitObjectId]
-            .bezierCurves[lastBezierId]
-            .controlPoints.pop();
-        if(appData.playfield
-                .hitobjects[lastHitObjectId]
-                .bezierCurves[lastBezierId]
-                .controlPoints.length === 0) {
-            appData.playfield
-                .hitobjects[lastHitObjectId]
-                .bezierCurves.pop();
-            if(appData.playfield
-                    .hitobjects[lastHitObjectId]
-                    .bezierCurves.length === 0) {
-                appData.playfield.hitobjects.pop();
+        this.mouseCursor.unregister();
+
+        const lastHitObjectId = this.hitObjects.length-1;
+        const lastBezierId = this.hitObjects[lastHitObjectId].bezierCurves.length-1;
+        this.hitObjects[lastHitObjectId].bezierCurves[lastBezierId].controlPoints.pop();
+        if(this.hitObjects[lastHitObjectId].bezierCurves[lastBezierId].controlPoints.length === 0) {
+            this.hitObjects[lastHitObjectId].bezierCurves.pop();
+            if(this.hitObjects[lastHitObjectId].bezierCurves.length === 0) {
+                this.hitObjects.pop();
             }
         }
-        if(appData.playfield.hitobjects.length === lastHitObjectId+1) {
+        if(this.hitObjects.length === lastHitObjectId+1) {
             this.sendSampleRequest();
         }
     }
 
     name() {
-        return 'hitobject';
+        return ToolType.HitObjectPlacement;
     }
 
     mouseDown(event) {
         if(event.button == 0) {
-            this.bezierCurve.controlPoints.push(appData.userInput.mouseCursor.get());
+            this.bezierCurve.controlPoints.push(this.mouseCursor.get());
             if(!this.isWorking) {
                 this.sendSampleRequest();
                 this.isWorking = true;
@@ -91,13 +87,12 @@ export default class HitobjectPlacementTool extends IPlayfieldTool {
         if(this.now - this.lastTime < MAX_REFRESH_RATE) return;
         this.lastTime = this.now;
 
-        const lastHitObjectId = appData.playfield.hitobjects.length-1;
-        const lastBezierId = appData.playfield.hitobjects[lastHitObjectId].bezierCurves.length-1
-        const lastControlPointId = appData.playfield.hitobjects[lastHitObjectId].bezierCurves[lastBezierId].controlPoints.length-1;
-        appData.playfield
-            .hitobjects[lastHitObjectId]
+        const lastHitObjectId = this.hitObjects.length-1;
+        const lastBezierId = this.hitObjects[lastHitObjectId].bezierCurves.length-1
+        const lastControlPointId = this.hitObjects[lastHitObjectId].bezierCurves[lastBezierId].controlPoints.length-1;
+        this.hitObjects[lastHitObjectId]
             .bezierCurves[lastBezierId]
-            .controlPoints[lastControlPointId] = appData.userInput.mouseCursor.get();
+            .controlPoints[lastControlPointId] = this.mouseCursor.get();
         if(this.bezierCurve.controlPoints.length > 0) {
             if(this.bezierCurve.controlPoints.length > 1) {
                 if(!this.isWorking) {
@@ -106,13 +101,10 @@ export default class HitobjectPlacementTool extends IPlayfieldTool {
                 }
             }
             else {
-                appData.playfield
-                    .hitobjects[lastHitObjectId]
+                this.hitObjects[lastHitObjectId]
                     .bezierCurves[lastBezierId]
-                    .samples[0] = appData.userInput.mouseCursor.get();
-                appData.playfield
-                    .hitobjects[lastHitObjectId]
-                    .id = uuid();
+                    .samples[0] = this.mouseCursor.get();
+                this.hitObjects[lastHitObjectId].id = uuid();
             }
         }
     }

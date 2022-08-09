@@ -1,53 +1,46 @@
 <template>
-  <div id="app-background">
-      <img id="sakura-test" src="@/../assets/bg_test/sakura.jpeg"/>
-  </div>
-  <PlayfieldArea/>
-  <MeasureBars/>
-  <BorderMenus/>
+    <div class="app-background"/>
+    <div class="widget-playfield-test">
+        <PlayfieldArea 
+            :hitObjects="this.hitObjects" 
+            :backgroundImageSrc="'@/../assets/bg_test/sakura.jpeg'" 
+        />
+    </div>
 </template>
 
 <script>
-import PlayfieldArea from '@/../src/app/ui/playfield/PlayfieldArea.vue';
-import BorderMenus from '@/../src/app/ui/menus/border_menu/BorderMenu.vue';
-import MeasureBars from '@/../src/app/ui/menus/measure_bar/MeasureBar.vue';
+    import PlayfieldArea from '@/../src/app/ui/widget/playfield/PlayfieldArea.vue';
 
-
-export default {
-    name: 'App',
-    components: {
-      PlayfieldArea,
-      BorderMenus,
-      MeasureBars
-    },
-    data() {
-        return {
-
-        };
+    export default {
+        name: 'App',
+        components: {
+            PlayfieldArea,
+        },
+        data() {
+            return {
+                hitObjects: [],
+            };
+        }
     }
-}
 </script>
 
 <style>
-body {
-    overflow: hidden;
-    user-select: none;
-}
-
-#sakura-test {
-    height: 100%;
-    width:auto;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-#app-background {
-    top: 0px;
-    left: 0px;
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    background-color: #333;
-}
+    body {
+        overflow: hidden;
+        user-select: none;
+    }
+    .app-background {
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        background-color: #333;
+    }
+    .widget-playfield-test {
+        position: absolute;
+        overflow: hidden;
+        top: 5%;
+        left: 10%;
+        height: 90%;
+        width: 80%;
+    }
 </style>

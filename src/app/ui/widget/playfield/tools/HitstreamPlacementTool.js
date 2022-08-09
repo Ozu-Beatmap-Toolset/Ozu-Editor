@@ -1,4 +1,5 @@
-import IPlayfieldTool from "@/../src/app/ui/playfield/tools/IPlayfieldTool.js";
+import IPlayfieldTool from "@/../src/app/ui/widget/playfield/tools/IPlayfieldTool.js";
+import { ToolType } from "@/../src/app/ui/widget/playfield/tools/ToolTypeEnum.js";
 
 export default class HitstreamPlacementTool extends IPlayfieldTool {
     constructor() {
@@ -6,15 +7,15 @@ export default class HitstreamPlacementTool extends IPlayfieldTool {
     }
 
     unregister() {
-        //console.log(this.name());
+        
     }
 
     name() {
-        return 'hitstream';
+        return ToolType.HitStreamPlacement;
     }
 
     mouseDown() {
-        console.log(this.name());
+        
     }
 
     mouseMove() {

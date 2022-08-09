@@ -12,19 +12,27 @@
         :hitCircleSrc="this.hitCircleSrc" 
         :hitCircleOverlaySrc="this.hitCircleOverlaySrc" 
         :opacity="this.opacity" 
-        :key="this.headDistance"
+        :key="this.headDistance" 
+    />
+    <ControlPoints v-if="this.editionMode === this.EditionMode.edit"
+        :controlPoints="this.controlPoints" 
+        :selectedIndexes="[]" 
+        :key="this.editionMode" 
     />
 </template>
 
 <script>
     import SliderBody from '@/../src/app/ui/playable_component/hitobject/SliderBody.vue';
     import HitObjectHead from '@/../src/app/ui/playable_component/hitobject/HitObjectHead.vue';
+    import ControlPoints from '@/../src/app/ui/playable_component/hitobject/ControlPoints.vue';
+    import { EditionMode } from '@/../src/app/ui/widget/playfield/EditionModeEnum.js';
 
     export default {
         name: "HitObject",
-        components: { 
+        components: {
             SliderBody,
-            HitObjectHead
+            HitObjectHead,
+            ControlPoints
         },
         props: [
             "controlPoints",
@@ -35,7 +43,13 @@
             "hitCircleOverlaySrc",
             "sliderBorderColour",
             "opacity",
+            "editionMode",
         ],
+        data() {
+            return {
+                EditionMode: EditionMode,
+            };
+        }
     }
 </script>
 

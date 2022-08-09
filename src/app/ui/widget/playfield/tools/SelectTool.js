@@ -1,4 +1,5 @@
-import IPlayfieldTool from "@/../src/app/ui/playfield/tools/IPlayfieldTool.js";
+import IPlayfieldTool from "@/../src/app/ui/widget/playfield/tools/IPlayfieldTool.js";
+import { ToolType } from "@/../src/app/ui/widget/playfield/tools/ToolTypeEnum.js";
 
 export default class SelectTool extends IPlayfieldTool {
     constructor() {
@@ -8,15 +9,15 @@ export default class SelectTool extends IPlayfieldTool {
     }
 
     unregister() {
-        console.log(this.name());
+        
     }
 
     name() {
-        return 'select';
+        return ToolType.Select;
     }
 
     mouseDown() {
-        console.log(this.name());
+        
     }
 
     mouseMove() {

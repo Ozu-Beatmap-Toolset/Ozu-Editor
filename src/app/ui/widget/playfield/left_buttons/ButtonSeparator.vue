@@ -1,10 +1,14 @@
 <template>
-  
+    <tr/>
+    <tr/>
+    <tr/>
+    <tr/>
+    <tr/>
 </template>
 
 <script>
 export default {
-    name: "TimelineBar"
+    
 }
 </script>
 

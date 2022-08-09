@@ -1,7 +1,7 @@
 <template>
     <div :style="this.getComputedHeadStyle()">
-        <img class="hitobject-head" :src="this.hitCircleSrc" :style="{opacity:this.opacity}" />
-        <img class="hitobject-head" :src="this.hitCircleOverlaySrc" :style="{opacity:this.opacity}" />
+        <img class="hitobject-head" :src="this.hitCircleSrc" :style="{opacity:this.opacity}"/>
+        <img class="hitobject-head" :src="this.hitCircleOverlaySrc" :style="{opacity:this.opacity}"/>
     </div>
 </template>
 
