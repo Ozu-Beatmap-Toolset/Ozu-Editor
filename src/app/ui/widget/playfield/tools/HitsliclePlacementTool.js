@@ -11,7 +11,7 @@ export default class HitsliclePlacementTool extends IPlayfieldTool {
     }
 
     name() {
-        return ToolType.HitObjectPlacement;
+        return ToolType.HitSliclePlacement;
     }
 
     mouseDown() {
