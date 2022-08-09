@@ -1,0 +1,11 @@
+{
+    "gameData" : {
+        "gameLocation": "C:/Users/Plads/AppData/Local/osu!",
+        "songsFolderLocation": "C:/Users/Plads/AppData/Local/osu!/songs",
+        "skinLocation": "C:/Users/Plads/AppData/Local/osu!/Skins/meow_2"
+    },
+    "playfieldEditor": {
+        "actionHistoryBufferSize": 10000,
+        "aspectRatio": 0.5625
+    }
+}
