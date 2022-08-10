@@ -93,9 +93,6 @@
                 }
             }, 16);
         },
-        mounted() {
-
-        },
         beforeUnmount() {
             window.clearInterval(this.tempHeadUpdateInterval);
         }

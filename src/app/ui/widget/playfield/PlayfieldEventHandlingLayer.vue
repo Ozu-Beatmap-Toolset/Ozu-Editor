@@ -49,8 +49,8 @@
                 const clientMousePosition = this.mouseListener.get();
                 const scalingFactor = playfieldResolution.height / (this.playfieldClientRect.height * this.zoom);
                 const offset = new Vector2(
-                    this.playfieldClientRect.left + this.playfieldClientRect.width*(1-this.zoom)*0.5, 
-                    this.playfieldClientRect.top + this.playfieldClientRect.height*(1-this.zoom)*0.5);
+                    this.playfieldClientRect.left + this.playfieldClientRect.width*(1-this.zoom)*0.5 + this.zoom*this.offset.x, 
+                    this.playfieldClientRect.top + this.playfieldClientRect.height*(1-this.zoom)*0.5 + this.zoom*this.offset.y);
                 return clientMousePosition.minus(offset).scaled(scalingFactor);
             },
             playfieldClicked(event) {
