@@ -1,7 +1,7 @@
-import binomial from '../../common_function/binomial.js';
-import Vector2 from '../../vector/Vector2.js';
-import arcLengthApproximation from'../arc_length/arcLengthApproximation.js';
-import ParametricCurve from '../ParametricCurve.js';
+import binomial from '@/../src/util/math/common_function/binomial.js';
+import Vector2 from '@/../src/util/math/vector/Vector2.js';
+import arcLengthApproximation from'@/../src/util/math/curve/arc_length/arcLengthApproximation.js';
+import ParametricCurve from '@/../src/util/math/curve/ParametricCurve.js';
 
 export default class BezierCurve extends ParametricCurve {
     controlPoints;

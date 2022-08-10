@@ -1,4 +1,4 @@
-import factorial from './factorial.js';
+import factorial from '@/../src/util/math/common_function/factorial.js';
 
 const lut = [[]];
 

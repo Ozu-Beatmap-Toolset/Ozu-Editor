@@ -20,6 +20,9 @@ export default class Vector2 {
 
     scaledToMagnitude(magnitude) {
         const currentMagnitude = this.magnitude();
+        if(currentMagnitude == 0) {
+            return new Vector2(magnitude, 0);
+        }
         return this.scaled(magnitude/currentMagnitude);
     }
 
@@ -62,7 +65,18 @@ export default class Vector2 {
     }
 
     angleFrom(that) {
-        return Math.acos(this.dotProduct(that)/(this.magnitude() * that.magnitude()));
+        const beforeAcos = this.dotProduct(that)/(this.magnitude() * that.magnitude());
+        if(beforeAcos > 1) {
+            return 0;
+        }
+        if(beforeAcos < -1) {
+            return Math.PI;
+        }
+        return Math.acos(beforeAcos);
+    }
+
+    absAngleFrom(that) {
+        return Math.abs(this.angleFrom(that));
     }
 
     static constructFromJson(json) {
@@ -71,5 +85,9 @@ export default class Vector2 {
 
     isFinite() {
         return isFinite(this.x) && isFinite(this.y);
+    }
+
+    projectOnto(that) {
+        return that.scaled(this.dotProduct(that)/that.magnitudeSquared());
     }
 }
