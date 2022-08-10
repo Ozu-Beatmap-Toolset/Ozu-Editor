@@ -6,7 +6,7 @@ import HitspinnerPlacementTool from "@/../src/app/ui/widget/playfield/tools/Hits
 import { ToolType } from "@/../src/app/ui/widget/playfield/tools/ToolTypeEnum.js"
 
 
-function getNextPlayfieldTool(previousTool, newToolType, hitObjects) {
+function getNextPlayfieldTool(previousTool, newToolType, hitObjects, initialMousePosition) {
     // safeguard to handle duplicate tool change requests
 
     if(newToolType === null || typeof newToolType === 'undefined') return previousTool;
@@ -17,15 +17,15 @@ function getNextPlayfieldTool(previousTool, newToolType, hitObjects) {
     previousTool.unregister();
     switch(newToolType) {
         case ToolType.Select:
-            return new SelectTool(hitObjects);
+            return new SelectTool(hitObjects, initialMousePosition);
         case ToolType.HitObjectPlacement:
-            return new HitobjectPlacementTool(hitObjects);
+            return new HitobjectPlacementTool(hitObjects, initialMousePosition);
         case ToolType.HitSliclePlacement:
-            return new HitsliclePlacementTool(hitObjects);
+            return new HitsliclePlacementTool(hitObjects, initialMousePosition);
         case ToolType.HitStreamPlacement:
-            return new HitstreamPlacementTool(hitObjects);
+            return new HitstreamPlacementTool(hitObjects, initialMousePosition);
         case ToolType.HitSpinnerPlacement:
-            return new HitspinnerPlacementTool(hitObjects);
+            return new HitspinnerPlacementTool(hitObjects, initialMousePosition);
     }
 }
 

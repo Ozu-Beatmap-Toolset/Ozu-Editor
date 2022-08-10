@@ -1,8 +1,11 @@
 <template>
     <PlayfieldEventHandlingLayer 
         @set-active-tool="this.quickAccessToolChanged"
+        @zoom-changed="this.onZoomChange"
         :userTool="this.userTool"
         :shortcutListener="this.shortcutListener"
+        :mouseListener="this.mouseListener"
+        :playfieldClientRect="this.playfieldClientRect"
     >
         <img ref="backgroundImage"
             :src="this.backgroundImageSrc"
@@ -12,6 +15,7 @@
         <PlayableComponentDrawingLayer 
             :hitObjects="this.hitObjects" 
             :playfieldClientRect="this.playfieldClientRect"
+            :widgetClientRect="this.widgetClientRect"
             :circleSize="this.circleSize"
             :editionMode="this.editionMode"
             :key="this.playfieldId"
@@ -27,6 +31,8 @@
     import PlayableComponentDrawingLayer from '@/../src/app/ui/widget/playfield/PlayableComponentDrawingLayer.vue';
     import { uuid } from '@/../src/util/uuid/uuid.js';
 
+    const DEFAULT_VIEWPORT_ZOOM = 1;
+
     export default {
         name: 'PlayfieldArea',
         components: {
@@ -37,7 +43,8 @@
             'hitObjects',
             'circleSize',
             'backgroundImageSrc',
-            'shortcutListener'
+            'shortcutListener',
+            'mouseListener',
         ],
         data() {
             return {
@@ -53,6 +60,8 @@
                 },
                 playfieldId: uuid(),
                 playfieldClientRect: null,
+                widgetClientRect: null,
+                zoom: DEFAULT_VIEWPORT_ZOOM,
             };
         },
         methods: {
@@ -85,16 +94,27 @@
                 }
             },
             redrawHitObjects() {
+                // Viewport zoom and viewport offset are CSS only. 
+                // They do not interfere with the actual data. 
+
+                this.widgetClientRect = this.$parent.getWidgetClientRect();
+
+                const playfieldWidth = this.$refs['playfieldArea'].offsetWidth;
+                const playfieldHeight = this.$refs['playfieldArea'].offsetHeight;
                 this.playfieldClientRect = {
-                    left: this.$refs['playfieldArea'].offsetLeft,
-                    top: this.$refs['playfieldArea'].offsetTop,
-                    width: this.$refs['playfieldArea'].offsetWidth,
-                    height: this.$refs['playfieldArea'].offsetHeight,
+                    left: this.widgetClientRect.width*0.5 - playfieldWidth*0.5 + this.widgetClientRect.left,
+                    top: this.widgetClientRect.height*0.5171 - playfieldHeight*0.5 + this.widgetClientRect.top,
+                    width: playfieldWidth,
+                    height: playfieldHeight,
                 }
                 this.playfieldId = uuid();
             },
-            quickAccessToolChanged(toolType) {
-                this.userTool = getNextPlayfieldTool(this.userTool, toolType, this.hitObjects);
+            quickAccessToolChanged(toolType, mousePositionInOsuCoordinates) {
+                this.userTool = getNextPlayfieldTool(this.userTool, toolType, this.hitObjects, mousePositionInOsuCoordinates);
+            },
+            onZoomChange(newZoom) {
+                this.zoom = newZoom;
+                this.redrawHitObjects();
             },
         },
         mounted() {

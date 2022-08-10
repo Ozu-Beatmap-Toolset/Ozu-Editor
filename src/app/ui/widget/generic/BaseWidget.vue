@@ -1,5 +1,5 @@
 <template>
-    <div class="widget-content">
+    <div class="widget-content" ref="widget">
         <slot>
             <img class="background-logo" src="@/../assets/logo/icon-v5.png"/>
         </slot>
@@ -9,6 +9,16 @@
 <script>
 export default {
     name: 'BaseWidget',
+    methods: {
+        getWidgetClientRect() {
+            return {
+                left: this.$refs['widget'].offsetLeft,
+                top: this.$refs['widget'].offsetTop,
+                width: this.$refs['widget'].offsetWidth,
+                height: this.$refs['widget'].offsetHeight,
+            }
+        }
+    }
 }
 </script>
 
@@ -16,8 +26,8 @@ export default {
     .widget-content {
         position: absolute;
         overflow: hidden;
-        top: 0%;
-        left: 0%;
+        top: 5%;
+        left: 10%;
         height: 90%;
         width: 80%;
         border-radius: 6px;

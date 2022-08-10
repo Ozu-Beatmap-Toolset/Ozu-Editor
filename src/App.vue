@@ -5,6 +5,7 @@
         <PlayfieldArea 
             :hitObjects="this.hitObjects" 
             :shortcutListener="this.shortcutListener" 
+            :mouseListener="this.mouseListener" 
             :circleSize="4" 
             backgroundImageSrc="C:/Users/Plads/Documents/GitHub/Ozu-Beatmap-Toolset/editor/ozu-editor/assets/bg_test/sakura.jpeg" 
         />
@@ -14,6 +15,7 @@
 <script>
     import PlayfieldArea from '@/../src/app/ui/widget/playfield/PlayfieldArea.vue';
     import ShortcutListener from '@/../src/util/user_input/ShortcutListener.js';
+    import CursorPosition from '@/../src/util/user_input/CursorPosition.js';
     import BaseWidget from '@/../src/app/ui/widget/generic/BaseWidget.vue';
 
     export default {
@@ -26,6 +28,7 @@
             return {
                 hitObjects: [],
                 shortcutListener: new ShortcutListener(),
+                mouseListener: new CursorPosition(),
             };
         },
         beforeUnmount() {

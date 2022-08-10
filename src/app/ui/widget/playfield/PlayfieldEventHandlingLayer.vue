@@ -27,58 +27,62 @@
 <script>
     import { ToolType } from '@/../src/app/ui/widget/playfield/tools/ToolTypeEnum.js';
     import ButtonList from '@/../src/app/ui/widget/playfield/left_buttons/ButtonList.vue';
-    import CursorPosition from '@/../src/util/user_input/CursorPosition.js';
+    import { playfieldResolution } from '@/../src/app/game_data/playfield/resolution.js';
+    import Vector2 from '@/../src/util/math/vector/Vector2.js';
 
     export default {
         name: 'PlayfieldEventHandlingLayer',
         components: {
             ButtonList,
         },
-        props: ['userTool', 'shortcutListener'],
+        props: ['userTool', 'shortcutListener', 'mouseListener', 'playfieldClientRect'],
         emits: ['zoom-changed', 'offset-changed', 'set-active-tool'],
         data() {
             return {
                 isMouseHovering: false,
-                mouseListener: null,
                 zoom: 1,
                 offset: {x:0, y:0},
             }
         },
         methods: {
+            getTransformedMousePosition() {
+                const clientMousePosition = this.mouseListener.get();
+                const scalingFactor = playfieldResolution.height / (this.playfieldClientRect.height * this.zoom);
+                const offset = new Vector2(
+                    this.playfieldClientRect.left + this.playfieldClientRect.width*(1-this.zoom)*0.5, 
+                    this.playfieldClientRect.top + this.playfieldClientRect.height*(1-this.zoom)*0.5);
+                return clientMousePosition.minus(offset).scaled(scalingFactor);
+            },
             playfieldClicked(event) {
-                this.userTool.mouseDown(event, this.mouseListener);
+                this.userTool.mouseDown(event, this.getTransformedMousePosition());
             },
             playfieldMouseMoved() {
-                this.userTool.mouseMove(this.mouseListener);
+                this.userTool.mouseMove(this.getTransformedMousePosition());
             },
             mouseEntered() {
                 if(this.isMouseHovering) return;
                 this.isMouseHovering = true;
-                this.mouseListener = new CursorPosition();
                 
                 this.shortcutListener.addKeybinding(['Escape'], () => {
-                    this.$emit('set-active-tool', ToolType.Select, this.mouseListener.get());
+                    this.$emit('set-active-tool', ToolType.Select, this.getTransformedMousePosition());
                 });
                 this.shortcutListener.addKeybinding(['Digit1'], () => {
-                    this.$emit('set-active-tool', ToolType.HitObjectPlacement, this.mouseListener.get());
+                    this.$emit('set-active-tool', ToolType.HitObjectPlacement, this.getTransformedMousePosition());
                 });
                 this.shortcutListener.addKeybinding(['Digit2'], () => {
-                    this.$emit('set-active-tool', ToolType.HitSliclePlacement, this.mouseListener.get());
+                    this.$emit('set-active-tool', ToolType.HitSliclePlacement, this.getTransformedMousePosition());
                 });
                 this.shortcutListener.addKeybinding(['Digit3'], () => {
-                    this.$emit('set-active-tool', ToolType.HitStreamPlacement, this.mouseListener.get());
+                    this.$emit('set-active-tool', ToolType.HitStreamPlacement, this.getTransformedMousePosition());
                 });
                 this.shortcutListener.addKeybinding(['Digit4'], () => {
-                    this.$emit('set-active-tool', ToolType.HitSpinnerPlacement, this.mouseListener.get());
+                    this.$emit('set-active-tool', ToolType.HitSpinnerPlacement, this.getTransformedMousePosition());
                 });
                 window.addEventListener('wheel', this.mouseScroll);
             },
             mouseExit() {
                 this.isMouseHovering = false;
-                if(this.mouseListener !== null) {
-                    this.mouseListener.unregister();
-                }
-                this.mouseListener = null;
+                
                 this.shortcutListener.removeKeybinding(['Escape']);
                 this.shortcutListener.removeKeybinding(['Digit1']);
                 this.shortcutListener.removeKeybinding(['Digit2']);

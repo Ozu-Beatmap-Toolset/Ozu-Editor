@@ -29,7 +29,7 @@
         components: {
             HitObject,
         },
-        props: ['hitObjects', 'playfieldClientRect', 'editionMode', 'circleSize'],
+        props: ['hitObjects', 'playfieldClientRect', 'widgetClientRect', 'editionMode', 'circleSize'],
         data() {
             return {
                 skin: skin,
@@ -38,27 +38,33 @@
             };
         },
         methods: {
-            getSamples(bezierCurves) {
+            osuCoordinatesToClientPlayfield(osuPosition) {
                 const scalingFactor = this.playfieldClientRect.height / playfieldResolution.height;
+                const offset1 = new Vector2(this.playfieldClientRect.left, this.playfieldClientRect.top);
+                const offset2 = new Vector2(this.widgetClientRect.left, this.widgetClientRect.top);
+                return osuPosition.scaled(scalingFactor).plus(offset1).minus(offset2);
+            },
+            getSamples(bezierCurves) {
                 const samples = [];
                 for(const bezierCurve of bezierCurves) {
                     for(const sample of bezierCurve.samples) {
-                        const offset = new Vector2(this.playfieldClientRect.left - this.playfieldClientRect.width/2, this.playfieldClientRect.top - this.playfieldClientRect.height/2);
-                        samples.push(sample.scaled(scalingFactor).plus(offset));
+                        const transformed = this.osuCoordinatesToClientPlayfield(sample);
+                        samples.push(transformed);
                     }
                 }
                 return samples;
             },
             getHeadDiameter() {
-                const diameterInOsuSize = circleSizeToRadiusInOsuPixels(this.circleSize);
-                const scalingFactor = 2 * this.playfieldClientRect.height / playfieldResolution.height;
+                const diameterInOsuSize = 2 * circleSizeToRadiusInOsuPixels(this.circleSize);
+                const scalingFactor = this.playfieldClientRect.height / playfieldResolution.height;
                 return diameterInOsuSize * scalingFactor;
             },
             getControlPoints(bezierCurves) {
                 const controlPoints = [];
                 for(const bezierCurve of bezierCurves) {
                     for(const controlPoint of bezierCurve.controlPoints) {
-                        controlPoints.push(controlPoint);
+                        const transformed = this.osuCoordinatesToClientPlayfield(controlPoint);
+                        controlPoints.push(transformed);
                     }
                 }
                 return controlPoints;
