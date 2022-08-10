@@ -45,6 +45,7 @@
             'backgroundImageSrc',
             'shortcutListener',
             'mouseListener',
+            'actionHistory',
         ],
         data() {
             return {
@@ -109,18 +110,21 @@
                 }
                 this.playfieldId = uuid();
             },
+            redraw() {
+                this.computeImageStyle();
+                this.redrawHitObjects();
+            },
             quickAccessToolChanged(toolType, mousePositionInOsuCoordinates) {
                 this.userTool = getNextPlayfieldTool(this.userTool, toolType, this.hitObjects, mousePositionInOsuCoordinates);
             },
             onZoomChange(newZoom) {
                 this.zoom = newZoom;
-                this.redrawHitObjects();
+                this.computeImageStyle();
             },
         },
         mounted() {
             this.resizeObserver = new ResizeObserver(() => {
-                this.computeImageStyle();
-                this.redrawHitObjects();
+                this.redraw();
             });
             this.resizeObserver.observe(this.$el.parentElement);
         },

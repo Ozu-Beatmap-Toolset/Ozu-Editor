@@ -30,6 +30,8 @@
     import { playfieldResolution } from '@/../src/app/game_data/playfield/resolution.js';
     import Vector2 from '@/../src/util/math/vector/Vector2.js';
 
+    const ZOOM_FACTOR_ON_SCROOL = 1 + 1/20;
+
     export default {
         name: 'PlayfieldEventHandlingLayer',
         components: {
@@ -47,6 +49,7 @@
         methods: {
             getTransformedMousePosition() {
                 const clientMousePosition = this.mouseListener.get();
+                if(this.playfieldClientRect == null) return clientMousePosition;
                 const scalingFactor = playfieldResolution.height / (this.playfieldClientRect.height * this.zoom);
                 const offset = new Vector2(
                     this.playfieldClientRect.left + this.playfieldClientRect.width*(1-this.zoom)*0.5 + this.zoom*this.offset.x, 
@@ -91,15 +94,23 @@
                 window.removeEventListener('wheel', this.mouseScroll);
             },
             mouseScroll(event) {
-                const direction = Math.sign(event.deltaY);
-                this.zoom -= this.zoom/20 * direction;
-                if(this.zoom > 2) {
-                    this.zoom = 2;
+                if(event.deltaY < 0) {
+                    this.zoom *= ZOOM_FACTOR_ON_SCROOL;
                 }
-                if(this.zoom < 0.5) {
-                    this.zoom = 0.5;
+                else {
+                    this.zoom /= ZOOM_FACTOR_ON_SCROOL;
+                }
+                if(this.zoom > 1.9799315994393984) {
+                    this.zoom = 1.9799315994393984;
+                }
+                if(this.zoom < 0.5050679529955184) {
+                    this.zoom = 0.5050679529955184;
+                }
+                if(Math.abs(this.zoom-1) < 0.0001) {
+                    this.zoom = 1;
                 }
                 this.$emit('zoom-changed', this.zoom);
+                this.userTool.mouseMove(this.getTransformedMousePosition());
             },
         },
     }
