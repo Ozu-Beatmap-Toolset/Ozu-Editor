@@ -4,7 +4,7 @@
             <HitObject 
                 :samples="this.getSamples(hitObject.bezierCurves)" 
                 :controlPoints="this.getControlPoints(hitObject.bezierCurves)" 
-                :headDiameter="hitObject.headDiameter"  
+                :headDiameter="this.getHeadDiameter()" 
                 :headDistance="hitObject.headDistance" 
                 :hitCircleSrc="this.skin.dict['hitcircle']" 
                 :hitCircleOverlaySrc="this.skin.dict['hitcircleoverlay']" 
@@ -20,27 +20,39 @@
     import HitObject from '@/../src/app/ui/playable_component/hitobject/HitObject.vue';
     import { skin } from '@/../src/app/game_data/skin/skinData.js';
     import { getSliderBorderColour } from '@/../src/app/game_data/skin/sliderBorderColour.js';
+    import { circleSizeToRadiusInOsuPixels } from '@/../src/app/game_data/difficulty/circleSizeConverter.js';
+    import { playfieldResolution } from '@/../src/app/game_data/playfield/resolution.js';
+    import Vector2 from '@/../src/util/math/vector/Vector2.js';
 
     export default {
         name: 'HitObjectDrawingLayer',
         components: {
             HitObject,
         },
-        props: ['hitObjects', 'editionMode'],
+        props: ['hitObjects', 'playfieldClientRect', 'editionMode', 'circleSize'],
         data() {
             return {
                 skin: skin,
+                samples: null,
+                tempHeadUpdateInterval: null,
             };
         },
         methods: {
             getSamples(bezierCurves) {
+                const scalingFactor = this.playfieldClientRect.height / playfieldResolution.height;
                 const samples = [];
                 for(const bezierCurve of bezierCurves) {
                     for(const sample of bezierCurve.samples) {
-                        samples.push(sample);
+                        const offset = new Vector2(this.playfieldClientRect.left - this.playfieldClientRect.width/2, this.playfieldClientRect.top - this.playfieldClientRect.height/2);
+                        samples.push(sample.scaled(scalingFactor).plus(offset));
                     }
                 }
                 return samples;
+            },
+            getHeadDiameter() {
+                const diameterInOsuSize = circleSizeToRadiusInOsuPixels(this.circleSize);
+                const scalingFactor = 2 * this.playfieldClientRect.height / playfieldResolution.height;
+                return diameterInOsuSize * scalingFactor;
             },
             getControlPoints(bezierCurves) {
                 const controlPoints = [];
@@ -55,8 +67,8 @@
                 return getSliderBorderColour()
             },
         },
-        created() {
-            window.setInterval(() => {
+        beforeMount() {
+            this.tempHeadUpdateInterval = window.setInterval(() => {
                 for(const hitObject of this.hitObjects) {
                     hitObject.headDistance += 10;
                     var totalLength = 0;
@@ -74,6 +86,12 @@
                     }
                 }
             }, 16);
+        },
+        mounted() {
+
+        },
+        beforeUnmount() {
+            window.clearInterval(this.tempHeadUpdateInterval);
         }
     }
 </script>

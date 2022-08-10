@@ -1,4 +1,4 @@
 export const playfieldResolution = {
-    x: 640, 
-    y:480
+    width: 640, 
+    height: 480
 }

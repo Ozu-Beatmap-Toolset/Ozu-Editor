@@ -49,7 +49,7 @@
             return {
                 EditionMode: EditionMode,
             };
-        }
+        },
     }
 </script>
 

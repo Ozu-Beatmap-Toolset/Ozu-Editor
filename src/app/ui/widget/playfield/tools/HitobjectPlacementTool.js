@@ -21,7 +21,7 @@ export default class HitobjectPlacementTool extends IPlayfieldTool {
         super();
         this.now = Date.now();
         this.key = uuid();
-        
+
         this.mouseCursor = new CursorPosition();
         this.hitObjects = hitObjects;
 
@@ -42,7 +42,6 @@ export default class HitobjectPlacementTool extends IPlayfieldTool {
         this.hitObjects.push({
             bezierCurves: [this.bezierCurve],
             id: this.key,
-            headDiameter: 100,
             headDistance: 0,
             opacity: 1,
         });
@@ -82,7 +81,7 @@ export default class HitobjectPlacementTool extends IPlayfieldTool {
         }
     }
 
-    mouseMove() {
+    mouseMove(mouseListener) {
         this.now = Date.now();
         if(this.now - this.lastTime < MAX_REFRESH_RATE) return;
         this.lastTime = this.now;
@@ -92,7 +91,7 @@ export default class HitobjectPlacementTool extends IPlayfieldTool {
         const lastControlPointId = this.hitObjects[lastHitObjectId].bezierCurves[lastBezierId].controlPoints.length-1;
         this.hitObjects[lastHitObjectId]
             .bezierCurves[lastBezierId]
-            .controlPoints[lastControlPointId] = this.mouseCursor.get();
+            .controlPoints[lastControlPointId] = mouseListener.get();
         if(this.bezierCurve.controlPoints.length > 0) {
             if(this.bezierCurve.controlPoints.length > 1) {
                 if(!this.isWorking) {

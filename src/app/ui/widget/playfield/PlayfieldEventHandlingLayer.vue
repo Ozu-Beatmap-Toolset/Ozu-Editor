@@ -3,23 +3,23 @@
         @mousedown="this.playfieldClicked" 
         @mousemove="this.playfieldMouseMoved" 
         @mouseenter="this.mouseEntered" 
-        @mouseleave="this.mouseExit"
+        @mouseleave="this.mouseExit" 
         :style="{
             position: 'absolute', 
             width: '100%', 
             height: '100%', 
-            left: `${this.zoom*this.offset.x}px`,
-            top: `${this.zoom*this.offset.y}px`,
-            transform: `scale(${this.zoom})`
+            left: `${this.zoom*this.offset.x}px`, 
+            top: `${this.zoom*this.offset.y}px`, 
+            transform: `scale(${this.zoom})`, 
         }"
     >
         <slot/>
     </div>
-    <div class="event-catching-window"
+    <div class="event-catching-window" 
         @mousedown="this.playfieldClicked" 
         @mousemove="this.playfieldMouseMoved" 
         @mouseenter="this.mouseEntered" 
-        @mouseleave="this.mouseExit"
+        @mouseleave="this.mouseExit" 
     />
     <ButtonList/>
 </template>
@@ -27,58 +27,64 @@
 <script>
     import { ToolType } from '@/../src/app/ui/widget/playfield/tools/ToolTypeEnum.js';
     import ButtonList from '@/../src/app/ui/widget/playfield/left_buttons/ButtonList.vue';
-    import ShortcutListener from '@/../src/util/user_input/ShortcutListener';
+    import CursorPosition from '@/../src/util/user_input/CursorPosition.js';
 
     export default {
         name: 'PlayfieldEventHandlingLayer',
         components: {
             ButtonList,
         },
-        props: ['userTool'],
+        props: ['userTool', 'shortcutListener'],
         emits: ['zoom-changed', 'offset-changed', 'set-active-tool'],
         data() {
             return {
                 isMouseHovering: false,
-                keyListener: new ShortcutListener(),
+                mouseListener: null,
                 zoom: 1,
                 offset: {x:0, y:0},
             }
         },
         methods: {
             playfieldClicked(event) {
-                this.userTool.mouseDown(event, this.hitObjects);
+                this.userTool.mouseDown(event, this.mouseListener);
             },
-            playfieldMouseMoved(event) {
-                this.userTool.mouseMove(event, this.hitObjects);
+            playfieldMouseMoved() {
+                this.userTool.mouseMove(this.mouseListener);
             },
             mouseEntered() {
                 if(this.isMouseHovering) return;
                 this.isMouseHovering = true;
-                this.keyListener.addKeybinding(['Escape'], () => {
-                    this.$emit('set-active-tool', ToolType.Select);
+                this.mouseListener = new CursorPosition();
+                
+                this.shortcutListener.addKeybinding(['Escape'], () => {
+                    this.$emit('set-active-tool', ToolType.Select, this.mouseListener.get());
                 });
-                this.keyListener.addKeybinding(['Digit1'], () => {
-                    this.$emit('set-active-tool', ToolType.HitObjectPlacement);
+                this.shortcutListener.addKeybinding(['Digit1'], () => {
+                    this.$emit('set-active-tool', ToolType.HitObjectPlacement, this.mouseListener.get());
                 });
-                this.keyListener.addKeybinding(['Digit2'], () => {
-                    this.$emit('set-active-tool', ToolType.HitSliclePlacement);
+                this.shortcutListener.addKeybinding(['Digit2'], () => {
+                    this.$emit('set-active-tool', ToolType.HitSliclePlacement, this.mouseListener.get());
                 });
-                this.keyListener.addKeybinding(['Digit3'], () => {
-                    this.$emit('set-active-tool', ToolType.HitStreamPlacement);
+                this.shortcutListener.addKeybinding(['Digit3'], () => {
+                    this.$emit('set-active-tool', ToolType.HitStreamPlacement, this.mouseListener.get());
                 });
-                this.keyListener.addKeybinding(['Digit4'], () => {
-                    this.$emit('set-active-tool', ToolType.HitSpinnerPlacement);
+                this.shortcutListener.addKeybinding(['Digit4'], () => {
+                    this.$emit('set-active-tool', ToolType.HitSpinnerPlacement, this.mouseListener.get());
                 });
-                window.addEventListener('wheel', this.mouseScroll)
+                window.addEventListener('wheel', this.mouseScroll);
             },
             mouseExit() {
                 this.isMouseHovering = false;
-                this.keyListener.removeKeybinding(['Escape']);
-                this.keyListener.removeKeybinding(['Digit1']);
-                this.keyListener.removeKeybinding(['Digit2']);
-                this.keyListener.removeKeybinding(['Digit3']);
-                this.keyListener.removeKeybinding(['Digit4']);
-                window.removeEventListener('wheel', this.mouseScroll)
+                if(this.mouseListener !== null) {
+                    this.mouseListener.unregister();
+                }
+                this.mouseListener = null;
+                this.shortcutListener.removeKeybinding(['Escape']);
+                this.shortcutListener.removeKeybinding(['Digit1']);
+                this.shortcutListener.removeKeybinding(['Digit2']);
+                this.shortcutListener.removeKeybinding(['Digit3']);
+                this.shortcutListener.removeKeybinding(['Digit4']);
+                window.removeEventListener('wheel', this.mouseScroll);
             },
             mouseScroll(event) {
                 const direction = Math.sign(event.deltaY);
@@ -92,19 +98,11 @@
                 this.$emit('zoom-changed', this.zoom);
             },
         },
-        beforeUnmount() {
-            this.keyListener.unregister();
-        },
     }
 </script>
 
 <style>
     .event-catching-window {
-        position: absolute;
-        height: 100%;
-        width: 100%;
-    }
-    .full-playfield-area {
         position: absolute;
         height: 100%;
         width: 100%;

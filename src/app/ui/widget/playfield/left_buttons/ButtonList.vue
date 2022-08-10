@@ -1,5 +1,7 @@
 <template>
     <table style="position:absolute">
+        <ButtonSeparator/>
+
         <QuickAccessButton :toolName="this.ToolType.Select">
             <img src="@/../assets/buttons/ic_edit_24px.svg" draggable="false"/>
         </QuickAccessButton>
@@ -56,8 +58,6 @@
                 ToolType: ToolType,
             };
         },
-        mounted() {
-        }
     }
 </script>
 

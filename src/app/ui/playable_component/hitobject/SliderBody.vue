@@ -69,7 +69,7 @@
         mounted() {
             this.computeCanvasBoundingBox();
             this.drawComponent();
-        },
+        }
     }
 </script>
 

@@ -38,11 +38,11 @@ export default class ShortcutListener {
         const index = this.loggedKeys.indexOf(code);
         if(index == -1) {
             this.loggedKeys.push(code);
-        }
 
-        for(const keyBinding of this.bindings) {
-            const isValid = keyBinding.keys.every(key => this.loggedKeys.includes(key));
-            if(isValid) keyBinding.func();
+            for(const keyBinding of this.bindings) {
+                const isValid = keyBinding.keys.every(key => this.loggedKeys.includes(key));
+                if(isValid) keyBinding.func();
+            }
         }
     }
 
