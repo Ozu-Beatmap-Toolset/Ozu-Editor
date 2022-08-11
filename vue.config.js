@@ -6,9 +6,7 @@ module.exports = defineConfig({
             nodeIntegration: true,
             builderOptions: {
                 productName: "Ozu Editor",
-                appId: 'test.com',
                 win: {
-                    "target": ["nsis"],
                     icon: 'assets/logo/icon-v5.png',
                 },
             },

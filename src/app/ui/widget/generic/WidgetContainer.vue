@@ -1,7 +1,7 @@
 <template>
-    <div class="horizontal-widget-container app-background-color"
+    <div class="poly-widget-container app-background-color"
         :style="{
-            width:this.width, 
+            width: this.width, 
             height: this.height, 
         }"
     >
@@ -18,17 +18,17 @@
             return {
                 amountOfChildren: 0,
                 children: [],
+                binaryNode: new BinaryNode(),
                 width: '100%',
                 height: '100%',
-                binaryNode: new BinaryNode(),
             }
         },
         methods: {
+            // for the child
             childMounted(child) {
                 this.children.push(child);
                 this.amountOfChildren++;
-                child.setWidth('50%');
-                child.setHeight('100%');
+                this.$parent.scaleChild(child);
                 this.binaryNode.addChild(child.binaryNode);
             },
             childUnmounting(child) {
@@ -39,6 +39,7 @@
                 }
                 this.amountOfChildren--;
             },
+            // for the parent
             setWidth(widthCss) {
                 this.width = widthCss;
             },
@@ -60,7 +61,7 @@
 </script>
 
 <style>
-    .horizontal-widget-container {
+    .poly-widget-container {
         display: flex;
         flex-wrap: wrap;
         overflow: hidden;
