@@ -1,5 +1,5 @@
 <template>
-    <table style="position:absolute">
+    <table style="position:relative; z-index=2">
         <ButtonSeparator/>
 
         <QuickAccessButton :toolName="this.ToolType.Select">

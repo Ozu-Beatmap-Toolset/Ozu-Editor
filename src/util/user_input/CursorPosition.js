@@ -1,12 +1,10 @@
-import Vector2 from '@/../src/util/math/vector/Vector2.js';
-
 export default class CursorPosition {
     mouseMoveListenerMethod = (event) => { this.mouseMove(event); };
     mousePosition;
 
-    constructor() {
+    constructor(initialVector) {
         window.addEventListener('mousemove', this.mouseMoveListenerMethod);
-        this.mousePosition = new Vector2(0, 0);
+        this.mousePosition = initialVector;
     }
 
     unregister() {
@@ -14,7 +12,8 @@ export default class CursorPosition {
     }
 
     mouseMove(event) {
-        this.mousePosition = new Vector2(event.clientX, event.clientY);
+        this.mousePosition.x = event.clientX;
+        this.mousePosition.y = event.clientY;
     }
 
     get() {

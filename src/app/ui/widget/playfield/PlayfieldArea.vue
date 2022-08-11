@@ -11,7 +11,7 @@
             :src="this.backgroundImageSrc"
             :style="this.imageStyle"
         />
-        <div class="playfield-area" ref="playfieldArea"/>
+        <div class="playfield-area" ref="playfieldArea" :style="{border: `dashed rgba(255, 255, 255, ${this.imageBrightness})`}"/>
         <PlayableComponentDrawingLayer 
             :hitObjects="this.hitObjects" 
             :playfieldClientRect="this.playfieldClientRect"
@@ -46,6 +46,7 @@
             'shortcutListener',
             'mouseListener',
             'actionHistory',
+            'imageBrightness'
         ],
         data() {
             return {
@@ -58,6 +59,7 @@
                     minHeight: '100%',
                     maxWidth: '100%',
                     maxHeight: '100%',
+                    filter: `brightness(${this.imageBrightness})`,
                 },
                 playfieldId: uuid(),
                 playfieldClientRect: null,
@@ -70,7 +72,7 @@
                 const image = this.$refs.backgroundImage;
                 const imgWidth = image.naturalWidth;
                 const imgHeight = image.naturalHeight;
-                if(imgWidth === 0 && imgHeight === 0) return this.imageScale;
+                if(imgWidth === 0 && imgHeight === 0) return;
                 const imgRatio = imgWidth / imgHeight;
 
                 const boxWidth = this.$el.parentElement.offsetWidth;
@@ -83,6 +85,7 @@
                         top: `${boxHeight/2 - boxWidth/imgRatio/2}px`, 
                         width: `${boxWidth}px`, 
                         height: `${boxWidth/imgRatio}px`,
+                        filter: `brightness(${this.imageBrightness})`,
                     };
                 }
                 else {
@@ -91,6 +94,7 @@
                         left: `${boxWidth/2 - boxHeight*imgRatio/2}px`, 
                         width: `${boxHeight*imgRatio}px`, 
                         height: `${boxHeight}px`,
+                        filter: `brightness(${this.imageBrightness})`,
                     };
                 }
             },
@@ -146,8 +150,7 @@
         border-style: solid;
         border-radius: 0.5%;
         border-width: 2px;
-        border-color: rgb(255, 255, 255);
         
-        border: dashed rgb(255, 255, 255);
+        border: dashed rgba(255, 255, 255, 0.3);
     }
 </style>

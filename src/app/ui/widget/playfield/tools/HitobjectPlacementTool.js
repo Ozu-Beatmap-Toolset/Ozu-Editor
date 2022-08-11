@@ -113,7 +113,7 @@ export default class HitobjectPlacementTool extends IPlayfieldTool {
             if(amountOfPoints > 400) {
                 amountOfPoints = 400;
             }
-            this.bezierSamplerClient.send(this.bezierCurve.controlPoints, 1, amountOfPoints);
+            this.bezierSamplerClient.send(this.bezierCurve.controlPoints, 1, this.bezierCurve.controlPoints.length*3);
         }
     }
 }

@@ -51,7 +51,7 @@
                 const offsetSamples = [];
                 for(const sample of this.samples) {
                     offsetSamples.push(sample.minus({x: this.boundingBox.left, y: this.boundingBox.top}));
-                } 
+                }
 
                 if(this.samples.length > 1) {
                     drawCanvasSliderBody(

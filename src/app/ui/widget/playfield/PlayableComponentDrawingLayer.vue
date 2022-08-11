@@ -40,9 +40,9 @@
         methods: {
             osuCoordinatesToClientPlayfield(osuPosition) {
                 const scalingFactor = this.playfieldClientRect.height / playfieldResolution.height;
-                const offset1 = new Vector2(this.playfieldClientRect.left, this.playfieldClientRect.top);
-                const offset2 = new Vector2(this.widgetClientRect.left, this.widgetClientRect.top);
-                return osuPosition.scaled(scalingFactor).plus(offset1).minus(offset2);
+                return new Vector2(
+                    osuPosition.x*scalingFactor + this.playfieldClientRect.left - this.widgetClientRect.left,
+                    osuPosition.y*scalingFactor + this.playfieldClientRect.top - this.widgetClientRect.top);
             },
             getSamples(bezierCurves) {
                 const samples = [];
@@ -74,7 +74,7 @@
             },
         },
         beforeMount() {
-            this.tempHeadUpdateInterval = window.setInterval(() => {
+            /*this.tempHeadUpdateInterval = window.setInterval(() => {
                 for(const hitObject of this.hitObjects) {
                     hitObject.headDistance += 10;
                     var totalLength = 0;
@@ -91,7 +91,7 @@
                         }
                     }
                 }
-            }, 16);
+            }, 16);*/
         },
         beforeUnmount() {
             window.clearInterval(this.tempHeadUpdateInterval);

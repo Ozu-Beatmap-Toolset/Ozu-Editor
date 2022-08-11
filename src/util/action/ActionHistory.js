@@ -40,6 +40,6 @@ export default class ActionHistory {
     }
 
     updateBufferSize() {
-        this.#actionHistoryBufferSize = require('../../../userPrefs.json').playfieldEditor.actionHistoryBufferSize;
+        this.#actionHistoryBufferSize = require('../../../user-prefs.json').playfieldEditor.actionHistoryBufferSize;
     }
 }

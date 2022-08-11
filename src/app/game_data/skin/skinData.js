@@ -7,7 +7,7 @@ var skinIni = {};
 reloadSkinFolder();
 
 function reloadSkinFolder() {
-    skinLocation = require('../../../../userPrefs.json').gameData.skinLocation;
+    skinLocation = require('../../../../user-prefs.json').gameData.skinLocation;
     registerFileNames();
     reloadSkinIni();
 }

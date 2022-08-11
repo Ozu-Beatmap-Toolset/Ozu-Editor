@@ -3,18 +3,8 @@
         <img class="app-background-logo" src="@/../assets/logo/icon-v5.png" />
     </div>
     <div class="app-content background-transparent-color">
-        <HorizontalWidgetContainer>
-            <BaseWidget>
-                <PlayfieldArea 
-                    :hitObjects="this.hitObjects" 
-                    :circleSize="4" 
-                    :shortcutListener="this.shortcutListener" 
-                    :mouseListener="this.mouseListener" 
-                    :actionHistory="this.actionHistory" 
-                    backgroundImageSrc="C:/Users/Plads/Documents/GitHub/Ozu-Beatmap-Toolset/editor/ozu-editor/assets/bg_test/sakura.jpeg" 
-                />
-            </BaseWidget>
-            <VerticalWidgetContainer>
+        <NestedWidgetContainer :widgetStackingType="this.WidgetStackingType.HORIZONTAL" ratio="80%">
+            <NestedWidgetContainer :widgetStackingType="this.WidgetStackingType.VERTICAL" ratio="85%">
                 <BaseWidget>
                     <PlayfieldArea 
                         :hitObjects="this.hitObjects" 
@@ -23,56 +13,22 @@
                         :mouseListener="this.mouseListener" 
                         :actionHistory="this.actionHistory" 
                         backgroundImageSrc="C:/Users/Plads/Documents/GitHub/Ozu-Beatmap-Toolset/editor/ozu-editor/assets/bg_test/sakura.jpeg" 
+                        imageBrightness="10%" 
                     />
                 </BaseWidget>
-                <HorizontalWidgetContainer>
-                    <BaseWidget>
-                        <PlayfieldArea 
-                            :hitObjects="this.hitObjects" 
-                            :circleSize="4" 
-                            :shortcutListener="this.shortcutListener" 
-                            :mouseListener="this.mouseListener" 
-                            :actionHistory="this.actionHistory" 
-                            backgroundImageSrc="C:/Users/Plads/Documents/GitHub/Ozu-Beatmap-Toolset/editor/ozu-editor/assets/bg_test/sakura.jpeg" 
-                        />
-                    </BaseWidget>
-            <VerticalWidgetContainer>
                 <BaseWidget>
-                    <PlayfieldArea 
-                        :hitObjects="this.hitObjects" 
-                        :circleSize="4" 
-                        :shortcutListener="this.shortcutListener" 
-                        :mouseListener="this.mouseListener" 
-                        :actionHistory="this.actionHistory" 
-                        backgroundImageSrc="C:/Users/Plads/Documents/GitHub/Ozu-Beatmap-Toolset/editor/ozu-editor/assets/bg_test/sakura.jpeg" 
+                    <TimelineBar 
+                        :timelineCursorPosition="1000"
                     />
                 </BaseWidget>
-                <HorizontalWidgetContainer>
-                    <BaseWidget>
-                        <PlayfieldArea 
-                            :hitObjects="this.hitObjects" 
-                            :circleSize="4" 
-                            :shortcutListener="this.shortcutListener" 
-                            :mouseListener="this.mouseListener" 
-                            :actionHistory="this.actionHistory" 
-                            backgroundImageSrc="C:/Users/Plads/Documents/GitHub/Ozu-Beatmap-Toolset/editor/ozu-editor/assets/bg_test/sakura.jpeg" 
-                        />
-                    </BaseWidget>
-                    <BaseWidget>
-                        <PlayfieldArea 
-                            :hitObjects="this.hitObjects" 
-                            :circleSize="4" 
-                            :shortcutListener="this.shortcutListener" 
-                            :mouseListener="this.mouseListener" 
-                            :actionHistory="this.actionHistory" 
-                            backgroundImageSrc="C:/Users/Plads/Documents/GitHub/Ozu-Beatmap-Toolset/editor/ozu-editor/assets/bg_test/sakura.jpeg" 
-                        />
-                    </BaseWidget>
-                </HorizontalWidgetContainer>
-            </VerticalWidgetContainer>
-                </HorizontalWidgetContainer>
-            </VerticalWidgetContainer>
-        </HorizontalWidgetContainer>
+            </NestedWidgetContainer>
+            <NestedWidgetContainer :widgetStackingType="this.WidgetStackingType.VERTICAL" ratio="30%">
+                <BaseWidget>
+                </BaseWidget>
+                <BaseWidget>
+                </BaseWidget>
+            </NestedWidgetContainer>
+        </NestedWidgetContainer>
     </div>
 </template>
 
@@ -82,27 +38,33 @@
     import CursorPosition from '@/../src/util/user_input/CursorPosition.js';
     import ActionHistory from '@/../src/util/action/ActionHistory.js';
     import BaseWidget from '@/../src/app/ui/widget/generic/BaseWidget.vue';
-    import HorizontalWidgetContainer from '@/../src/app/ui/widget/generic/HorizontalWidgetContainer.vue';
-    import VerticalWidgetContainer from '@/../src/app/ui/widget/generic/VerticalWidgetContainer.vue';
+    import NestedWidgetContainer from '@/../src/app/ui/widget/generic/NestedWidgetContainer.vue';
+    import { WidgetStackingType } from '@/../src/app/ui/widget/generic/NestedWidgetStackingType.js';
+    import Vector2 from '@/../src/util/math/vector/Vector2.js';
+    import TimelineBar from '@/../src/app/ui/widget/timeline/TimelineBar.vue';
 
     export default {
         name: 'App',
         components: {
             PlayfieldArea,
             BaseWidget,
-            HorizontalWidgetContainer,
-            VerticalWidgetContainer,
+            NestedWidgetContainer,
+            TimelineBar
         },
         data() {
             return {
                 hitObjects: [],
                 shortcutListener: new ShortcutListener(),
-                mouseListener: new CursorPosition(),
+                mouseListener: new CursorPosition(new Vector2(0, 0)),
                 actionHistory: new ActionHistory(),
+                WidgetStackingType,
+                ratio: '50%',
+                x: 0,
             };
         },
         beforeUnmount() {
             this.shortcutListener.unregister();
+            this.mouseListener.unregister();
         }
     }
 </script>

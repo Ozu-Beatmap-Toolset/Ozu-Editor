@@ -1,5 +1,5 @@
 <template>
-    <div class="poly-widget-container app-background-color"
+    <div class="nested-widget-container widget-spacing-background-color"
         :style="{
             width: this.width, 
             height: this.height, 
@@ -11,9 +11,18 @@
 
 <script>
     import BinaryNode from '@/../src/util/data_structure/BinaryNode.js';
+    import { WidgetStackingType } from '@/../src/app/ui/widget/generic/NestedWidgetStackingType.js';
 
     export default {
-        name: 'WidgetContainer',
+        name: 'NestedWidgetContainer',
+        props: {
+            widgetStackingType: {
+                default: WidgetStackingType.HORIZONTAL,
+            },
+            ratio: {
+                default: '50%',
+            },
+        },
         data() {
             return {
                 amountOfChildren: 0,
@@ -24,11 +33,10 @@
             }
         },
         methods: {
-            // for the child
             childMounted(child) {
                 this.children.push(child);
                 this.amountOfChildren++;
-                this.$parent.scaleChild(child);
+                this.scaleChild(child);
                 this.binaryNode.addChild(child.binaryNode);
             },
             childUnmounting(child) {
@@ -39,7 +47,20 @@
                 }
                 this.amountOfChildren--;
             },
-            // for the parent
+            scaleChild(child) {
+                switch(this.widgetStackingType) {
+                    case WidgetStackingType.VERTICAL:
+                        child.setWidth('100%');
+                        if(this.amountOfChildren === 1) child.setHeight(this.ratio);
+                        else child.setHeight(`calc(100% - ${this.ratio})`);
+                        break;
+                    case WidgetStackingType.HORIZONTAL:
+                        if(this.amountOfChildren === 1) child.setWidth(this.ratio);
+                        else child.setWidth(`calc(100% - ${this.ratio})`);
+                        child.setHeight('100%');
+                        break;
+                }
+            },
             setWidth(widthCss) {
                 this.width = widthCss;
             },
@@ -48,6 +69,7 @@
             },
         },
         mounted() {
+            this.binaryNode.value = this;
             if(typeof this.$parent !== undefined && typeof this.$parent.childMounted !== 'undefined') {
                 this.$parent.childMounted(this);
             }
@@ -61,9 +83,12 @@
 </script>
 
 <style>
-    .poly-widget-container {
+    .nested-widget-container {
         display: flex;
         flex-wrap: wrap;
         overflow: hidden;
+    }
+    .widget-spacing-background-color {
+        background-color: #222222;
     }
 </style>
