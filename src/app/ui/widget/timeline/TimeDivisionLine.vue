@@ -1,5 +1,5 @@
 <template>
-    <div class="time-division-line" :style="{left:`${this.position}px`, height:`${this.height}`, backgroundColor:`${this.strokeColor}`}"/>
+    <div class="time-division-line" :style="{left:`${this.position}`, height:`${this.height}`, backgroundColor:`${this.strokeColor}`}"/>
 </template>
 
 <script>
@@ -16,7 +16,7 @@ export default {
 
 <style>
     .time-division-line {
-        position: relative;
-        width: 1px;
+        position: absolute;
+        width: 0.8px;
     }
 </style>

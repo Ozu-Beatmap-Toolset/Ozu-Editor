@@ -1,26 +1,37 @@
 <template>
-    <PlayfieldEventHandlingLayer 
-        @set-active-tool="this.quickAccessToolChanged"
-        @zoom-changed="this.onZoomChange"
-        :userTool="this.userTool"
-        :shortcutListener="this.shortcutListener"
-        :mouseListener="this.mouseListener"
-        :playfieldClientRect="this.playfieldClientRect"
-    >
-        <img ref="backgroundImage"
-            :src="this.backgroundImageSrc"
-            :style="this.imageStyle"
-        />
-        <div class="playfield-area" ref="playfieldArea" :style="{border: `dashed rgba(255, 255, 255, ${this.imageBrightness})`}"/>
-        <PlayableComponentDrawingLayer 
-            :hitObjects="this.hitObjects" 
-            :playfieldClientRect="this.playfieldClientRect"
-            :widgetClientRect="this.widgetClientRect"
-            :circleSize="this.circleSize"
-            :editionMode="this.editionMode"
-            :key="this.playfieldId"
-        />
-    </PlayfieldEventHandlingLayer>
+    <BaseWidget ref="base-widget-container">
+        <template #widget-icon>
+            Playfield Viewport
+        </template>
+        <template #widget-content>
+            <PlayfieldEventHandlingLayer 
+                @set-active-tool="this.quickAccessToolChanged"
+                @zoom-changed="this.onZoomChange"
+                :userTool="this.userTool"
+                :shortcutListener="this.shortcutListener"
+                :mouseListener="this.mouseListener"
+                :playfieldClientRect="this.playfieldClientRect"
+            >
+                <img ref="backgroundImage" 
+                    :src="this.backgroundImageSrc" 
+                    :style="this.imageStyle" 
+                />
+                <div class="playfield-area" ref="playfieldArea" 
+                    :style="{
+                        border: `dashed rgba(255, 255, 255, ${this.imageBrightness})`
+                    }"
+                />
+                <PlayableComponentDrawingLayer 
+                    :hitObjects="this.hitObjects" 
+                    :playfieldClientRect="this.playfieldClientRect"
+                    :widgetClientRect="this.widgetClientRect"
+                    :circleSize="this.circleSize"
+                    :editionMode="this.editionMode"
+                    :key="this.playfieldId"
+                />
+            </PlayfieldEventHandlingLayer>
+        </template>
+    </BaseWidget>
 </template>
 
 <script>
@@ -30,6 +41,8 @@
     import PlayfieldEventHandlingLayer from '@/../src/app/ui/widget/playfield/PlayfieldEventHandlingLayer.vue';
     import PlayableComponentDrawingLayer from '@/../src/app/ui/widget/playfield/PlayableComponentDrawingLayer.vue';
     import { uuid } from '@/../src/util/uuid/uuid.js';
+    import BaseWidget from '@/../src/app/ui/widget/generic/BaseWidget.vue';
+    import { generateBackgroundImageStyle } from '@/../src/app/ui/widget/playfield/backgroundImageStyleGenerator.js';
 
     const DEFAULT_VIEWPORT_ZOOM = 1;
 
@@ -37,7 +50,8 @@
         name: 'PlayfieldArea',
         components: {
             PlayfieldEventHandlingLayer,
-            PlayableComponentDrawingLayer
+            PlayableComponentDrawingLayer,
+            BaseWidget,
         },
         props: [
             'hitObjects',
@@ -75,35 +89,15 @@
                 if(imgWidth === 0 && imgHeight === 0) return;
                 const imgRatio = imgWidth / imgHeight;
 
-                const boxWidth = this.$el.parentElement.offsetWidth;
-                const boxHeight = this.$el.parentElement.offsetHeight;
-                const boxRatio = boxWidth / boxHeight;
-
-                if(boxRatio > imgRatio) {
-                    this.imageStyle = {
-                        position: 'absolute',
-                        top: `${boxHeight/2 - boxWidth/imgRatio/2}px`, 
-                        width: `${boxWidth}px`, 
-                        height: `${boxWidth/imgRatio}px`,
-                        filter: `brightness(${this.imageBrightness})`,
-                    };
-                }
-                else {
-                    this.imageStyle = {
-                        position: 'absolute',
-                        left: `${boxWidth/2 - boxHeight*imgRatio/2}px`, 
-                        width: `${boxHeight*imgRatio}px`, 
-                        height: `${boxHeight}px`,
-                        filter: `brightness(${this.imageBrightness})`,
-                    };
-                }
+                const boxWidth = this.widgetClientRect.width;
+                const boxHeight = this.widgetClientRect.height;
+                const boxRatio = boxWidth/boxHeight;
+                
+                this.imageStyle = generateBackgroundImageStyle(imgRatio, boxWidth, boxHeight, boxRatio, this.imageBrightness);
             },
             redrawHitObjects() {
                 // Viewport zoom and viewport offset are CSS only. 
                 // They do not interfere with the actual data. 
-
-                this.widgetClientRect = this.$parent.getWidgetClientRect();
-
                 const playfieldWidth = this.$refs['playfieldArea'].offsetWidth;
                 const playfieldHeight = this.$refs['playfieldArea'].offsetHeight;
                 this.playfieldClientRect = {
@@ -115,8 +109,12 @@
                 this.playfieldId = uuid();
             },
             redraw() {
+                this.updateWidgetContentRect();
                 this.computeImageStyle();
                 this.redrawHitObjects();
+            },
+            updateWidgetContentRect() {
+                this.widgetClientRect = this.$refs['base-widget-container'].getWidgetClientRect();
             },
             quickAccessToolChanged(toolType, mousePositionInOsuCoordinates) {
                 this.userTool = getNextPlayfieldTool(this.userTool, toolType, this.hitObjects, mousePositionInOsuCoordinates);
@@ -127,6 +125,7 @@
             },
         },
         mounted() {
+            this.updateWidgetContentRect();
             this.resizeObserver = new ResizeObserver(() => {
                 this.redraw();
             });

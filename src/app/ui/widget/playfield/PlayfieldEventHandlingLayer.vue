@@ -50,6 +50,7 @@
             getTransformedMousePosition() {
                 const clientMousePosition = this.mouseListener.get();
                 if(this.playfieldClientRect == null) return clientMousePosition;
+                
                 const scalingFactor = playfieldResolution.height / (this.playfieldClientRect.height * this.zoom);
                 const offset = new Vector2(
                     this.playfieldClientRect.left + this.playfieldClientRect.width*(1-this.zoom)*0.5 + this.zoom*this.offset.x, 

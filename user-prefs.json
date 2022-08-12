@@ -6,6 +6,7 @@
     },
     "playfieldEditor": {
         "actionHistoryBufferSize": 10000,
-        "aspectRatio": 0.5625
+        "useStaticAspectRatioForBGImage": true,
+        "aspectRatio": 1.777777
     }
 }
