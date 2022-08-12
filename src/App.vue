@@ -12,7 +12,7 @@
                         :shortcutListener="this.shortcutListener" 
                         :mouseListener="this.mouseListener" 
                         :actionHistory="this.actionHistory" 
-                        backgroundImageSrc="C:/Users/Plads/Documents/GitHub/Ozu-Beatmap-Toolset/editor/ozu-editor/assets/bg_test/sakura.jpeg" 
+                        :backgroundImageSrc="require('@/../assets/bg_test/sakura.jpeg')" 
                         imageBrightness="10%" 
                     />
                 </BaseWidget>
