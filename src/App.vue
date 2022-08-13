@@ -17,7 +17,8 @@
             </template>
             <template #right>
                 <TimelineBar 
-                    :timelineCursorPosition="`${this.timelinePosition}px`"
+                    timelineCursorPosition="2500" 
+                    timelineWidth="3000" 
                 />
             </template>
         </NestedWidgetContainer>
@@ -49,7 +50,7 @@
                 shortcutListener: new ShortcutListener(),
                 mouseListener: new CursorPosition(new Vector2(0, 0)),
                 actionHistory: new ActionHistory(),
-                timelinePosition: 0,
+                timelinePosition: 200,
             };
         },
         created() {

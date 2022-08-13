@@ -17,7 +17,16 @@
                 zIndex:2,
             }"
         >
-            <button :style="{width:this.widgetHeaderHeight, height:this.widgetHeaderHeight}">
+            <button 
+                :style="{
+                    width:this.widgetHeaderHeight, 
+                    height:this.widgetHeaderHeight,
+                    backgroundColor:'#666',
+                    borderRadius:'6px',
+                    position:'relative',
+                    left:'0px'
+                }"
+            >
                 <slot name="widget-icon"/>
             </button>
             <slot name="widget-header-bar"/>
