@@ -1,8 +1,11 @@
 <template>
-    <table style="position:relative; z-index=2">
+    <table style="position:relative">
         <ButtonSeparator/>
 
-        <QuickAccessButton :toolName="this.ToolType.Select">
+        <QuickAccessButton 
+            :toolName="this.ToolType.Select"
+            @set-active-tool="this.buttonPressForwarding"
+        >
             <img src="@/../assets/buttons/ic_edit_24px.svg" draggable="false"/>
         </QuickAccessButton>
         <QuickAccessButton>
@@ -23,16 +26,28 @@
 
         <ButtonSeparator/>
 
-        <QuickAccessButton :toolName="this.ToolType.HitObjectPlacement">
+        <QuickAccessButton 
+            :toolName="this.ToolType.HitObjectPlacement"
+            @set-active-tool="this.buttonPressForwarding"
+        >
             <img src="@/../assets/buttons/ic_add_circle_outline_24px.svg" draggable="false"/>
         </QuickAccessButton>
-        <QuickAccessButton :toolName="this.ToolType.HitSliclePlacement">
+        <QuickAccessButton 
+            :toolName="this.ToolType.HitSliclePlacement"
+            @set-active-tool="this.buttonPressForwarding"
+        >
             <img src="@/../assets/buttons/ic_rotate_left_24px.svg" draggable="false"/>
         </QuickAccessButton>
-        <QuickAccessButton :toolName="this.ToolType.HitSpinnerPlacement">
+        <QuickAccessButton 
+            :toolName="this.ToolType.HitSpinnerPlacement"
+            @set-active-tool="this.buttonPressForwarding"
+        >
             <img src="@/../assets/buttons/ic_control_point_duplicate_24px.svg" draggable="false"/>
         </QuickAccessButton>
-        <QuickAccessButton :toolName="this.ToolType.HitStreamPlacement">
+        <QuickAccessButton 
+            :toolName="this.ToolType.HitStreamPlacement"
+            @set-active-tool="this.buttonPressForwarding"
+        >
             <img src="@/../assets/buttons/ic_settings_backup_restore_24px.svg" draggable="false"/>
         </QuickAccessButton>
 
@@ -53,11 +68,17 @@
             QuickAccessButton,
             ButtonSeparator
         },
+        emits: ['set-active-tool'],
         data() {
             return {
                 ToolType: ToolType,
             };
         },
+        methods: {
+            buttonPressForwarding(toolName) {
+                this.$emit('set-active-tool', toolName);
+            },
+        }
     }
 </script>
 

@@ -3,7 +3,7 @@
         <img class="app-background-logo" src="@/../assets/logo/icon-v5.png" />
     </div>
     <div class="app-content background-transparent-color">
-        <NestedWidgetContainer :widgetStackingType="this.WidgetStackingType.HORIZONTAL" ratio="50%">
+        <NestedWidgetContainer :widgetStackingType="this.WidgetStackingType.VERTICAL" ratio="85%">
             <template #left>
                 <PlayfieldArea 
                     :hitObjects="this.hitObjects" 
@@ -16,24 +16,9 @@
                 />
             </template>
             <template #right>
-                <NestedWidgetContainer :widgetStackingType="this.WidgetStackingType.VERTICAL" ratio="50%">
-                    <template #left>
-                        <PlayfieldArea 
-                            :hitObjects="this.hitObjects" 
-                            :circleSize="4" 
-                            :shortcutListener="this.shortcutListener" 
-                            :mouseListener="this.mouseListener" 
-                            :actionHistory="this.actionHistory" 
-                            :backgroundImageSrc="require('@/../assets/bg_test/sakura.jpeg')" 
-                            imageBrightness="50%" 
-                        />
-                    </template>
-                    <template #right>
-                        <TimelineBar 
-                            :timelineCursorPosition="`${this.timelinePosition}px`"
-                        />
-                    </template>
-                </NestedWidgetContainer>
+                <TimelineBar 
+                    :timelineCursorPosition="`${this.timelinePosition}px`"
+                />
             </template>
         </NestedWidgetContainer>
     </div>
@@ -44,7 +29,6 @@
     import ShortcutListener from '@/../src/util/user_input/ShortcutListener.js';
     import CursorPosition from '@/../src/util/user_input/CursorPosition.js';
     import ActionHistory from '@/../src/util/action/ActionHistory.js';
-    //import BaseWidget from '@/../src/app/ui/widget/generic/BaseWidget.vue';
     import NestedWidgetContainer from '@/../src/app/ui/widget/generic/NestedWidgetContainer.vue';
     import { WidgetStackingType } from '@/../src/app/ui/widget/generic/NestedWidgetStackingType.js';
     import Vector2 from '@/../src/util/math/vector/Vector2.js';

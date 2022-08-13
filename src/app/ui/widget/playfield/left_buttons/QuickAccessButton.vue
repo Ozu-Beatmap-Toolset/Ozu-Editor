@@ -11,12 +11,11 @@
 <script>
     export default {
         name: "QuickAccessButton",
-        props: [
-            "toolName",
-        ],
+        props: ['toolName'],
+        emits: ['set-active-tool'],
         methods: {
             buttonClick() {
-                this.events.emit('set-active-tool', this.toolName);
+                this.$emit('set-active-tool', this.toolName);
             }
         }
     }

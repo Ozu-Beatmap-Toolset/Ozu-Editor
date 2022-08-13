@@ -1,5 +1,11 @@
 <template>
-    <div class="time-division-line" :style="{left:`${this.position}`, height:`${this.height}`, backgroundColor:`${this.strokeColor}`}"/>
+    <div class="time-division-line" 
+        :style="{
+            left:`${this.position}`, 
+            height:`${this.height}`, 
+            backgroundColor:`${this.strokeColor}` 
+        }"
+    />
 </template>
 
 <script>

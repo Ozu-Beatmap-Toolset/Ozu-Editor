@@ -1,7 +1,7 @@
 <template>
     <BaseWidget ref="base-widget-container">
         <template #widget-icon>
-            Playfield Viewport
+            <img src="@/../assets/buttons/draw_FILL0_wght400_GRAD0_opsz48.svg" style="position:relative; width:200%; height:100%; left:-4px;"/>
         </template>
         <template #widget-content>
             <PlayfieldEventHandlingLayer 

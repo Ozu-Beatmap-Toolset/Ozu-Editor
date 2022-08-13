@@ -21,7 +21,9 @@
         @mouseenter="this.mouseEntered" 
         @mouseleave="this.mouseExit" 
     />
-    <ButtonList/>
+    <ButtonList v-if="require('@/../user-prefs.json')['playfieldEditor']['showLeftSideButtons']" 
+        @set-active-tool="this.buttonPressForwarding"
+    />
 </template>
 
 <script>
@@ -112,6 +114,9 @@
                 }
                 this.$emit('zoom-changed', this.zoom);
                 this.userTool.mouseMove(this.getTransformedMousePosition());
+            },
+            buttonPressForwarding(toolName) {
+                this.$emit('set-active-tool', toolName, this.getTransformedMousePosition());
             },
         },
     }

@@ -1,7 +1,7 @@
 <template>
     <BaseWidget>
         <template #widget-icon>
-            Timeline
+            <img src="@/../assets/buttons/schedule_FILL0_wght400_GRAD0_opsz48.svg" style="position:relative; width:200%; height:100%; left:-4px;"/>
         </template>
         <template #widget-content>
             <div 
@@ -17,7 +17,7 @@
                     backgroundColor:this.backgroundColor
                 }"
             >
-                <RepeatedDivisionLines
+                <RepeatedDivisionLines 
                     initialPosition="-12px"
                     separation="40px"
                     amount="50"
