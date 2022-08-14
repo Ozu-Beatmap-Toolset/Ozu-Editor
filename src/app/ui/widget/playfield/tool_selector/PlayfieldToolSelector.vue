@@ -1,5 +1,5 @@
 <template>
-    <table style="position:relative">
+    <table style="position:relative" v-if="require('@/../user-prefs.json')['playfieldEditor']['showLeftSideButtons']" >
         <ButtonSeparator/>
 
         <QuickAccessButton 
@@ -60,15 +60,17 @@
 </template>
 
 <script>
-    import QuickAccessButton from '@/../src/app/ui/widget/playfield/left_buttons/QuickAccessButton.vue';
-    import ButtonSeparator from '@/../src/app/ui/widget/playfield/left_buttons/ButtonSeparator.vue';
+    import QuickAccessButton from '@/../src/app/ui/widget/playfield/tool_selector/QuickAccessButton.vue';
+    import ButtonSeparator from '@/../src/app/ui/widget/playfield/tool_selector/ButtonSeparator.vue';
     import { ToolType } from '@/../src/app/ui/widget/playfield/tools/ToolTypeEnum.js';
+    import { registerBindings, unregisterBindings } from '@/../src/app/ui/widget/playfield/tool_selector/playfieldKeybinds.js'
 
     export default {
         components: { 
             QuickAccessButton,
             ButtonSeparator
         },
+        props: ['shortcutListener', 'areKeyBindingsActive'],
         emits: ['set-active-tool'],
         data() {
             return {
@@ -77,8 +79,28 @@
         },
         methods: {
             buttonPressForwarding(toolName) {
-                this.$emit('set-active-tool', toolName, );
+                this.$emit('set-active-tool', toolName);
             },
+            registerBindings() {
+                registerBindings(this.shortcutListener, this);
+            },
+            unregisterBindings() {
+                unregisterBindings(this.shortcutListener);
+            },
+            updateKeyBindings() {
+                if(this.areKeyBindingsActive) {
+                    this.registerBindings();
+                }
+                else {
+                    this.unregisterBindings();
+                }
+            }
+        },
+        mounted() {
+            this.updateKeyBindings();
+        },
+        beforeUpdate() {
+            this.updateKeyBindings();
         }
     }
 </script>
