@@ -12,8 +12,8 @@
 </template>
 
 <script>
-    import { drawCanvasSliderBody } from '@/../src/app/ui/playable_component/hitobject/sliderBodyDrawer.js'
-    import { findBoundingBoxFromSamples } from '@/../src/app/ui/playable_component/hitobject/sliderBoundingBoxFinder.js'
+    import { drawCanvasSliderBody } from '@/../src/app/ui/playable_component/hitobject/body/sliderBodyDrawer.js'
+    import { findBoundingBoxFromSamples } from '@/../src/app/ui/playable_component/hitobject/body/sliderBoundingBoxFinder.js'
 
     export default {
         name: "SliderBody",

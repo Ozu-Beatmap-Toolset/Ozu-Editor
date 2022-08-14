@@ -22,8 +22,8 @@
 </template>
 
 <script>
-    import SliderBody from '@/../src/app/ui/playable_component/hitobject/SliderBody.vue';
-    import HitObjectHead from '@/../src/app/ui/playable_component/hitobject/HitObjectHead.vue';
+    import SliderBody from '@/../src/app/ui/playable_component/hitobject/body/SliderBody.vue';
+    import HitObjectHead from '@/../src/app/ui/playable_component/hitobject/head/HitObjectHead.vue';
     import ControlPoints from '@/../src/app/ui/playable_component/hitobject/ControlPoints.vue';
     import { EditionMode } from '@/../src/app/ui/widget/playfield/EditionModeEnum.js';
 

@@ -63,6 +63,7 @@
     import QuickAccessButton from '@/../src/app/ui/widget/playfield/left_buttons/QuickAccessButton.vue';
     import ButtonSeparator from '@/../src/app/ui/widget/playfield/left_buttons/ButtonSeparator.vue';
     import { ToolType } from '@/../src/app/ui/widget/playfield/tools/ToolTypeEnum.js';
+
     export default {
         components: { 
             QuickAccessButton,
@@ -76,7 +77,7 @@
         },
         methods: {
             buttonPressForwarding(toolName) {
-                this.$emit('set-active-tool', toolName);
+                this.$emit('set-active-tool', toolName, );
             },
         }
     }

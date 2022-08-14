@@ -35,11 +35,21 @@
     import Vector2 from '@/../src/util/math/vector/Vector2.js';
     import TimelineBar from '@/../src/app/ui/widget/timeline/TimelineBar.vue';
 
+    // xav propose:
+    // 
+    // keybindings configs done in a config file (Z)
+    // add a vue thingy for settings and configuring the keybinds (F)
+    // keybinds should not be in playfield event handling layer stuff (A)
+    // buttons for playfield should be in the playfield area component, not the event one (A)
+    // keybinds should go in the button defs, not the event handling layer (A)
+    // tool creation is probably bad, have some sort of object that contains the factories already setup, and use that instead (B)
+    // timeline should only render bars that can be seen, don't add stuff in the dom that is not displayed (A)
+    // 
+
     export default {
         name: 'App',
         components: {
             PlayfieldArea,
-            //BaseWidget,
             NestedWidgetContainer,
             TimelineBar
         },

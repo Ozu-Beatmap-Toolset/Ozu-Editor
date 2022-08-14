@@ -8,6 +8,6 @@
         "actionHistoryBufferSize": 10000,
         "useStaticAspectRatioForBGImage": true,
         "aspectRatio": 1.777777,
-        "showLeftSideButtons": false
+        "showLeftSideButtons": true
     }
 }

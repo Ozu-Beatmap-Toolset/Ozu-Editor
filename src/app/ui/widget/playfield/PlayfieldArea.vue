@@ -5,16 +5,17 @@
         </template>
         <template #widget-content>
             <PlayfieldEventHandlingLayer 
-                @set-active-tool="this.quickAccessToolChanged"
-                @zoom-changed="this.onZoomChange"
-                :userTool="this.userTool"
-                :shortcutListener="this.shortcutListener"
-                :mouseListener="this.mouseListener"
-                :playfieldClientRect="this.playfieldClientRect"
+                @set-active-tool="this.quickAccessToolChanged" 
+                @zoom-changed="this.onZoomChange" 
+                :userTool="this.userTool" 
+                :shortcutListener="this.shortcutListener" 
+                :mouseListener="this.mouseListener" 
+                :playfieldClientRect="this.playfieldClientRect" 
             >
-                <img ref="backgroundImage" 
+                <PlayfieldBackgroundImage 
                     :src="this.backgroundImageSrc" 
-                    :style="this.imageStyle" 
+                    :widgetClientRect="this.widgetClientRect" 
+                    :imageBrightness="this.imageBrightness"
                 />
                 <div class="playfield-area" ref="playfieldArea" 
                     :style="{
@@ -42,7 +43,7 @@
     import PlayableComponentDrawingLayer from '@/../src/app/ui/widget/playfield/PlayableComponentDrawingLayer.vue';
     import { uuid } from '@/../src/util/uuid/uuid.js';
     import BaseWidget from '@/../src/app/ui/widget/generic/BaseWidget.vue';
-    import { generateBackgroundImageStyle } from '@/../src/app/ui/widget/playfield/backgroundImageStyleGenerator.js';
+    import PlayfieldBackgroundImage from '@/../src/app/ui/widget/playfield/playfield_background_image/PlayfieldBackgroundImage.vue';
 
     const DEFAULT_VIEWPORT_ZOOM = 1;
 
@@ -52,6 +53,7 @@
             PlayfieldEventHandlingLayer,
             PlayableComponentDrawingLayer,
             BaseWidget,
+            PlayfieldBackgroundImage,
         },
         props: [
             'hitObjects',
@@ -66,15 +68,6 @@
             return {
                 editionMode: EditionMode.hitObject,
                 userTool: new SelectTool(this.hitObjects),
-                imageStyle: {
-                    position: 'absolute',
-                    objectFit: 'cover',
-                    minWidth: '100%',
-                    minHeight: '100%',
-                    maxWidth: '100%',
-                    maxHeight: '100%',
-                    filter: `brightness(${this.imageBrightness})`,
-                },
                 playfieldId: uuid(),
                 playfieldClientRect: null,
                 widgetClientRect: null,
@@ -82,19 +75,6 @@
             };
         },
         methods: {
-            computeImageStyle() {
-                const image = this.$refs.backgroundImage;
-                const imgWidth = image.naturalWidth;
-                const imgHeight = image.naturalHeight;
-                if(imgWidth === 0 && imgHeight === 0) return;
-                const imgRatio = imgWidth / imgHeight;
-
-                const boxWidth = this.widgetClientRect.width;
-                const boxHeight = this.widgetClientRect.height;
-                const boxRatio = boxWidth/boxHeight;
-                
-                this.imageStyle = generateBackgroundImageStyle(imgRatio, boxWidth, boxHeight, boxRatio, this.imageBrightness);
-            },
             redrawHitObjects() {
                 // Viewport zoom and viewport offset are CSS only. 
                 // They do not interfere with the actual data. 
@@ -110,7 +90,6 @@
             },
             redraw() {
                 this.updateWidgetContentRect();
-                this.computeImageStyle();
                 this.redrawHitObjects();
             },
             updateWidgetContentRect() {
@@ -121,7 +100,6 @@
             },
             onZoomChange(newZoom) {
                 this.zoom = newZoom;
-                this.computeImageStyle();
             },
         },
         mounted() {

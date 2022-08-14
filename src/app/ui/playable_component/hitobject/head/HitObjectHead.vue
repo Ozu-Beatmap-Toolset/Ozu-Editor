@@ -6,7 +6,7 @@
 </template>
 
 <script>
-    import { findPositionOnSlider } from '@/../src/app/ui/playable_component/hitobject/sliderPositionFinder.js';
+    import { findPositionOnSlider } from '@/../src/app/ui/playable_component/hitobject/head/sliderPositionFinder.js';
 
     export default {
         name: "HitObjectHead",
