@@ -18,7 +18,9 @@
             <template #right>
                 <TimelineBar 
                     timelineCursorPosition="2500" 
-                    timelineWidth="3000" 
+                    timelineWidth="5000" 
+                    timeDivision="1" 
+                    :redlines="[]" 
                 />
             </template>
         </NestedWidgetContainer>
@@ -39,9 +41,6 @@
     // 
     // keybindings configs done in a config file (Z)
     // add a vue thingy for settings and configuring the keybinds (F)
-    // keybinds should not be in playfield event handling layer stuff (A)
-    // buttons for playfield should be in the playfield area component, not the event one (A)
-    // keybinds should go in the button defs, not the event handling layer (A)
     // tool creation is probably bad, have some sort of object that contains the factories already setup, and use that instead (B)
     // timeline should only render bars that can be seen, don't add stuff in the dom that is not displayed (A)
     // 
@@ -49,10 +48,10 @@
     export default {
         name: 'App',
         components: {
-            PlayfieldArea,
-            NestedWidgetContainer,
-            TimelineBar
-        },
+    PlayfieldArea,
+    NestedWidgetContainer,
+    TimelineBar,
+},
         data() {
             return {
                 WidgetStackingType,

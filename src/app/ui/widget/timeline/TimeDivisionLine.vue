@@ -23,6 +23,6 @@ export default {
 <style>
     .time-division-line {
         position: absolute;
-        width: 0.8px;
+        width: 0.5px;
     }
 </style>

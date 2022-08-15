@@ -12,6 +12,7 @@
                 }"
             />
             <div class="timeline-bar" 
+                ref="timeline-bar-content"
                 :style="{
                     width:`calc(${this.timelineWidth}px * ${this.zoom})`,
                     height:`calc(100% - ${this.subHeaderHeight})`, 
@@ -19,22 +20,19 @@
                     transform:`translate(calc(${this.offset}px * ${this.zoom}), 0px)`,
                 }"
             >
-                <RepeatedDivisionLines 
-                    :initialPosition="`calc((${this.DEFAULT_1_BEAT_SEPARATION} / 2) * ${this.zoom})`"
-                    :separation="`calc(${this.DEFAULT_1_BEAT_SEPARATION} * ${this.zoom})`"
-                    amount="50"
-                    color="#4C4C4C"
-                />
-                <RepeatedDivisionLines
-                    initialPosition="0px"
-                    :separation="`calc(${this.DEFAULT_1_BEAT_SEPARATION} * ${this.zoom})`"
-                    amount="50"
-                    color="#666"
-                />
+                <div v-for="timeDivision of this.redlines" :key="timeDivision.id">
+                    <RepeatedDivisionLines 
+                        :initialPosition="timeDivision.initialPosition" 
+                        :separation="timedivision.separation" 
+                        :initialCount="timedivision.initialCount" 
+                        :amount="this.timelineWidth/timeDivision.separation" 
+                        :color="timeDivision.color" 
+                    />
+                </div>
                 <TimelineCursor 
-                    :position="`calc(${this.timelineCursorPosition}px * ${this.zoom})`"
+                    :position="`calc(${this.timelineCursorPosition}px * ${this.zoom})`" 
                     :subHeaderHeight="this.subHeaderHeight" 
-                    :text="this.cursorText"
+                    :text="this.cursorText" 
                 />
             </div>
         </template>
@@ -45,6 +43,7 @@
     import TimelineCursor from '@/../src/app/ui/widget/timeline/TimelineCursor.vue';
     import RepeatedDivisionLines from '@/../src/app/ui/widget/timeline/RepeatedDivisionLines.vue';
     import BaseWidget from '@/../src/app/ui/widget/generic/BaseWidget.vue';
+    import { timeDivisionColors } from '@/../src/app/ui/widget/timeline/timeDivisionColors.js'
 
     const DEFAULT_TIMELINE_ZOOM = 1;
     const DEFAULT_1_BEAT_SEPARATION = '80px';
@@ -58,7 +57,7 @@
             RepeatedDivisionLines,
             BaseWidget
         },
-        props: ['timelineCursorPosition', 'timelineWidth'],
+        props: ['timelineCursorPosition', 'timelineWidth', 'timeDivision', 'redlines'],
         data() {
             return {
                 subHeaderHeight: '12px',
@@ -67,7 +66,7 @@
                 backgroundColor: '#3C3C3C',
                 offset: 0,
                 zoom: DEFAULT_TIMELINE_ZOOM,
-                DEFAULT_1_BEAT_SEPARATION: DEFAULT_1_BEAT_SEPARATION,
+                DEFAULT_1_BEAT_SEPARATION: DEFAULT_1_BEAT_SEPARATION, 
             };
         },
         created() {

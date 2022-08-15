@@ -100,21 +100,20 @@
                     width: playfieldWidth,
                     height: playfieldHeight,
                 }
-                this.playfieldId = uuid();
+                //this.playfieldId = uuid();
             },
             redraw() {
-                this.updateWidgetContentRect();
+                this.updateWidgetClientRect();
                 this.redrawHitObjects();
             },
-            updateWidgetContentRect() {
+            updateWidgetClientRect() {
                 this.widgetClientRect = this.$refs['base-widget-container'].getWidgetClientRect();
             },
             quickAccessToolChanged(toolType) {
-                this.userTool = getNextPlayfieldTool(this.userTool, toolType, this.hitObjects, this.getTransformedMousePosition());
+                this.userTool = getNextPlayfieldTool(this.userTool, toolType, this.hitObjects, this.getTransformedMousePosition(new Vector2(0, 0)));
             },
-            getTransformedMousePosition() {
-                const clientMousePosition = this.mouseListener.get();
-                if(this.playfieldClientRect == null) return clientMousePosition;
+            getTransformedMousePosition(clientMousePosition) {
+                if(this.playfieldClientRect === null) return clientMousePosition;
                 
                 const scalingFactor = playfieldResolution.height / (this.playfieldClientRect.height * this.zoom);
                 const offset = new Vector2(
@@ -123,10 +122,10 @@
                 return clientMousePosition.minus(offset).scaled(scalingFactor);
             },
             playfieldClicked(event) {
-                this.userTool.mouseDown(event, this.getTransformedMousePosition());
+                this.userTool.mouseDown(event, this.getTransformedMousePosition(new Vector2(event.clientX, event.clientY)));
             },
-            playfieldMouseMoved() {
-                this.userTool.mouseMove(this.getTransformedMousePosition());
+            playfieldMouseMoved(event) {
+                this.userTool.mouseMove(this.getTransformedMousePosition(new Vector2(event.clientX, event.clientY)));
             },
             mouseEntered() {
                 if(this.isMouseHovering) return;
@@ -139,11 +138,11 @@
             },
             mouseScroll(event) {
                 this.zoom = calculateNewZoomValue(this.zoom, event.deltaY);
-                this.userTool.mouseMove(this.getTransformedMousePosition());
+                this.userTool.mouseMove(this.getTransformedMousePosition(new Vector2(event.clientX, event.clientY)));
             },
         },
         mounted() {
-            this.updateWidgetContentRect();
+            this.updateWidgetClientRect();
             this.resizeObserver = new ResizeObserver(() => {
                 this.redraw();
             });

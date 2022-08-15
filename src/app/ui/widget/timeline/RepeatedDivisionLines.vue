@@ -1,5 +1,5 @@
 <template>
-    <div v-for="position of this.positions" :key="position.id" style="width:100%; height:100;">
+    <div v-for="position of this.positions" :key="position.id" style="width:100%; height:100%">
         <TimeDivisionLine
             :position="position.cssPosition" 
             :height="'100%'" 
@@ -16,14 +16,14 @@
     components: { 
         TimeDivisionLine,
     },
-    props: ["initialPosition", "separation", "amount", "color"],
+    props: ['initialPosition', 'initialCount', 'separation', 'amount', 'color'],
     data() {
         return {
             positions: [],
         };
     },
     mounted() {
-        for (var i = 0; i < this.amount; i++) {
+        for (let i = this.initialCount; i < this.amount; i++) {
             this.positions.push({
                 cssPosition: `calc(${this.initialPosition} + (${i} * ${this.separation}))`,
                 id: i,
