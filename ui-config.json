@@ -1,0 +1,30 @@
+{
+    "colors": {
+        "widgetBackground":"",
+        "widgetHeader":"",
+        "playfieldArea": {},
+        "timeline": {
+            "background-color":"",
+            "default-vertical-line-color":"",
+            "vertical-line-color-1":"",
+            "vertical-line-color-2":"",
+            "vertical-line-color-3":"",
+            "vertical-line-color-4":"",
+            "vertical-line-color-5":"",
+            "vertical-line-color-6":"",
+            "vertical-line-color-7":"",
+            "vertical-line-color-8":"",
+            "vertical-line-color-9":"",
+            "vertical-line-color-10":"",
+            "vertical-line-color-11":"",
+            "vertical-line-color-12":"",
+            "vertical-line-color-13":"",
+            "vertical-line-color-14":"",
+            "vertical-line-color-15":"",
+            "vertical-line-color-16":""
+        }
+    },
+    "images": {
+        "logo":"@/../assets/logo/icon-v5.png"
+    }
+}

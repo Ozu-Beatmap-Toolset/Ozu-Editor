@@ -24,11 +24,11 @@ export default class ShortcutListener {
 
     removeKeybinding(keyBindingToRemove) {
         const indexesToRemove = [];
-        for(var i = 0; i < this.bindings.length; i++) {
+        for(let i = 0; i < this.bindings.length; i++) {
             const isSameBinding = this.bindings[i].keys.every(key => keyBindingToRemove.includes(key));
             if(isSameBinding) indexesToRemove.push(i);
         }
-        for(var j = indexesToRemove.length-1; j >= 0; j--) {
+        for(let j = indexesToRemove.length-1; j >= 0; j--) {
             this.bindings.splice(indexesToRemove[j], 1);
         }
     }
@@ -48,7 +48,7 @@ export default class ShortcutListener {
 
     delog(keyEvent) {
         const code = keyEvent.code;
-        var index = this.loggedKeys.indexOf(code);
+        let index = this.loggedKeys.indexOf(code);
         while(index > -1) {
             this.loggedKeys.splice(index, 1);
             index = this.loggedKeys.indexOf(code);

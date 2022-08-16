@@ -9,7 +9,7 @@ export default class BezierSamplerClient {
     userFunction = () => {};
 
     send(unparsedControlPoints, length, amount) {
-        var controlPoints = '';
+        let controlPoints = '';
         for(const point of unparsedControlPoints) {
             controlPoints += String(point.x) + ':' + String(point.y) + '|';
         }

@@ -73,26 +73,6 @@
                 return getSliderBorderColour()
             },
         },
-        beforeMount() {
-            /*this.tempHeadUpdateInterval = window.setInterval(() => {
-                for(const hitObject of this.hitObjects) {
-                    hitObject.headDistance += 10;
-                    var totalLength = 0;
-                    const samples = this.getSamples(hitObject.bezierCurves);
-                    for(var i = 1; i < samples.length; i++) {
-                        totalLength += samples[i-1].distance(samples[i]);
-                    }
-                    if(hitObject.headDistance > totalLength) {
-                        if(totalLength > 0) {
-                            hitObject.headDistance %= totalLength;
-                        }
-                        else {
-                            hitObject.headDistance = 0;
-                        }
-                    }
-                }
-            }, 16);*/
-        },
         beforeUnmount() {
             window.clearInterval(this.tempHeadUpdateInterval);
         }

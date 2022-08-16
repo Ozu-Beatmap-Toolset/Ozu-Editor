@@ -22,7 +22,7 @@ function compute(func, a, b) {
     const k1 = (b-a)*0.5;
     const k2 = (b+a)*0.5;
 
-    var result = 0;
+    let result = 0;
 
     for(const factor of factors) {
         result += factor[0] * func(k1*factor[1] + k2);

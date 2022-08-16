@@ -1,43 +1,71 @@
 <template>
-    <PlayfieldEventHandlingLayer 
-        @set-active-tool="this.quickAccessToolChanged"
-        @zoom-changed="this.onZoomChange"
-        :userTool="this.userTool"
-        :shortcutListener="this.shortcutListener"
-        :mouseListener="this.mouseListener"
-        :playfieldClientRect="this.playfieldClientRect"
-    >
-        <img ref="backgroundImage"
-            :src="this.backgroundImageSrc"
-            :style="this.imageStyle"
-        />
-        <div class="playfield-area" ref="playfieldArea" :style="{border: `dashed rgba(255, 255, 255, ${this.imageBrightness})`}"/>
-        <PlayableComponentDrawingLayer 
-            :hitObjects="this.hitObjects" 
-            :playfieldClientRect="this.playfieldClientRect"
-            :widgetClientRect="this.widgetClientRect"
-            :circleSize="this.circleSize"
-            :editionMode="this.editionMode"
-            :key="this.playfieldId"
-        />
-    </PlayfieldEventHandlingLayer>
+    <BaseWidget ref="base-widget-container">
+        <template #widget-icon>
+            <img src="@/../assets/buttons/draw_FILL0_wght400_GRAD0_opsz48.svg" style="position:relative; width:200%; height:100%; left:-4px;"/>
+        </template>
+        <template #widget-content>
+            <LinearTransformer 
+                :zoom="this.zoom" 
+                :offset="this.offset" 
+            >
+                <PlayfieldBackgroundImage 
+                    :src="this.backgroundImageSrc" 
+                    :widgetClientRect="this.widgetClientRect" 
+                    :imageBrightness="this.imageBrightness"
+                />
+                <div class="playfield-area" ref="playfieldArea" 
+                    :style="{
+                        border: `dashed rgba(255, 255, 255, ${this.imageBrightness})`
+                    }"
+                />
+                <PlayableComponentDrawingLayer 
+                    :hitObjects="this.hitObjects" 
+                    :playfieldClientRect="this.playfieldClientRect"
+                    :widgetClientRect="this.widgetClientRect"
+                    :circleSize="this.circleSize"
+                    :editionMode="this.editionMode"
+                    :key="this.playfieldId"
+                />
+            </LinearTransformer>
+            <div class="event-catching-window" 
+                @mousedown="this.playfieldClicked" 
+                @mousemove="this.playfieldMouseMoved" 
+                @mouseenter="this.mouseEntered" 
+                @mouseleave="this.mouseExited" 
+            />
+            <PlayfieldToolSelector 
+                @set-active-tool="this.quickAccessToolChanged"
+                :areKeyBindingsActive="this.isMouseHovering"
+                :shortcutListener="this.shortcutListener"
+            />
+        </template>
+    </BaseWidget>
 </template>
 
 <script>
-    import { getNextPlayfieldTool } from '@/../src/app/ui/widget/playfield/playfieldToolSelector.js';
-    import { EditionMode } from '@/../src/app/ui/widget/playfield/EditionModeEnum.js';
+    import BaseWidget from '@/../src/app/ui/widget/generic/BaseWidget.vue';
+    import { getNextPlayfieldTool } from '@/../src/app/ui/widget/playfield/tool_selector/playfieldToolSelector.js';
+    import PlayfieldToolSelector from '@/../src/app/ui/widget/playfield/tool_selector/PlayfieldToolSelector.vue';
     import SelectTool from '@/../src/app/ui/widget/playfield/tools/SelectTool.js';
-    import PlayfieldEventHandlingLayer from '@/../src/app/ui/widget/playfield/PlayfieldEventHandlingLayer.vue';
+    import PlayfieldBackgroundImage from '@/../src/app/ui/widget/playfield/playfield_background_image/PlayfieldBackgroundImage.vue';
     import PlayableComponentDrawingLayer from '@/../src/app/ui/widget/playfield/PlayableComponentDrawingLayer.vue';
+    import { calculateNewZoomValue } from '@/../src/app/ui/widget/playfield/zoomIncrementsCalculator.js';
+    import LinearTransformer from '@/../src/app/ui/widget/playfield/LinearTransformer.vue'
+    import { EditionMode } from '@/../src/app/ui/widget/playfield/EditionModeEnum.js';
     import { uuid } from '@/../src/util/uuid/uuid.js';
+    import Vector2 from '@/../src/util/math/vector/Vector2.js';
+    import { playfieldResolution } from '@/../src/app/game_data/playfield/resolution.js';
 
     const DEFAULT_VIEWPORT_ZOOM = 1;
 
     export default {
         name: 'PlayfieldArea',
         components: {
-            PlayfieldEventHandlingLayer,
-            PlayableComponentDrawingLayer
+            BaseWidget,
+            LinearTransformer,
+            PlayfieldBackgroundImage,
+            PlayableComponentDrawingLayer,
+            PlayfieldToolSelector,
         },
         props: [
             'hitObjects',
@@ -52,58 +80,18 @@
             return {
                 editionMode: EditionMode.hitObject,
                 userTool: new SelectTool(this.hitObjects),
-                imageStyle: {
-                    position: 'absolute',
-                    objectFit: 'cover',
-                    minWidth: '100%',
-                    minHeight: '100%',
-                    maxWidth: '100%',
-                    maxHeight: '100%',
-                    filter: `brightness(${this.imageBrightness})`,
-                },
                 playfieldId: uuid(),
                 playfieldClientRect: null,
                 widgetClientRect: null,
                 zoom: DEFAULT_VIEWPORT_ZOOM,
+                offset: new Vector2(0, 0),
+                isMouseHovering: false,
             };
         },
         methods: {
-            computeImageStyle() {
-                const image = this.$refs.backgroundImage;
-                const imgWidth = image.naturalWidth;
-                const imgHeight = image.naturalHeight;
-                if(imgWidth === 0 && imgHeight === 0) return;
-                const imgRatio = imgWidth / imgHeight;
-
-                const boxWidth = this.$el.parentElement.offsetWidth;
-                const boxHeight = this.$el.parentElement.offsetHeight;
-                const boxRatio = boxWidth / boxHeight;
-
-                if(boxRatio > imgRatio) {
-                    this.imageStyle = {
-                        position: 'absolute',
-                        top: `${boxHeight/2 - boxWidth/imgRatio/2}px`, 
-                        width: `${boxWidth}px`, 
-                        height: `${boxWidth/imgRatio}px`,
-                        filter: `brightness(${this.imageBrightness})`,
-                    };
-                }
-                else {
-                    this.imageStyle = {
-                        position: 'absolute',
-                        left: `${boxWidth/2 - boxHeight*imgRatio/2}px`, 
-                        width: `${boxHeight*imgRatio}px`, 
-                        height: `${boxHeight}px`,
-                        filter: `brightness(${this.imageBrightness})`,
-                    };
-                }
-            },
             redrawHitObjects() {
                 // Viewport zoom and viewport offset are CSS only. 
                 // They do not interfere with the actual data. 
-
-                this.widgetClientRect = this.$parent.getWidgetClientRect();
-
                 const playfieldWidth = this.$refs['playfieldArea'].offsetWidth;
                 const playfieldHeight = this.$refs['playfieldArea'].offsetHeight;
                 this.playfieldClientRect = {
@@ -112,21 +100,49 @@
                     width: playfieldWidth,
                     height: playfieldHeight,
                 }
-                this.playfieldId = uuid();
+                //this.playfieldId = uuid();
             },
             redraw() {
-                this.computeImageStyle();
+                this.updateWidgetClientRect();
                 this.redrawHitObjects();
             },
-            quickAccessToolChanged(toolType, mousePositionInOsuCoordinates) {
-                this.userTool = getNextPlayfieldTool(this.userTool, toolType, this.hitObjects, mousePositionInOsuCoordinates);
+            updateWidgetClientRect() {
+                this.widgetClientRect = this.$refs['base-widget-container'].getWidgetClientRect();
             },
-            onZoomChange(newZoom) {
-                this.zoom = newZoom;
-                this.computeImageStyle();
+            quickAccessToolChanged(toolType) {
+                this.userTool = getNextPlayfieldTool(this.userTool, toolType, this.hitObjects, this.getTransformedMousePosition(this.mouseListener.get()));
+            },
+            getTransformedMousePosition(clientMousePosition) {
+                if(this.playfieldClientRect === null) return clientMousePosition;
+                
+                const scalingFactor = playfieldResolution.height / (this.playfieldClientRect.height * this.zoom);
+                const offset = new Vector2(
+                    this.playfieldClientRect.left + this.playfieldClientRect.width*(1-this.zoom)*0.5 + this.zoom*this.offset.x, 
+                    this.playfieldClientRect.top + this.playfieldClientRect.height*(1-this.zoom)*0.5 + this.zoom*this.offset.y);
+                return clientMousePosition.minus(offset).scaled(scalingFactor);
+            },
+            playfieldClicked(event) {
+                this.userTool.mouseDown(event, this.getTransformedMousePosition(new Vector2(event.clientX, event.clientY)));
+            },
+            playfieldMouseMoved(event) {
+                this.userTool.mouseMove(this.getTransformedMousePosition(new Vector2(event.clientX, event.clientY)));
+            },
+            mouseEntered() {
+                if(this.isMouseHovering) return;
+                this.isMouseHovering = true;
+                window.addEventListener('wheel', this.mouseScroll);
+            },
+            mouseExited() {
+                this.isMouseHovering = false;
+                window.removeEventListener('wheel', this.mouseScroll);
+            },
+            mouseScroll(event) {
+                this.zoom = calculateNewZoomValue(this.zoom, event.deltaY);
+                this.userTool.mouseMove(this.getTransformedMousePosition(new Vector2(event.clientX, event.clientY)));
             },
         },
         mounted() {
+            this.updateWidgetClientRect();
             this.resizeObserver = new ResizeObserver(() => {
                 this.redraw();
             });
@@ -152,5 +168,10 @@
         border-width: 2px;
         
         border: dashed rgba(255, 255, 255, 0.3);
+    }
+    .event-catching-window {
+        position: absolute;
+        height: 100%;
+        width: 100%;
     }
 </style>

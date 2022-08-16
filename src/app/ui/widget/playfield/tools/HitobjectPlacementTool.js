@@ -109,7 +109,7 @@ export default class HitobjectPlacementTool extends IPlayfieldTool {
         }
         else {
             const upperBoundArcLength = this.bezierCurve.fastUpperBoundArcLength();
-            var amountOfPoints = Math.max(Math.round(upperBoundArcLength/30), 1);
+            let amountOfPoints = Math.max(Math.round(upperBoundArcLength/30), 1);
             if(amountOfPoints > 400) {
                 amountOfPoints = 400;
             }

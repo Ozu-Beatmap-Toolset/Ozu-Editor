@@ -3,31 +3,33 @@
         <img class="app-background-logo" src="@/../assets/logo/icon-v5.png" />
     </div>
     <div class="app-content background-transparent-color">
-        <NestedWidgetContainer :widgetStackingType="this.WidgetStackingType.HORIZONTAL" ratio="80%">
-            <NestedWidgetContainer :widgetStackingType="this.WidgetStackingType.VERTICAL" ratio="85%">
-                <BaseWidget>
-                    <PlayfieldArea 
-                        :hitObjects="this.hitObjects" 
-                        :circleSize="4" 
-                        :shortcutListener="this.shortcutListener" 
-                        :mouseListener="this.mouseListener" 
-                        :actionHistory="this.actionHistory" 
-                        :backgroundImageSrc="require('@/../assets/bg_test/sakura.jpeg')" 
-                        imageBrightness="10%" 
-                    />
-                </BaseWidget>
-                <BaseWidget>
-                    <TimelineBar 
-                        :timelineCursorPosition="1000"
-                    />
-                </BaseWidget>
-            </NestedWidgetContainer>
-            <NestedWidgetContainer :widgetStackingType="this.WidgetStackingType.VERTICAL" ratio="30%">
-                <BaseWidget>
-                </BaseWidget>
-                <BaseWidget>
-                </BaseWidget>
-            </NestedWidgetContainer>
+        <NestedWidgetContainer :widgetStackingType="this.WidgetStackingType.VERTICAL" ratio="85%">
+            <template #left>
+                <PlayfieldArea 
+                    :hitObjects="this.hitObjects" 
+                    :circleSize="4" 
+                    :shortcutListener="this.shortcutListener" 
+                    :mouseListener="this.mouseListener" 
+                    :actionHistory="this.actionHistory" 
+                    :backgroundImageSrc="require('@/../assets/bg_test/sakura.jpeg')" 
+                    imageBrightness="20%" 
+                />
+            </template>
+            <template #right>
+                <TimelineBar 
+                    :currentTime="this.currentTimeMs" 
+                    :timelineWidth="10000" 
+                    :timeDivision="1" 
+                    :redlines="[
+                        {
+                            initialPosition: 300,
+                            bpm: 120,
+                            id: 0
+                        }
+                    ]" 
+                    @change-current-time="this.updateCurrentTime"
+                />
+            </template>
         </NestedWidgetContainer>
     </div>
 </template>
@@ -37,30 +39,43 @@
     import ShortcutListener from '@/../src/util/user_input/ShortcutListener.js';
     import CursorPosition from '@/../src/util/user_input/CursorPosition.js';
     import ActionHistory from '@/../src/util/action/ActionHistory.js';
-    import BaseWidget from '@/../src/app/ui/widget/generic/BaseWidget.vue';
     import NestedWidgetContainer from '@/../src/app/ui/widget/generic/NestedWidgetContainer.vue';
     import { WidgetStackingType } from '@/../src/app/ui/widget/generic/NestedWidgetStackingType.js';
     import Vector2 from '@/../src/util/math/vector/Vector2.js';
     import TimelineBar from '@/../src/app/ui/widget/timeline/TimelineBar.vue';
 
+    // xav propose:
+    // 
+    // keybindings configs done in a config file (Z)
+    // add a vue thingy for settings and configuring the keybinds (F)
+    // tool creation is probably bad, have some sort of object that contains the factories already setup, and use that instead (B)
+    // timeline should only render bars that can be seen, don't add stuff in the dom that is not displayed (A)
+    // 
+
     export default {
         name: 'App',
         components: {
-            PlayfieldArea,
-            BaseWidget,
-            NestedWidgetContainer,
-            TimelineBar
-        },
+    PlayfieldArea,
+    NestedWidgetContainer,
+    TimelineBar,
+},
         data() {
             return {
+                WidgetStackingType,
                 hitObjects: [],
                 shortcutListener: new ShortcutListener(),
                 mouseListener: new CursorPosition(new Vector2(0, 0)),
                 actionHistory: new ActionHistory(),
-                WidgetStackingType,
-                ratio: '50%',
-                x: 0,
+                currentTimeMs: 1000,
             };
+        },
+        methods: {
+            updateCurrentTime(newTimeMs) {
+                this.currentTimeMs = newTimeMs;
+            }
+        },
+        created() {
+            
         },
         beforeUnmount() {
             this.shortcutListener.unregister();

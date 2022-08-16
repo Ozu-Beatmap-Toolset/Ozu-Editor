@@ -1,5 +1,5 @@
-var rootUuid = '';
-var uuidHead = 0;
+let rootUuid = '';
+let uuidHead = 0;
 
 export const uuid = () => {
     const result = rootUuid + `${uuidHead}`;

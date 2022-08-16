@@ -1,11 +1,13 @@
 <template>
     <div class="nested-widget-container widget-spacing-background-color"
-        :style="{
-            width: this.width, 
-            height: this.height, 
-        }"
+        style="width:100%; height:100%"
     >
-        <slot/>
+        <div :style="{width:this.leftChildWidth, height:this.leftChildHeight}">
+            <slot name="left"/>
+        </div>
+        <div :style="{width:this.rightChildWidth, height:this.rightChildHeight}">
+            <slot name="right"/>
+        </div>
     </div>
 </template>
 
@@ -25,60 +27,38 @@
         },
         data() {
             return {
-                amountOfChildren: 0,
-                children: [],
                 binaryNode: new BinaryNode(),
-                width: '100%',
-                height: '100%',
+                leftChildWidth: '50%',
+                leftChildHeight: '100%',
+                rightChildWidth: '50%',
+                rightChildHeight: '100%',
             }
         },
         methods: {
-            childMounted(child) {
-                this.children.push(child);
-                this.amountOfChildren++;
-                this.scaleChild(child);
-                this.binaryNode.addChild(child.binaryNode);
-            },
-            childUnmounting(child) {
-                const indexOfChild = this.children.indexOf(child);
-                if(indexOfChild > -1) {
-                    this.children.splice(indexOfChild, 1);
-                    this.binaryNode.removeChild(child.binaryNode);
-                }
-                this.amountOfChildren--;
-            },
-            scaleChild(child) {
+            computeChildrenScale() {
                 switch(this.widgetStackingType) {
-                    case WidgetStackingType.VERTICAL:
-                        child.setWidth('100%');
-                        if(this.amountOfChildren === 1) child.setHeight(this.ratio);
-                        else child.setHeight(`calc(100% - ${this.ratio})`);
-                        break;
                     case WidgetStackingType.HORIZONTAL:
-                        if(this.amountOfChildren === 1) child.setWidth(this.ratio);
-                        else child.setWidth(`calc(100% - ${this.ratio})`);
-                        child.setHeight('100%');
+                        this.leftChildWidth = this.ratio;
+                        this.leftChildHeight = '100%';
+                        this.rightChildWidth = `calc(100% - ${this.ratio})`;
+                        this.rightChildHeight = '100%';
+                        break;
+                    case WidgetStackingType.VERTICAL:
+                        this.leftChildWidth = '100%';
+                        this.leftChildHeight = this.ratio;
+                        this.rightChildWidth = '100%';
+                        this.rightChildHeight = `calc(100% - ${this.ratio})`;
                         break;
                 }
-            },
-            setWidth(widthCss) {
-                this.width = widthCss;
-            },
-            setHeight(heightCss) {
-                this.height = heightCss;
             },
         },
         mounted() {
+            this.computeChildrenScale();
             this.binaryNode.value = this;
-            if(typeof this.$parent !== undefined && typeof this.$parent.childMounted !== 'undefined') {
-                this.$parent.childMounted(this);
+            if (typeof this.$parent !== undefined && typeof this.$parent.binaryNode !== "undefined") {
+                this.$parent.binaryNode.addChild(this.binaryNode);
             }
         },
-        beforeUnmount() {
-            if(typeof this.$parent !== undefined && typeof this.$parent.childUnmounting !== 'undefined') {
-                this.$parent.childUnmounting(this);
-            }
-        }
     }
 </script>
 

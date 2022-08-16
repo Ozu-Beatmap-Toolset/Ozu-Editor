@@ -32,14 +32,14 @@ export const getEnhencedCurveSamples = (samples) => {
 
     const newSamples = [];
     newSamples.push(computeEndpoint(samples[0], samples[1], samples[2]));
-    for(var i = 1; i < samples.length-2; i++) {
+    for(let i = 1; i < samples.length-2; i++) {
         newSamples.push(computeInBetweenPoint(samples[i-1], samples[i], samples[i+1], samples[i+2]));
     }
     newSamples.push(computeEndpoint(samples[samples.length-1], samples[samples.length-2], samples[samples.length-3]));
 
     const result = [];
     result.push(samples[0]);
-    for(var j = 1; j < samples.length-1; j++) {
+    for(let j = 1; j < samples.length-1; j++) {
         result.push(newSamples[j-1]);
         result.push(samples[j]);
     }
