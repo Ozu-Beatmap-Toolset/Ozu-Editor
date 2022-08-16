@@ -24,6 +24,7 @@
                 <div v-for="redline of this.redlines" :key="redline.id">
                     <RedlineRenderer 
                         :redline="redline"
+                        :amountOfDivisions="this.timeDivision"
                     />
                     <RepeatedDivisionLines 
                         :start="this.findStartPosition(redline)" 
@@ -33,15 +34,18 @@
                     />
                 </div>
                 <TimelineCursor 
-                    :position="`${this.timelineCursorPosition * this.zoom}px`" 
+                    :position="`${this.currentTime * this.zoom}px`" 
                     :subHeaderHeight="this.subHeaderHeight" 
                     :text="this.cursorText" 
                 />
             </div>
-            <div class="timeline-event-listening"
-                style="position:absolute; width:100%; height:100%;"
-                @mouseenter="this.mouseEntered"
-                @mouseleave="this.mouseExited"
+            <div class="timeline-event-listening" 
+                :style="{position:'absolute', width:'100%', height:'100%', top:`${-this.subHeaderHeight}px`}" 
+                @mouseenter="this.mouseEntered" 
+                @mouseleave="this.mouseExited" 
+                @mousedown="this.timelineClicked" 
+                @mouseup="this.timelineReleased" 
+                @mousemove="this.timelineDragged" 
             />
         </template>
     </BaseWidget>
@@ -65,7 +69,8 @@
             BaseWidget,
             RedlineRenderer,
         },
-        props: ['timelineCursorPosition', 'timelineWidth', 'timeDivision', 'redlines'],
+        props: ['currentTime', 'timelineWidth', 'timeDivision', 'redlines'],
+        emits: ['change-current-time'],
         data() {
             return {
                 subHeaderHeight: '12px',
@@ -78,6 +83,7 @@
                 widgetLeft: null,
                 resizeObserver: null,
                 isMouseHovering: false,
+                isMousePressed: false,
             };
         },
         methods: {
@@ -116,7 +122,21 @@
             },
             mouseExited() {
                 this.isMouseHovering = false;
+                this.isMousePressed = false;
                 window.removeEventListener('wheel', this.mouseScroll);
+            },
+            timelineClicked(event) {
+                this.isMousePressed = true;
+                let positionMs = (event.clientX - this.widgetLeft) / this.zoom + this.offset;
+                this.$emit('change-current-time', positionMs);
+            },
+            timelineReleased() {
+                this.isMousePressed = false;
+            },
+            timelineDragged(event) {
+                if(!this.isMousePressed) return;
+                let positionMs = (event.clientX - this.widgetLeft) / this.zoom + this.offset;
+                this.$emit('change-current-time', positionMs);
             },
             mouseScroll(event) {
                 let mouseX = (event.clientX - this.widgetLeft) / this.zoom;

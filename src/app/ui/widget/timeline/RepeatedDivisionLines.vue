@@ -24,8 +24,7 @@
     },
     beforeUpdate() {
         this.positions.splice(0, this.positions.length);
-        let amount = Math.ceil((this.end - this.start) / this.separation + 0.5);
-        console.log(amount);
+        let amount = (this.end - this.start) / this.separation;
         for (let i = 0; i < amount; i++) {
             this.positions.push({
                 cssPosition: `${this.start + i * this.separation}px`,

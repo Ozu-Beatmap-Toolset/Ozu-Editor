@@ -17,16 +17,17 @@
             </template>
             <template #right>
                 <TimelineBar 
-                    :timelineCursorPosition="2500" 
+                    :currentTime="this.currentTimeMs" 
                     :timelineWidth="10000" 
                     :timeDivision="1" 
                     :redlines="[
                         {
-                            initialPosition: 0,
+                            initialPosition: 300,
                             bpm: 120,
                             id: 0
                         }
                     ]" 
+                    @change-current-time="this.updateCurrentTime"
                 />
             </template>
         </NestedWidgetContainer>
@@ -65,8 +66,13 @@
                 shortcutListener: new ShortcutListener(),
                 mouseListener: new CursorPosition(new Vector2(0, 0)),
                 actionHistory: new ActionHistory(),
-                timelinePosition: 200,
+                currentTimeMs: 1000,
             };
+        },
+        methods: {
+            updateCurrentTime(newTimeMs) {
+                this.currentTimeMs = newTimeMs;
+            }
         },
         created() {
             
