@@ -2,10 +2,9 @@
     <div class="widget-frame"
         :style="{
             position:'relative',
-            width:`calc(100% - ${this.margin}px)`, 
-            height:`calc(100% - ${this.margin}px)`, 
-            marginLeft:`${this.margin}px`, 
-            marginTop:`${this.margin}px`
+            width:`calc(100% - ${this.margin*2}px)`, 
+            height:`calc(100% - ${this.margin*2}px)`, 
+            margin:`${this.margin}px`, 
         }"
     >
         <div class="widget-header-bar"
@@ -33,9 +32,8 @@
         </div>
         <div class="widget-content" ref="widget-content" 
             :style="{
-                position:'absolute', 
-                top:this.widgetHeaderHeight, 
-                width:'100%', 
+                position:'relative', 
+                width:'100%',
                 height:`calc(100% - ${this.widgetHeaderHeight})`,
             }"
         >
@@ -55,7 +53,7 @@
             return {
                 width: "100%",
                 height: "100%",
-                margin: 2,
+                margin: 1.5,
                 widgetHeaderHeight: '25px',
                 binaryNode: new BinaryNode(),
             };

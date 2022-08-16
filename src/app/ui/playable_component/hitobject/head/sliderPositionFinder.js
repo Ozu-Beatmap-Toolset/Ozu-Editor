@@ -3,10 +3,10 @@ export const findPositionOnSlider = (samples, distance) => {
         return samples[0];
     }
 
-    var totalDistance = 0;
-    var lastSeparation = 0;
-    var bestI;
-    for(var i = 1; i < samples.length; i++) {
+    let totalDistance = 0;
+    let lastSeparation = 0;
+    let bestI;
+    for(let i = 1; i < samples.length; i++) {
         lastSeparation = samples[i-1].distance(samples[i]);
         totalDistance += lastSeparation;
         bestI = i;

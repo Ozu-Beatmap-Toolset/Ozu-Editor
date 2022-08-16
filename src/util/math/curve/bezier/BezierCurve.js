@@ -21,9 +21,9 @@ export default class BezierCurve extends ParametricCurve {
         if(this.controlPoints.length == 1) {
             return this.controlPoints[0];
         }
-        var n = this.controlPoints.length-1;
-        var result = new Vector2(0, 0);
-        for(var i = 0; i < n+1; i++) {
+        let n = this.controlPoints.length-1;
+        let result = new Vector2(0, 0);
+        for(let i = 0; i < n+1; i++) {
             const bin = binomial.getOrCompute(n, i);
             const scalar = Math.pow(1-t, n-i) * Math.pow(t, i);
             result = result.plus(this.controlPoints[i].scaled(bin * scalar));
@@ -37,8 +37,8 @@ export default class BezierCurve extends ParametricCurve {
         }
         const P = this.controlPoints;
         const n = P.length-1;
-        var result = new Vector2(0, 0);
-        for(var i = 0; i < P.length; i++) {
+        let result = new Vector2(0, 0);
+        for(let i = 0; i < P.length; i++) {
             const bin = binomial.getOrCompute(n, i);
             // derivation with respect to t, only the factors containing t are affected
             const scalar = (i-n)*Math.pow(1-t, n-i-1) * Math.pow(t, i)
@@ -60,8 +60,8 @@ export default class BezierCurve extends ParametricCurve {
     }
 
     fastUpperBoundArcLength() {
-        var distance = 0;
-        for(var i = 1; i < this.controlPoints.length; i++) {
+        let distance = 0;
+        for(let i = 1; i < this.controlPoints.length; i++) {
             distance += this.controlPoints[i-1].distance(this.controlPoints[i]);
         }
         return distance * this.length;

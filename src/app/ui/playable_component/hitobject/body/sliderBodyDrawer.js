@@ -24,7 +24,7 @@ function drawBodyComponent(samples, context, color, compositeOperation, strokeWi
     context.strokeStyle = color;
     context.lineWidth = strokeWidth;
 
-    for(var i = 0; i < samples.length-1; i++) {
+    for(let i = 0; i < samples.length-1; i++) {
         segmentFunction(context, samples, i, strokeWidth);
         circleFunction(context, samples, i, strokeWidth);
     }

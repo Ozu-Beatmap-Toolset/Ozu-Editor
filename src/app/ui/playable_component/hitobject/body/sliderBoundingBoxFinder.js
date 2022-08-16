@@ -7,10 +7,10 @@ export const findBoundingBoxFromSamples = (samples, radius) => {
             height: 0,
         };
     }
-    var left = samples[0].x;
-    var top = samples[0].y;
-    var right = samples[0].x;
-    var bottom = samples[0].y;
+    let left = samples[0].x;
+    let top = samples[0].y;
+    let right = samples[0].x;
+    let bottom = samples[0].y;
 
     for(const sample of samples) {
         if(sample.x - radius < left) {

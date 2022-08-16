@@ -1,7 +1,7 @@
 const ZOOM_FACTOR_ON_SCROLL = 1 + 1/20;
 
 export const calculateNewZoomValue = (previous, scrollAmount) => {
-    var newZoom;
+    let newZoom;
     if(scrollAmount < 0) {
         newZoom = previous * ZOOM_FACTOR_ON_SCROLL;
     }

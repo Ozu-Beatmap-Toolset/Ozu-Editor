@@ -16,16 +16,19 @@
     components: { 
         TimeDivisionLine,
     },
-    props: ['initialPosition', 'initialCount', 'separation', 'amount', 'color'],
+    props: ['start', 'end', 'separation', 'color'],
     data() {
         return {
             positions: [],
         };
     },
-    mounted() {
-        for (let i = this.initialCount; i < this.amount; i++) {
+    beforeUpdate() {
+        this.positions.splice(0, this.positions.length);
+        let amount = Math.ceil((this.end - this.start) / this.separation + 0.5);
+        console.log(amount);
+        for (let i = 0; i < amount; i++) {
             this.positions.push({
-                cssPosition: `calc(${this.initialPosition} + (${i} * ${this.separation}))`,
+                cssPosition: `${this.start + i * this.separation}px`,
                 id: i,
             });
         }

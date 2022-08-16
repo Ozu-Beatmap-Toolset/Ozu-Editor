@@ -31,9 +31,9 @@
                 @mousedown="this.playfieldClicked" 
                 @mousemove="this.playfieldMouseMoved" 
                 @mouseenter="this.mouseEntered" 
-                @mouseleave="this.mouseExit" 
+                @mouseleave="this.mouseExited" 
             />
-            <playfieldToolSelector 
+            <PlayfieldToolSelector 
                 @set-active-tool="this.quickAccessToolChanged"
                 :areKeyBindingsActive="this.isMouseHovering"
                 :shortcutListener="this.shortcutListener"
@@ -43,29 +43,29 @@
 </template>
 
 <script>
-    import { getNextPlayfieldTool } from '@/../src/app/ui/widget/playfield/playfieldToolSelector.js';
-    import { EditionMode } from '@/../src/app/ui/widget/playfield/EditionModeEnum.js';
-    import SelectTool from '@/../src/app/ui/widget/playfield/tools/SelectTool.js';
-    import PlayableComponentDrawingLayer from '@/../src/app/ui/widget/playfield/PlayableComponentDrawingLayer.vue';
-    import { uuid } from '@/../src/util/uuid/uuid.js';
     import BaseWidget from '@/../src/app/ui/widget/generic/BaseWidget.vue';
+    import { getNextPlayfieldTool } from '@/../src/app/ui/widget/playfield/tool_selector/playfieldToolSelector.js';
+    import PlayfieldToolSelector from '@/../src/app/ui/widget/playfield/tool_selector/PlayfieldToolSelector.vue';
+    import SelectTool from '@/../src/app/ui/widget/playfield/tools/SelectTool.js';
     import PlayfieldBackgroundImage from '@/../src/app/ui/widget/playfield/playfield_background_image/PlayfieldBackgroundImage.vue';
-    import playfieldToolSelector from '@/../src/app/ui/widget/playfield/tool_selector/PlayfieldToolSelector.vue';
-    import { playfieldResolution } from '@/../src/app/game_data/playfield/resolution.js';
-    import Vector2 from '@/../src/util/math/vector/Vector2.js';
+    import PlayableComponentDrawingLayer from '@/../src/app/ui/widget/playfield/PlayableComponentDrawingLayer.vue';
     import { calculateNewZoomValue } from '@/../src/app/ui/widget/playfield/zoomIncrementsCalculator.js';
     import LinearTransformer from '@/../src/app/ui/widget/playfield/LinearTransformer.vue'
+    import { EditionMode } from '@/../src/app/ui/widget/playfield/EditionModeEnum.js';
+    import { uuid } from '@/../src/util/uuid/uuid.js';
+    import Vector2 from '@/../src/util/math/vector/Vector2.js';
+    import { playfieldResolution } from '@/../src/app/game_data/playfield/resolution.js';
 
     const DEFAULT_VIEWPORT_ZOOM = 1;
 
     export default {
         name: 'PlayfieldArea',
         components: {
-            PlayableComponentDrawingLayer,
             BaseWidget,
-            PlayfieldBackgroundImage,
-            playfieldToolSelector,
             LinearTransformer,
+            PlayfieldBackgroundImage,
+            PlayableComponentDrawingLayer,
+            PlayfieldToolSelector,
         },
         props: [
             'hitObjects',
@@ -110,7 +110,7 @@
                 this.widgetClientRect = this.$refs['base-widget-container'].getWidgetClientRect();
             },
             quickAccessToolChanged(toolType) {
-                this.userTool = getNextPlayfieldTool(this.userTool, toolType, this.hitObjects, this.getTransformedMousePosition(new Vector2(0, 0)));
+                this.userTool = getNextPlayfieldTool(this.userTool, toolType, this.hitObjects, this.getTransformedMousePosition(this.mouseListener.get()));
             },
             getTransformedMousePosition(clientMousePosition) {
                 if(this.playfieldClientRect === null) return clientMousePosition;
@@ -132,7 +132,7 @@
                 this.isMouseHovering = true;
                 window.addEventListener('wheel', this.mouseScroll);
             },
-            mouseExit() {
+            mouseExited() {
                 this.isMouseHovering = false;
                 window.removeEventListener('wheel', this.mouseScroll);
             },

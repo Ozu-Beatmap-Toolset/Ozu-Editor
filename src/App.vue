@@ -12,15 +12,21 @@
                     :mouseListener="this.mouseListener" 
                     :actionHistory="this.actionHistory" 
                     :backgroundImageSrc="require('@/../assets/bg_test/sakura.jpeg')" 
-                    imageBrightness="10%" 
+                    imageBrightness="20%" 
                 />
             </template>
             <template #right>
                 <TimelineBar 
-                    timelineCursorPosition="2500" 
-                    timelineWidth="5000" 
-                    timeDivision="1" 
-                    :redlines="[]" 
+                    :timelineCursorPosition="2500" 
+                    :timelineWidth="10000" 
+                    :timeDivision="1" 
+                    :redlines="[
+                        {
+                            initialPosition: 0,
+                            bpm: 120,
+                            id: 0
+                        }
+                    ]" 
                 />
             </template>
         </NestedWidgetContainer>
