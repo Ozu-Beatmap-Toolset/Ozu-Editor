@@ -100,7 +100,7 @@
                     width: playfieldWidth,
                     height: playfieldHeight,
                 }
-                //this.playfieldId = uuid();
+                this.playfieldId = uuid();
             },
             redraw() {
                 this.updateWidgetClientRect();

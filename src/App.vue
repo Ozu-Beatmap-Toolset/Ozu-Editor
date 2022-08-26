@@ -3,7 +3,7 @@
         <img class="app-background-logo" src="@/../assets/logo/icon-v5.png" />
     </div>
     <div class="app-content background-transparent-color">
-        <NestedWidgetContainer :widgetStackingType="this.WidgetStackingType.VERTICAL" ratio="85%">
+        <NestedWidgetContainer :widgetStackingType="this.WidgetStackingType.VERTICAL" ratio="calc(100% - 130px)">
             <template #left>
                 <PlayfieldArea 
                     :hitObjects="this.hitObjects" 

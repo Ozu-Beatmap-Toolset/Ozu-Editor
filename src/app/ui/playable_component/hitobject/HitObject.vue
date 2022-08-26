@@ -1,24 +1,26 @@
-<template style="position:absolute">
-    <SliderBody 
-        :samples="this.samples"
-        :headDiameter="this.headDiameter"
-        :sliderBorderColour="this.sliderBorderColour"
-        :opacity="this.opacity"
-    />
-    <HitObjectHead 
-        :samples="this.samples" 
-        :headDiameter="this.headDiameter"
-        :headDistance="this.headDistance" 
-        :hitCircleSrc="this.hitCircleSrc" 
-        :hitCircleOverlaySrc="this.hitCircleOverlaySrc" 
-        :opacity="this.opacity" 
-        :key="this.headDistance" 
-    />
-    <ControlPoints v-if="this.editionMode === this.EditionMode.edit"
-        :controlPoints="this.controlPoints" 
-        :selectedIndexes="[]" 
-        :key="this.editionMode" 
-    />
+<template>
+    <div style="position:absolute">
+        <SliderBody 
+            :samples="this.samples"
+            :headDiameter="this.headDiameter"
+            :sliderBorderColour="this.sliderBorderColour"
+            :opacity="this.opacity"
+        />
+        <HitObjectHead 
+            :samples="this.samples" 
+            :headDiameter="this.headDiameter"
+            :headDistance="this.headDistance" 
+            :hitCircleSrc="this.hitCircleSrc" 
+            :hitCircleOverlaySrc="this.hitCircleOverlaySrc" 
+            :opacity="this.opacity" 
+            :key="this.headDistance" 
+        />
+        <ControlPoints v-if="this.editionMode === this.EditionMode.edit" 
+            :controlPoints="this.controlPoints" 
+            :selectedIndexes="[]" 
+            :key="this.editionMode" 
+        />
+    </div>
 </template>
 
 <script>

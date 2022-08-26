@@ -66,9 +66,11 @@ export default class HitobjectPlacementTool extends IPlayfieldTool {
     mouseDown(event, mousePositionInOsuCoordinates) {
         if(event.button == 0) {
             this.bezierCurve.controlPoints.push(mousePositionInOsuCoordinates);
-            if(!this.isWorking) {
-                this.sendSampleRequest();
-                this.isWorking = true;
+            if(this.bezierCurve.controlPoints.length > 2) {
+                if(!this.isWorking) {
+                    this.sendSampleRequest();
+                    this.isWorking = true;
+                }
             }
         }
         else if(event.button == 2) {
@@ -82,7 +84,7 @@ export default class HitobjectPlacementTool extends IPlayfieldTool {
         this.lastTime = this.now;
 
         const lastHitObjectId = this.hitObjects.length-1;
-        const lastBezierId = this.hitObjects[lastHitObjectId].bezierCurves.length-1
+        const lastBezierId = this.hitObjects[lastHitObjectId].bezierCurves.length-1;
         const lastControlPointId = this.hitObjects[lastHitObjectId].bezierCurves[lastBezierId].controlPoints.length-1;
         this.hitObjects[lastHitObjectId]
             .bezierCurves[lastBezierId]
@@ -104,7 +106,13 @@ export default class HitobjectPlacementTool extends IPlayfieldTool {
     }
 
     sendSampleRequest() {
-        if(this.bezierCurve.controlPoints.length === 2) {
+        console.log('request');
+        const lastHitObjectId = this.hitObjects.length-1;
+        if(this.bezierCurve.controlPoints.length === 1) {
+            this.bezierCurve.samples = [this.bezierCurve.samples[0]];
+            this.hitObjects[lastHitObjectId].id = uuid();
+        }
+        else if(this.bezierCurve.controlPoints.length === 2) {
             this.bezierSamplerClient.send(this.bezierCurve.controlPoints, 2, 2);
         }
         else {
